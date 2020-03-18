@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.core.covid19.models.Account;
+import com.core.covid19.models.entities.Account;
 import com.core.covid19.repos.AccountRepo;
 
 @RestController
-@RequestMapping("/account")
-public class RestAccountController {
+@RequestMapping("/accounts")
+public class AccountController {
 
 	@Autowired
 	private AccountRepo accountRepo;

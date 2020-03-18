@@ -1,4 +1,4 @@
-package com.core.covid19.models;
+package com.core.covid19.models.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
@@ -27,7 +27,7 @@ public class Status implements Serializable {
 	@Column(unique=true, nullable=false)
 	private Integer id;
 
-	@Column(nullable=false, length=2147483647)
+	@Column(nullable=false, length=200)
 	private String name;
 
 	//bi-directional many-to-one association to Person

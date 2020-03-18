@@ -1,4 +1,4 @@
-package com.core.covid19.models;
+package com.core.covid19.models.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;

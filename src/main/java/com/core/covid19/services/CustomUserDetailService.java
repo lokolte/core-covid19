@@ -14,8 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.core.covid19.models.entities.Account;
 import com.core.covid19.models.enums.ClaimsTypes;
-import com.core.covid19.models.Account;
 import com.core.covid19.repos.AccountRepo;
 
 @Service
@@ -44,7 +44,7 @@ public class CustomUserDetailService implements UserDetailsService {
 		
 		claims.put(ClaimsTypes.ROLE.toString(), (Object)account.getRole().getName());
 		
-		return null;
+		return claims;
 	}
 	
 }
