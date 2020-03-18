@@ -2,6 +2,12 @@ package com.core.covid19.models;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.util.List;
 
 
@@ -10,18 +16,24 @@ import java.util.List;
  * 
  */
 @Entity
+@Table(name="role")
+@Data
 @NamedQuery(name="Role.findAll", query="SELECT r FROM Role r")
 public class Role implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(unique=true, nullable=false)
 	private Integer id;
 
+	@Column(nullable=false, length=100)
 	private String name;
 
 	//bi-directional many-to-one association to Account
-	@OneToMany(mappedBy="role", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="role")
+	@JsonIgnoreProperties("role")
+	@EqualsAndHashCode.Exclude
 	private List<Account> accounts;
 
 	public Role() {

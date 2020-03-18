@@ -2,6 +2,12 @@ package com.core.covid19.models;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.util.List;
 
 
@@ -10,24 +16,33 @@ import java.util.List;
  * 
  */
 @Entity
+@Table(name="location")
+@Data
 @NamedQuery(name="Location.findAll", query="SELECT l FROM Location l")
 public class Location implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(unique=true, nullable=false)
 	private Integer id;
 
+	@Column(nullable=false)
 	private double latitude;
 
+	@Column(nullable=false)
 	private double longitude;
 
 	//bi-directional many-to-one association to Contact
-	@OneToMany(mappedBy="location", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="location")
+	@JsonIgnoreProperties("location")
+	@EqualsAndHashCode.Exclude
 	private List<Contact> contacts;
 
 	//bi-directional many-to-one association to Person
-	@OneToMany(mappedBy="locationBean", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="location")
+	@JsonIgnoreProperties("location")
+	@EqualsAndHashCode.Exclude
 	private List<Person> persons;
 
 	public Location() {
@@ -89,14 +104,14 @@ public class Location implements Serializable {
 
 	public Person addPerson(Person person) {
 		getPersons().add(person);
-		person.setLocationBean(this);
+		person.setLocation(this);
 
 		return person;
 	}
 
 	public Person removePerson(Person person) {
 		getPersons().remove(person);
-		person.setLocationBean(null);
+		person.setLocation(null);
 
 		return person;
 	}

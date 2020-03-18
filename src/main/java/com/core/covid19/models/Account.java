@@ -3,30 +3,45 @@ package com.core.covid19.models;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Data;
+
 
 /**
  * The persistent class for the account database table.
  * 
  */
 @Entity
+@Table(name="account")
+@Data
 @NamedQuery(name="Account.findAll", query="SELECT a FROM Account a")
 public class Account implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(unique=true, nullable=false)
 	private Integer id;
 
+	@Column(nullable=false, length=100)
 	private String email;
 
+	@Column(nullable=false, length=100)
+	@JsonIgnore
 	private String password;
 
 	//bi-directional many-to-one association to Person
-	@ManyToOne
+	@ManyToOne//(fetch=FetchType.LAZY)
+	@JoinColumn(name="person_id")
+	@JsonIgnoreProperties("accounts")
 	private Person person;
 
 	//bi-directional many-to-one association to Role
-	@ManyToOne
+	@ManyToOne//(fetch=FetchType.LAZY)
+	@JoinColumn(name="role_id")
+	@JsonIgnoreProperties("accounts")
 	private Role role;
 
 	public Account() {

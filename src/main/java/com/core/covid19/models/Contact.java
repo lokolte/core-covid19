@@ -2,6 +2,11 @@ package com.core.covid19.models;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Data;
+
 import java.sql.Timestamp;
 
 
@@ -10,26 +15,30 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
+@Table(name="contact")
+@Data
 @NamedQuery(name="Contact.findAll", query="SELECT c FROM Contact c")
 public class Contact implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(unique=true, nullable=false)
 	private Integer id;
 
-	@Column(name="contact_date")
+	@Column(name="contact_date", nullable=false)
 	private Timestamp contactDate;
 
-	@Column(name="person_id1")
+	@Column(name="person_id1", nullable=false)
 	private Integer personId1;
 
 	@Column(name="person_id2")
 	private Integer personId2;
 
 	//bi-directional many-to-one association to Location
-	@ManyToOne
+	@ManyToOne//(fetch=FetchType.LAZY)
 	@JoinColumn(name="contact_location")
+	@JsonIgnoreProperties("contacts")
 	private Location location;
 
 	public Contact() {

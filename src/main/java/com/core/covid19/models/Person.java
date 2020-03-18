@@ -2,6 +2,12 @@ package com.core.covid19.models;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.util.List;
 
 
@@ -10,30 +16,46 @@ import java.util.List;
  * 
  */
 @Entity
+@Table(name="person")
+@Data
 @NamedQuery(name="Person.findAll", query="SELECT p FROM Person p")
 public class Person implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(unique=true, nullable=false)
 	private Integer id;
 
+	@Column(nullable=false, length=70)
 	private String document;
 
+	@Column(nullable=false, length=300)
 	private String name;
 
+	@Column(nullable=false, length=20)
 	private String phone;
 
+	@Column(nullable=false, length=10)
 	private String sex;
 
 	//bi-directional many-to-one association to Account
-	@OneToMany(mappedBy="person", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="person")
+	@JsonIgnoreProperties("person")
+	@EqualsAndHashCode.Exclude
 	private List<Account> accounts;
 
 	//bi-directional many-to-one association to Location
-	@ManyToOne
-	@JoinColumn(name="location")
-	private Location locationBean;
+	@ManyToOne//(fetch=FetchType.LAZY)
+	@JoinColumn(name="location", nullable=false)
+	@JsonIgnoreProperties("persons")
+	private Location location;
+
+	//bi-directional many-to-one association to Status
+	@ManyToOne//(fetch=FetchType.LAZY)
+	@JoinColumn(name="status", nullable=false)
+	@JsonIgnoreProperties("persons")
+	private Status status;
 
 	public Person() {
 	}
@@ -100,12 +122,20 @@ public class Person implements Serializable {
 		return account;
 	}
 
-	public Location getLocationBean() {
-		return this.locationBean;
+	public Location getLocation() {
+		return this.location;
 	}
 
-	public void setLocationBean(Location locationBean) {
-		this.locationBean = locationBean;
+	public void setLocation(Location locationBean) {
+		this.location = locationBean;
+	}
+
+	public Status getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(Status statusBean) {
+		this.status = statusBean;
 	}
 
 }
