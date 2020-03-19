@@ -27,15 +27,15 @@ class CoreCovid19ApplicationTests {
 	//@Autowired
 	//private BCryptPasswordEncoder bcrypt;
 
-	@Test
-	void createAccountTest() {
-		Account account = accauntRepo.findByEmail("jaaguilarmeza@gmail.com");
-		account.setPassword("password"); //bcrypt.encode("password"));
-		
-		Account account2 = accauntRepo.save(account);
-		
-		assert(account.getPassword().equals(account2.getPassword()));
-	}
+//	@Test
+//	void createAccountTest() {
+//		Account account = accauntRepo.findByEmail("jaaguilarmeza@gmail.com");
+//		account.setPassword("password"); //bcrypt.encode("password"));
+//		
+//		Account account2 = accauntRepo.save(account);
+//		
+//		assert(account.getPassword().equals(account2.getPassword()));
+//	}
 	
 	@Test
 	void verifyRoleTest() {
