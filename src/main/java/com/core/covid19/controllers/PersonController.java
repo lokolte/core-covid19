@@ -13,39 +13,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.core.covid19.models.entities.Person;
-import com.core.covid19.repos.PersonRepo;
+import com.core.covid19.models.requests.PersonRequest;
+import com.core.covid19.services.PersonService;
 
 @RestController
 @RequestMapping("/persons")
 public class PersonController {
-
+	
 	@Autowired
-	private PersonRepo personRepo;
+	private PersonService personService;
 	
 	@GetMapping
 	public List<Person> list(){
-		return personRepo.findAll();
+		return personService.findAll();
 	}
 	
 	@GetMapping(value = "/{document}")
 	public Person get(@PathVariable("document") String document){
-		return personRepo.findByDocument(document);
+		return personService.findByDocument(document);
 	}
 
 	@PostMapping
-	public void insert(@RequestBody Person person){
-		personRepo.save(person);
+	public Person insert(@RequestBody PersonRequest personRequest){
+		return personService.insertPerson(personRequest);
 	}
 	
 	@PutMapping
 	public void modify(@RequestBody Person person){
-		personRepo.save(person);
+		personService.save(person);
 	}
 	
 	@DeleteMapping(value = "/{document}")
 	public void delete(@PathVariable("document") String document) {
-		Person personToDelete = personRepo.findByDocument(document);
-		personRepo.delete(personToDelete);
+		personService.delete(document);
 	}
 
 }
