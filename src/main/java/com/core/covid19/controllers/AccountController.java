@@ -33,7 +33,7 @@ public class AccountController {
 		return accountRepo.findById(id);
 	}
 
-	@PostMapping
+	@PostMapping(value = "/singup")
 	public void insert(@RequestBody Account account){
 		accountRepo.save(account);
 	}

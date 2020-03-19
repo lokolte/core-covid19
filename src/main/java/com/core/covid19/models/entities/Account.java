@@ -3,7 +3,6 @@ package com.core.covid19.models.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -26,7 +25,7 @@ public class Account implements Serializable {
 	@Column(unique=true, nullable=false)
 	private Integer id;
 
-	@Column(nullable=false, length=100)
+	@Column(unique=true, nullable=false, length=100)
 	private String email;
 
 	@Column(nullable=false, length=100)
