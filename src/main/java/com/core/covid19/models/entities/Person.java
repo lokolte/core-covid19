@@ -27,7 +27,7 @@ public class Person implements Serializable {
 	@Column(unique=true, nullable=false)
 	private Integer id;
 
-	@Column(nullable=false, length=70)
+	@Column(unique=true, nullable=false, length=70)
 	private String document;
 
 	@Column(nullable=false, length=300)

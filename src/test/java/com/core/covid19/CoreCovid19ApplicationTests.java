@@ -8,15 +8,32 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.core.covid19.authentication.util.JwtUtil;
 import com.core.covid19.models.entities.Account;
+import com.core.covid19.models.entities.Status;
+import com.core.covid19.models.entities.Location;
+import com.core.covid19.models.entities.Person;
 import com.core.covid19.models.enums.ClaimsTypes;
+import com.core.covid19.models.enums.PersonStatus;
+import com.core.covid19.models.enums.Sex;
 import com.core.covid19.repos.AccountRepo;
+import com.core.covid19.repos.LocationRepo;
+import com.core.covid19.repos.PersonRepo;
+import com.core.covid19.repos.StatusRepo;
 import com.core.covid19.services.CustomUserDetailService;
 
 @SpringBootTest
 class CoreCovid19ApplicationTests {
 	
 	@Autowired
-	private AccountRepo accauntRepo;
+	private AccountRepo accountRepo;
+	
+	@Autowired
+	private PersonRepo personRepo;
+	
+	@Autowired
+	private LocationRepo locationRepo;
+	
+	@Autowired
+	private StatusRepo statusRepo;
 	
 	@Autowired
 	private CustomUserDetailService customUserDetailService;
@@ -36,6 +53,50 @@ class CoreCovid19ApplicationTests {
 //		
 //		assert(account.getPassword().equals(account2.getPassword()));
 //	}
+	
+	@Test
+	void deletePersonTest() {
+		
+		Location location = new Location();
+		
+		location.setLatitude(-25.245729);
+		location.setLongitude(-57.725436);
+				
+		Location loc = locationRepo.save(location);
+		
+		accountRepo.findByEmail("asdf@gmail.com");
+		
+		Status status = statusRepo.findByName(PersonStatus.HEALTHY.toString());
+		
+		Person person = new Person();
+		
+		person.setLocation(location);
+		person.setStatus(status);
+		
+		person.setDocument("123");
+		person.setName("fulano");
+		person.setLastname("De Tal");
+		person.setPhone("0985123456");
+		person.setSex(Sex.MASCULINO.toString());
+		
+		personRepo.save(person);
+		
+		Person b = personRepo.findByDocument("123");
+		
+		//System.out.println("############### get person: " + b.getName() + " " + b.getLastname());
+		
+		//System.out.println("############### assert igualdad: " + person.getName().equals(b.getName()));
+		
+		assert(person.getName().equals(b.getName()));
+		
+		personRepo.delete(person);
+		
+		Person c = personRepo.findByDocument("123");
+		
+		//System.out.println("############### assert null: " + (c == null));
+		
+		assert(c == null);
+	}
 	
 	@Test
 	void verifyRoleTest() {
