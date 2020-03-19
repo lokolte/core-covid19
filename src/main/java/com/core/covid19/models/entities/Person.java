@@ -32,6 +32,9 @@ public class Person implements Serializable {
 
 	@Column(nullable=false, length=300)
 	private String name;
+	
+	@Column(nullable=false, length=300)
+	private String lastname;
 
 	@Column(nullable=false, length=20)
 	private String phone;
@@ -82,6 +85,14 @@ public class Person implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getLastname() {
+		return this.lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
 	}
 
 	public String getPhone() {
