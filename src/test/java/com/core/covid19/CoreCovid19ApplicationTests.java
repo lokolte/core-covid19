@@ -43,18 +43,18 @@ class CoreCovid19ApplicationTests {
 		assert(ClaimsTypes.ROLE.toString().equals("ROLE"));
 	}
 	
-	@Test
-	void verifyTokenTest() {
-				
-		UserDetails user = customUserDetailService.loadUserByUsername("chuchosoft.239@gmail.com");
-		
-		String token = jwtUtil.generateToken(user);
-		
-		System.out.println("########### token: " + token);
-		
-		assert(jwtUtil.validateToken(token, user));
-		
-		assert(!token.equals(""));
-	}
+//	@Test
+//	void verifyTokenTest() {
+//				
+//		UserDetails user = customUserDetailService.loadUserByUsername("chuchosoft.239@gmail.com");
+//		
+//		String token = jwtUtil.generateToken(user);
+//		
+//		System.out.println("########### token: " + token);
+//		
+//		assert(jwtUtil.validateToken(token, user));
+//		
+//		assert(!token.equals(""));
+//	}
 
 }
