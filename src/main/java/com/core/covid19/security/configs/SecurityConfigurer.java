@@ -1,5 +1,7 @@
 package com.core.covid19.security.configs;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,15 +26,15 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private CustomUserDetailService customUserDetailService;
-	
+
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(customUserDetailService);//.passwordEncoder(bcrypt);
+		auth.userDetailsService(customUserDetailService);
 	}
-	
+
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.cors().and().csrf().disable().authorizeRequests()
@@ -41,23 +43,26 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
-	
+
 	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(Arrays.asList("https://localhost:9900"));
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
-	
+
 	@Override
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
-	
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return NoOpPasswordEncoder.getInstance();
 	}
-	
+
 }
