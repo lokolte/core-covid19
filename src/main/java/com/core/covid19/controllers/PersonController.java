@@ -48,9 +48,9 @@ public class PersonController {
 		personService.save(person);
 	}
 	
-	@DeleteMapping(value = "/{document}")
-	public void delete(@RequestHeader("Authorization") String authorization, @PathVariable("document") String document) {
-		personService.delete(document, jwtUtil.getEmailFromJwtToken(authorization));
+	@DeleteMapping
+	public void delete(@RequestHeader("Authorization") String authorization) {
+		personService.delete(jwtUtil.getEmailFromJwtToken(authorization));
 	}
 
 }

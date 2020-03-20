@@ -17,30 +17,30 @@ import com.core.covid19.repos.StatusRepo;
 
 @Service
 public class PersonService {
-	
+
 	@Autowired
 	private LocationRepo locationRepo;
-	
+
 	@Autowired
 	private StatusRepo statusRepo;
-	
+
 	@Autowired
 	private PersonRepo personRepo;
-	
+
 	@Autowired
 	private AccountRepo accountRepo;
-	
+
 	public Person insert(PersonRequest personRequest, String email) {
 		Location location = new Location();
 		location.setLatitude(personRequest.getLocation().getLatitude());
 		location.setLongitude(personRequest.getLocation().getLongitude());
-		
+
 		Location locationStored = locationRepo.save(location);
-		
+
 		Status status = statusRepo.findByName(personRequest.getStatus().getName());
-		
+
 		Account account = accountRepo.findByEmail(email);
-		
+
 		Person person = new Person();
 		person.setDocument(personRequest.getDocument());
 		person.setName(personRequest.getName());
@@ -49,40 +49,41 @@ public class PersonService {
 		person.setSex(personRequest.getSex());
 		person.setLocation(locationStored);
 		person.setStatus(status);
-		
+
 		Person personResult = personRepo.save(person);
-		
+
 		account.setPerson(person);
 		accountRepo.save(account);
-		
+
 		return personResult;
 	}
-	
-	public List<Person> findAll(){
+
+	public List<Person> findAll() {
 		return personRepo.findAll();
 	}
-	
+
 	public Person findByDocument(String document) {
 		return personRepo.findByDocument(document);
 	}
-	
-	public void save(Person person){
+
+	public void save(Person person) {
 		personRepo.save(person);
 	}
-	
-	public void delete(String document, String email) {
-		
+
+	public void delete(String email) {
+
 		Account account = accountRepo.findByEmail(email);
-		
+
+		Person personToDelete = account.getPerson();
+
 		account.setPerson(null);
-		
+
 		accountRepo.save(account);
-		
-		Person personToDelete = personRepo.findByDocument(document);
+
 		personToDelete.setAccounts(null);
-		
+
 		personRepo.save(personToDelete);
-		
+
 		personRepo.delete(personToDelete);
 	}
 
