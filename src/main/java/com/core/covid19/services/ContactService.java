@@ -80,11 +80,17 @@ public class ContactService {
 		contact.setPersonId1(personContactor.getId());
 		contact.setPersonId2(personContacted.getId());
 
-		Location location = new Location();
-		location.setLatitude(contactRequest.getLocation().getLatitude());
-		location.setLongitude(contactRequest.getLocation().getLongitude());
+		Location location = null;
+		Location locationStored = null;
 
-		contact.setLocation(locationRepo.save(location));
+		if (contactRequest.getLocation() != null) {
+			location = new Location();
+			location.setLatitude(contactRequest.getLocation().getLatitude());
+			location.setLongitude(contactRequest.getLocation().getLongitude());
+			locationStored = locationRepo.save(location);
+		}
+
+		contact.setLocation(locationStored);
 
 		Contact contactStored = contactRepo.save(contact);
 
