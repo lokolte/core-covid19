@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -46,6 +47,7 @@ public class Person implements Serializable {
 	@OneToMany(mappedBy="person")
 	@JsonIgnoreProperties("person")
 	@EqualsAndHashCode.Exclude
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private List<Account> accounts;
 
 	//bi-directional many-to-one association to Location

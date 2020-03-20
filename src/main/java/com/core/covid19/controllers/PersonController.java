@@ -40,7 +40,7 @@ public class PersonController {
 
 	@PostMapping()
 	public Person insert(@RequestHeader("Authorization") String authorization, @RequestBody PersonRequest personRequest){
-		return personService.insertPerson(personRequest, jwtUtil.getEmailFromJwtToken(authorization));
+		return personService.insert(personRequest, jwtUtil.getEmailFromJwtToken(authorization));
 	}
 	
 	@PutMapping

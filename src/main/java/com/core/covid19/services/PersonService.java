@@ -30,7 +30,7 @@ public class PersonService {
 	@Autowired
 	private AccountRepo accountRepo;
 	
-	public Person insertPerson(PersonRequest personRequest, String email) {
+	public Person insert(PersonRequest personRequest, String email) {
 		Location location = new Location();
 		location.setLatitude(personRequest.getLocation().getLatitude());
 		location.setLongitude(personRequest.getLocation().getLongitude());
