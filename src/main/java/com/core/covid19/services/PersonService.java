@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.core.covid19.models.entities.Status;
+import com.core.covid19.models.entities.Account;
 import com.core.covid19.models.entities.Location;
 import com.core.covid19.models.entities.Person;
 import com.core.covid19.models.requests.PersonRequest;
+import com.core.covid19.repos.AccountRepo;
 import com.core.covid19.repos.LocationRepo;
 import com.core.covid19.repos.PersonRepo;
 import com.core.covid19.repos.StatusRepo;
@@ -25,7 +27,10 @@ public class PersonService {
 	@Autowired
 	private PersonRepo personRepo;
 	
-	public Person insertPerson(PersonRequest personRequest) {
+	@Autowired
+	private AccountRepo accountRepo;
+	
+	public Person insertPerson(PersonRequest personRequest, String email) {
 		Location location = new Location();
 		location.setLatitude(personRequest.getLocation().getLatitude());
 		location.setLongitude(personRequest.getLocation().getLongitude());
@@ -33,6 +38,8 @@ public class PersonService {
 		Location locationStored = locationRepo.save(location);
 		
 		Status status = statusRepo.findByName(personRequest.getStatus().getName());
+		
+		Account account = accountRepo.findByEmail(email);
 		
 		Person person = new Person();
 		person.setDocument(personRequest.getDocument());
@@ -43,7 +50,12 @@ public class PersonService {
 		person.setLocation(locationStored);
 		person.setStatus(status);
 		
-		return personRepo.save(person);
+		Person personResult = personRepo.save(person);
+		
+		account.setPerson(person);
+		accountRepo.save(account);
+		
+		return personResult;
 	}
 	
 	public List<Person> findAll(){
@@ -58,8 +70,19 @@ public class PersonService {
 		personRepo.save(person);
 	}
 	
-	public void delete(String document) {
+	public void delete(String document, String email) {
+		
+		Account account = accountRepo.findByEmail(email);
+		
+		account.setPerson(null);
+		
+		accountRepo.save(account);
+		
 		Person personToDelete = personRepo.findByDocument(document);
+		personToDelete.setAccounts(null);
+		
+		personRepo.save(personToDelete);
+		
 		personRepo.delete(personToDelete);
 	}
 

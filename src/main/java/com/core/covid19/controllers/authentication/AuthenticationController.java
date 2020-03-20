@@ -36,8 +36,7 @@ public class AuthenticationController {
 			authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword())
 			);
-		}
-		catch (BadCredentialsException e) {
+		} catch (BadCredentialsException e) {
 			throw new Exception("Usuario o contraseña incorrectos.", e);
 		}
 

@@ -33,13 +33,13 @@ public class Account implements Serializable {
 	private String password;
 
 	//bi-directional many-to-one association to Person
-	@ManyToOne//(fetch=FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name="person_id")
 	@JsonIgnoreProperties("accounts")
 	private Person person;
 
 	//bi-directional many-to-one association to Role
-	@ManyToOne//(fetch=FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name="role_id")
 	@JsonIgnoreProperties("accounts")
 	private Role role;

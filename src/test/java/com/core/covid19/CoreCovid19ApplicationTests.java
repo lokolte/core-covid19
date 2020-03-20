@@ -35,23 +35,25 @@ class CoreCovid19ApplicationTests {
 	@Autowired
 	private StatusRepo statusRepo;
 	
-	@Autowired
-	private CustomUserDetailService customUserDetailService;
+//	@Autowired
+//	private CustomUserDetailService customUserDetailService;
 	
-	@Autowired
-	private JwtUtil jwtUtil;
+//	@Autowired
+//	private JwtUtil jwtUtil;
 	
 	//@Autowired
 	//private BCryptPasswordEncoder bcrypt;
 
 //	@Test
 //	void createAccountTest() {
-//		Account account = accauntRepo.findByEmail("jaaguilarmeza@gmail.com");
-//		account.setPassword("password"); //bcrypt.encode("password"));
+//		Account account = accountRepo.findByEmail("jaaguilarmeza@gmail.com");
+//		//account.setPassword("password"); //bcrypt.encode("password"));
 //		
-//		Account account2 = accauntRepo.save(account);
+//		System.out.println("################### user details: " + customUserDetailService.loadUserByUsername(""));
 //		
-//		assert(account.getPassword().equals(account2.getPassword()));
+//		Account account2 = accountRepo.save(account);
+//		
+//		//assert(account.getPassword().equals(account2.getPassword()));
 //	}
 	
 	@Test
@@ -64,7 +66,7 @@ class CoreCovid19ApplicationTests {
 				
 		Location loc = locationRepo.save(location);
 		
-		accountRepo.findByEmail("asdf@gmail.com");
+		accountRepo.findByEmail("test@gmail.com");
 		
 		Status status = statusRepo.findByName(PersonStatus.HEALTHY.toString());
 		
@@ -73,7 +75,7 @@ class CoreCovid19ApplicationTests {
 		person.setLocation(location);
 		person.setStatus(status);
 		
-		person.setDocument("123");
+		person.setDocument("1");
 		person.setName("fulano");
 		person.setLastname("De Tal");
 		person.setPhone("0985123456");
@@ -81,7 +83,7 @@ class CoreCovid19ApplicationTests {
 		
 		personRepo.save(person);
 		
-		Person b = personRepo.findByDocument("123");
+		Person b = personRepo.findByDocument("1");
 		
 		//System.out.println("############### get person: " + b.getName() + " " + b.getLastname());
 		
@@ -91,7 +93,7 @@ class CoreCovid19ApplicationTests {
 		
 		personRepo.delete(person);
 		
-		Person c = personRepo.findByDocument("123");
+		Person c = personRepo.findByDocument("1");
 		
 		//System.out.println("############### assert null: " + (c == null));
 		

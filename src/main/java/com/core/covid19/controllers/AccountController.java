@@ -14,38 +14,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.core.covid19.models.entities.Account;
-import com.core.covid19.repos.AccountRepo;
+import com.core.covid19.models.requests.AccountRequest;
+import com.core.covid19.services.AccountService;
 
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
 
 	@Autowired
-	private AccountRepo accountRepo;
+	private AccountService accountService;
 	
 	@GetMapping
 	public List<Account> list(){
-		return accountRepo.findAll();
+		return accountService.findAll();
 	}
 	
 	@GetMapping(value = "/{id}")
 	public Optional<Account> get(@PathVariable("id") Integer id){
-		return accountRepo.findById(id);
+		return accountService.findById(id);
 	}
 
 	@PostMapping(value = "/singup")
-	public void insert(@RequestBody Account account){
-		accountRepo.save(account);
+	public void insert(@RequestBody AccountRequest accountRequest){
+		accountService.insert(accountRequest);
 	}
 	
 	@PutMapping
-	public void modify(@RequestBody Account account){
-		accountRepo.save(account);
+	public Account modify(@RequestBody AccountRequest accountRequest){
+		return accountService.modify(accountRequest);
 	}
 	
-	@DeleteMapping(value = "/{id}")
-	public void delete(@PathVariable("id") Integer id) {
-		accountRepo.deleteById(id);
+	@DeleteMapping(value = "/{email}")
+	public void delete(@PathVariable("email") String email) {
+		accountService.deleteById(email);
 	}
 
 }
