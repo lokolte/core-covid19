@@ -9,7 +9,7 @@ public class AccountRequest implements Serializable {
 
 	private String password;
 
-	private RoleRequest roleRequest;
+	private RoleRequest role;
 
 	public String getEmail() {
 		return email;
@@ -28,10 +28,10 @@ public class AccountRequest implements Serializable {
 	}
 
 	public RoleRequest getRole() {
-		return roleRequest;
+		return role;
 	}
 
-	public void setRole(RoleRequest roleRequest) {
-		this.roleRequest = roleRequest;
+	public void setRole(RoleRequest role) {
+		this.role = role;
 	}
 }
