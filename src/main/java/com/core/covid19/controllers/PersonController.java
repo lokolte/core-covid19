@@ -45,7 +45,7 @@ public class PersonController {
 	
 	@PutMapping
 	public void modify(@RequestBody Person person){
-		personService.save(person);
+		personService.modify(person);
 	}
 	
 	@DeleteMapping
