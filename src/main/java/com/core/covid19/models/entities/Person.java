@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -49,15 +50,22 @@ public class Person implements Serializable {
 	@EqualsAndHashCode.Exclude
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private List<Account> accounts;
+	
+	@ManyToMany
+	@JoinTable(name = "person_forms",
+	joinColumns = @JoinColumn(name = "person_id"), 
+	inverseJoinColumns = @JoinColumn(name = "form_id"))
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private Set<Form> personForms;
 
 	//bi-directional many-to-one association to Location
-	@ManyToOne//(fetch=FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name="location", nullable=false)
 	@JsonIgnoreProperties("persons")
 	private Location location;
 
 	//bi-directional many-to-one association to Status
-	@ManyToOne//(fetch=FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name="status", nullable=false)
 	@JsonIgnoreProperties("persons")
 	private Status status;
@@ -66,7 +74,7 @@ public class Person implements Serializable {
 	}
 
 	public Integer getId() {
-		return this.id;
+		return id;
 	}
 
 	public void setId(Integer id) {
@@ -74,7 +82,7 @@ public class Person implements Serializable {
 	}
 
 	public String getDocument() {
-		return this.document;
+		return document;
 	}
 
 	public void setDocument(String document) {
@@ -82,15 +90,15 @@ public class Person implements Serializable {
 	}
 
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getLastname() {
-		return this.lastname;
+		return lastname;
 	}
 
 	public void setLastname(String lastname) {
@@ -98,7 +106,7 @@ public class Person implements Serializable {
 	}
 
 	public String getPhone() {
-		return this.phone;
+		return phone;
 	}
 
 	public void setPhone(String phone) {
@@ -106,7 +114,7 @@ public class Person implements Serializable {
 	}
 
 	public String getSex() {
-		return this.sex;
+		return sex;
 	}
 
 	public void setSex(String sex) {
@@ -114,41 +122,38 @@ public class Person implements Serializable {
 	}
 
 	public List<Account> getAccounts() {
-		return this.accounts;
+		return accounts;
 	}
 
 	public void setAccounts(List<Account> accounts) {
 		this.accounts = accounts;
 	}
 
-	public Account addAccount(Account account) {
-		getAccounts().add(account);
-		account.setPerson(this);
-
-		return account;
+	public Set<Form> getPersonForms() {
+		return personForms;
 	}
 
-	public Account removeAccount(Account account) {
-		getAccounts().remove(account);
-		account.setPerson(null);
-
-		return account;
+	public void setPersonForms(Set<Form> personForms) {
+		this.personForms = personForms;
 	}
 
 	public Location getLocation() {
-		return this.location;
+		return location;
 	}
 
-	public void setLocation(Location locationBean) {
-		this.location = locationBean;
+	public void setLocation(Location location) {
+		this.location = location;
 	}
 
 	public Status getStatus() {
-		return this.status;
+		return status;
 	}
 
-	public void setStatus(Status statusBean) {
-		this.status = statusBean;
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 }

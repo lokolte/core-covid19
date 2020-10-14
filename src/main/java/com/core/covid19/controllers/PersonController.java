@@ -33,12 +33,12 @@ public class PersonController {
 		return personService.findAll();
 	}
 	
-	@GetMapping(value = "/{document}")
-	public Person get(@PathVariable("document") String document){
-		return personService.findByDocument(document);
+	@GetMapping(value="/my")
+	public Person get(@RequestHeader("Authorization") String authorization){
+		return personService.findByEmail(jwtUtil.getEmailFromJwtToken(authorization));
 	}
 
-	@PostMapping()
+	@PostMapping
 	public Person insert(@RequestHeader("Authorization") String authorization, @RequestBody PersonRequest personRequest){
 		return personService.insert(personRequest, jwtUtil.getEmailFromJwtToken(authorization));
 	}

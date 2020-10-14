@@ -55,7 +55,7 @@ class CoreCovid19ApplicationTests {
 //		
 //		//assert(account.getPassword().equals(account2.getPassword()));
 //	}
-	
+	/*
 	@Test
 	void deletePersonTest() {
 		
@@ -99,12 +99,12 @@ class CoreCovid19ApplicationTests {
 		
 		assert(c == null);
 	}
-	
-	@Test
-	void verifyRoleTest() {
-		
-		assert(ClaimsTypes.ROLE.toString().equals("ROLE"));
-	}
+	*/
+//	@Test
+//	void verifyRoleTest() {
+//		
+//		assert(ClaimsTypes.ROLE.toString().equals("ROLE"));
+//	}
 	
 //	@Test
 //	void verifyTokenTest() {

@@ -34,7 +34,7 @@ public class AccountController {
 		return accountService.findById(id);
 	}
 
-	@PostMapping(value = "/singup")
+	@PostMapping(value = "/signup")
 	public void insert(@RequestBody AccountRequest accountRequest){
 		accountService.insert(accountRequest);
 	}

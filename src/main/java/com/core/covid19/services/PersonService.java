@@ -17,6 +17,7 @@ import com.core.covid19.repos.ContactRepo;
 import com.core.covid19.repos.LocationRepo;
 import com.core.covid19.repos.PersonRepo;
 import com.core.covid19.repos.StatusRepo;
+import com.core.covid19.services.FormService;
 
 @Service
 public class PersonService {
@@ -35,6 +36,9 @@ public class PersonService {
 
 	@Autowired
 	private ContactRepo contactRepo;
+	
+	@Autowired
+	private FormService formService;
 
 	public Person insert(PersonRequest personRequest, String email) {
 		Location location = new Location();
@@ -55,6 +59,7 @@ public class PersonService {
 		person.setSex(personRequest.getSex());
 		person.setLocation(locationStored);
 		person.setStatus(status);
+		person.setPersonForms(formService.getDefaultForms()); //agregar formularios a la persona
 
 		Person personResult = personRepo.save(person);
 
@@ -68,8 +73,8 @@ public class PersonService {
 		return personRepo.findAll();
 	}
 
-	public Person findByDocument(String document) {
-		return personRepo.findByDocument(document);
+	public Person findByEmail(String email) {
+		return accountRepo.findByEmail(email).getPerson();
 	}
 
 	public void modify(Person person) {
