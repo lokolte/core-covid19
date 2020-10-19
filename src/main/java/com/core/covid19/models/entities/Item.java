@@ -19,7 +19,7 @@ import java.util.Set;
 @Table(name="item")
 @Data
 @NamedQuery(name="Item.findAll", query="SELECT i FROM Item i")
-public class Item implements Serializable {
+public class Item implements Serializable, Comparable<Item> {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -55,6 +55,11 @@ public class Item implements Serializable {
 	private Set<ItemsAnswer> answers;
 
 	public Item() {
+	}
+	
+	@Override
+	public int compareTo(Item i){
+		return this.getId().compareTo(i.getId());
 	}
 
 	public Integer getId() {

@@ -37,6 +37,8 @@ public class Form implements Serializable {
 	@JoinTable(name = "form_items",
 	joinColumns = @JoinColumn(name = "form_id"), 
 	inverseJoinColumns = @JoinColumn(name = "item_id"))
+	@EqualsAndHashCode.Exclude
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Set<Item> itemsForm;
 	
 	@ManyToMany(mappedBy = "personForms")
