@@ -6,8 +6,10 @@ import java.sql.Timestamp;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Set;
 
@@ -34,9 +36,15 @@ public class Answer implements Serializable {
 	@Column(name="answer_date", nullable=false)
 	private Timestamp answerDate;
 
+	@ManyToMany(mappedBy = "personAnswers")
+	@JsonIgnoreProperties("personAnswers")
+	@EqualsAndHashCode.Exclude
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private Set<Person> answerPersons;
+
 	@OneToMany(mappedBy = "answer")
 	@JsonIgnoreProperties("answer")
-	Set<ItemsAnswer> itemsAnswered;
+	private Set<ItemsAnswer> answers;
 
 	public Answer() {
 	}
@@ -57,16 +65,27 @@ public class Answer implements Serializable {
 		this.form = form;
 	}
 
-	public Set<ItemsAnswer> getItemsAnswered() {
-		return itemsAnswered;
+	public Timestamp getAnswerDate() {
+		return answerDate;
 	}
 
-	public void setItemsAnswered(Set<ItemsAnswer> itemsAnswered) {
-		this.itemsAnswered = itemsAnswered;
+	public void setAnswerDate(Timestamp answerDate) {
+		this.answerDate = answerDate;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public Set<Person> getAnswerPersons() {
+		return answerPersons;
 	}
 
+	public void setAnswerPersons(Set<Person> answerPersons) {
+		this.answerPersons = answerPersons;
+	}
+
+	public Set<ItemsAnswer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(Set<ItemsAnswer> answers) {
+		this.answers = answers;
+	}
 }

@@ -1,6 +1,8 @@
 package com.core.covid19.models.entities;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -38,11 +40,17 @@ public class Person implements Serializable {
 	@Column(nullable=false, length=300)
 	private String lastname;
 
+	@Column(name="birth_date", nullable=false)
+	private Timestamp birthDate;
+
 	@Column(nullable=false, length=20)
 	private String phone;
 
 	@Column(nullable=false, length=10)
 	private String sex;
+
+	@Column(nullable=false, length=1000)
+	private String address;
 
 	//bi-directional many-to-one association to Account
 	@OneToMany(mappedBy="person")
@@ -57,6 +65,13 @@ public class Person implements Serializable {
 	inverseJoinColumns = @JoinColumn(name = "form_id"))
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Set<Form> personForms;
+
+	@ManyToMany
+	@JoinTable(name = "person_answers",
+	joinColumns = @JoinColumn(name = "person_id"), 
+	inverseJoinColumns = @JoinColumn(name = "answer_id"))
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private Set<Answer> personAnswers;
 
 	//bi-directional many-to-one association to Location
 	@ManyToOne
@@ -105,6 +120,14 @@ public class Person implements Serializable {
 		this.lastname = lastname;
 	}
 
+	public Timestamp getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(Timestamp birthDate) {
+		this.birthDate = birthDate;
+	}
+
 	public String getPhone() {
 		return phone;
 	}
@@ -119,6 +142,14 @@ public class Person implements Serializable {
 
 	public void setSex(String sex) {
 		this.sex = sex;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public List<Account> getAccounts() {
@@ -137,6 +168,14 @@ public class Person implements Serializable {
 		this.personForms = personForms;
 	}
 
+	public Set<Answer> getPersonAnswers() {
+		return personAnswers;
+	}
+
+	public void setPersonAnswers(Set<Answer> personAnswers) {
+		this.personAnswers = personAnswers;
+	}
+
 	public Location getLocation() {
 		return location;
 	}
@@ -151,9 +190,5 @@ public class Person implements Serializable {
 
 	public void setStatus(Status status) {
 		this.status = status;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 }

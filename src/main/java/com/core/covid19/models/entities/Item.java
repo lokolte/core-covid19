@@ -36,6 +36,9 @@ public class Item implements Serializable, Comparable<Item> {
 	@Column(nullable=false, length=20)
 	private String type;
 
+	@Column(name="order_level", nullable=false)
+	private Integer orderLevel;
+
 	@ManyToMany
 	@JoinTable(name = "item_options",
 	joinColumns = @JoinColumn(name = "item_id"), 
@@ -59,7 +62,7 @@ public class Item implements Serializable, Comparable<Item> {
 	
 	@Override
 	public int compareTo(Item i){
-		return this.getId().compareTo(i.getId());
+		return this.getOrderLevel().compareTo(i.getOrderLevel());
 	}
 
 	public Integer getId() {
@@ -92,6 +95,14 @@ public class Item implements Serializable, Comparable<Item> {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public Integer getOrderLevel() {
+		return orderLevel;
+	}
+
+	public void setOrderLevel(Integer orderLevel) {
+		this.orderLevel = orderLevel;
 	}
 
 	public Set<Option> getOptionsItem() {

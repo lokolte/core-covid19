@@ -3,9 +3,6 @@ package com.core.covid19.models.responses;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.Column;
-
-import com.core.covid19.models.entities.Form;
 import com.core.covid19.models.entities.Item;
 
 public class FormItemResponse implements Serializable, Comparable<FormItemResponse> {
@@ -17,19 +14,22 @@ public class FormItemResponse implements Serializable, Comparable<FormItemRespon
 	private final String title;
 
 	private final String subtitle;
+	
+	private final Integer order;
 
 	private final List<Item> itemsForm;
 
-    public FormItemResponse(Integer id, String title, String subtitle, List<Item> itemsForm) {
+    public FormItemResponse(Integer id, String title, String subtitle, Integer order, List<Item> itemsForm) {
     	this.id = id;
     	this.title = title;
     	this.subtitle = subtitle;
+    	this.order = order;
         this.itemsForm = itemsForm;
     }
 
 	@Override
 	public int compareTo(FormItemResponse fir){
-		return this.getId().compareTo(fir.getId());
+		return this.getOrder().compareTo(fir.getOrder());
 	}
 
 	public Integer getId() {
@@ -42,6 +42,10 @@ public class FormItemResponse implements Serializable, Comparable<FormItemRespon
 
 	public String getSubtitle() {
 		return subtitle;
+	}
+
+	public Integer getOrder() {
+		return order;
 	}
 
 	public List<Item> getItemsForm() {

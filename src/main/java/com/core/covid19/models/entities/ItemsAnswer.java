@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,19 +32,15 @@ public class ItemsAnswer implements Serializable {
 
 	@ManyToOne
     @JoinColumn(name = "answer_id")
-	@JsonIgnoreProperties("itemsAnswered")
+	@JsonIgnoreProperties("answers")
 	@EqualsAndHashCode.Exclude
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     Answer answer;
 
     @ManyToOne
     @JoinColumn(name = "item_id")
     @JsonIgnoreProperties({"forms","answers"})
     Item item;
-    
-    @ManyToOne
-    @JoinColumn(name = "option_id")
-    @JsonIgnoreProperties("items")
-    Option optionAnswered;
 
 	public ItemsAnswer() {
 	}
@@ -79,17 +76,4 @@ public class ItemsAnswer implements Serializable {
 	public void setItem(Item item) {
 		this.item = item;
 	}
-
-	public Option getOptionAnswered() {
-		return optionAnswered;
-	}
-
-	public void setOptionAnswered(Option optionAnswered) {
-		this.optionAnswered = optionAnswered;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 }

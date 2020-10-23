@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -36,6 +35,9 @@ public class Option implements Serializable {
 	
 	@Column(nullable=false, length=20)
 	private String type;
+	
+	@Column(name="order_level", nullable=false)
+	private Integer orderLevel;
 	
 	@ManyToMany(mappedBy = "optionsItem")
 	@JsonIgnoreProperties("optionsItem")
@@ -76,6 +78,14 @@ public class Option implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public Integer getOrderLevel() {
+		return orderLevel;
+	}
+
+	public void setOrderLevel(Integer orderLevel) {
+		this.orderLevel = orderLevel;
 	}
 
 	public Set<Item> getOptionItems() {

@@ -33,6 +33,9 @@ public class Form implements Serializable {
 	@Column(nullable=true, length=1500)
 	private String subtitle;
 
+	@Column(name="order_level", nullable=false)
+	private Integer orderLevel;
+
 	@ManyToMany
 	@JoinTable(name = "form_items",
 	joinColumns = @JoinColumn(name = "form_id"), 
@@ -40,7 +43,7 @@ public class Form implements Serializable {
 	@EqualsAndHashCode.Exclude
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Set<Item> itemsForm;
-	
+
 	@ManyToMany(mappedBy = "personForms")
 	@JsonIgnoreProperties("personForms")
 	@EqualsAndHashCode.Exclude
@@ -72,6 +75,14 @@ public class Form implements Serializable {
 
 	public void setSubtitle(String subtitle) {
 		this.subtitle = subtitle;
+	}
+
+	public Integer getOrderLevel() {
+		return orderLevel;
+	}
+
+	public void setOrderLevel(Integer orderLevel) {
+		this.orderLevel = orderLevel;
 	}
 
 	public Set<Item> getItemsForm() {

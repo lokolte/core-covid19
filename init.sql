@@ -18,8 +18,8 @@ INSERT INTO public.status(id, name)
 INSERT INTO public.location(id, latitude, longitude)
 	VALUES (1, -25.326650, -57.559925);
 	
-INSERT INTO public.person(id, document, name, lastname, phone, sex, location, status)
-	VALUES (1, '4204613', 'Jesus', 'Aguilar', '0982912326', 'MASCULINO', 1, 1);
+INSERT INTO public.person(id, document, name, lastname, birth_date, phone, sex, address, location, status)
+	VALUES (1, '4204613', 'Jesus', 'Aguilar', now(), '0982912326', 'MASCULINO', 'Juan de Garay 1634', 1, 1);
 
 INSERT INTO public.account(id, email, password, person_id, role_id)
 	VALUES (1, 'jaaguilarmeza@gmail.com', 'l0k0lte.', 1, 3);
@@ -28,8 +28,8 @@ INSERT INTO public.account(id, email, password, person_id, role_id)
 INSERT INTO public.location(id, latitude, longitude)
 	VALUES (2, -25.342138, -57.511109);
 	
-INSERT INTO public.person(id, document, name, lastname, phone, sex, location, status)
-	VALUES (2, '4653346', 'Juan', 'Duarte', '0961849365', 'FEMENINO', 2, 1);
+INSERT INTO public.person(id, document, name, lastname, birth_date, phone, sex, address, location, status)
+	VALUES (2, '4653346', 'Veronica', 'Gayoso', now(), '0981719893', 'FEMENINO', 'Juan de Garay 1634', 2, 1);
 
 INSERT INTO public.account(id, email, password, person_id, role_id)
 	VALUES (2, 'vritogayoso@gmail.com', 'vrito', 2, 1);
@@ -45,38 +45,37 @@ INSERT INTO public.contact(
 ///// para formularios
 // FORMULARIO DE SINTOMAS
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (1, 'Marquelo si posee actualmente temperatura superior a 38 grados.', '¿Tienes fiebre?', 'CHECK');
+	id, subtitle, title, type, order_level)
+	VALUES (1, 'Marquelo si posee actualmente temperatura superior a 38 grados.', '¿Tienes fiebre?', 'CHECK', 1);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (2, 'Marquelo si no puede parar de toser.', '¿Tiene tos?', 'CHECK');
+	id, subtitle, title, type, order_level)
+	VALUES (2, 'Marquelo si no puede parar de toser.', '¿Tiene tos?', 'CHECK', 2);
 	
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (3, 'Sensación de falta de aire o de respiración incómoda.', '¿Tiene dificultad para respirar?', 'CHECK');
+	id, subtitle, title, type, order_level)
+	VALUES (3, 'Sensación de falta de aire o de respiración incómoda.', '¿Tiene dificultad para respirar?', 'CHECK', 3);
 	
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (4, 'Sensación de falta de aire o de respiración incómoda.', '¿Tiene dificultad para respirar?', 'CHECK');
-	
-INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (5, 'Sólo se consideran viajes.', '¿Viajó a un lugar con transición local o comunitaria 14 dias antes de presentar síntomas?', 'CHECK');
+	id, subtitle, title, type, order_level)
+	VALUES (4, 'Sólo se consideran viajes.', '¿Viajó a un lugar con transición local o comunitaria 14 dias antes de presentar síntomas?', 'CHECK', 4);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (6, 'Considere el contacto cercano, como: a 2 metros de distancia, la misma habitación o área (por ejemplo un avión), cuidar, vivir o visitar a una persona, incluso en una sala de atención médica, sin uso de equipo de protección personal.', '¿Tuvo contacto cercano con un caso sospechoso de COVID-19 14 días antes de los síntomas?', 'CHECK');
+	id, subtitle, title, type, order_level)
+	VALUES (5, 'Considere el contacto cercano, como: a 2 metros de distancia, la misma habitación o área (por ejemplo un avión), cuidar, vivir o visitar a una persona, incluso en una sala de atención médica, sin uso de equipo de protección personal.', '¿Tuvo contacto cercano con un caso sospechoso de COVID-19 14 días antes de los síntomas?', 'CHECK', 5);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (7, 'Considere el contacto cercano, como: a 2 metros de distancia, la misma habitación o área (por ejemplo un avión), cuidar, vivir o visitar a una persona, incluso en una sala de atención médica, sin uso de equipo de protección personal.', '¿Tuvo contacto cercano con un caso CONFIRMADO de COVID-19 14 días antes de los síntomas?', 'CHECK');
+	id, subtitle, title, type, order_level)
+	VALUES (6, 'Considere el contacto cercano, como: a 2 metros de distancia, la misma habitación o área (por ejemplo un avión), cuidar, vivir o visitar a una persona, incluso en una sala de atención médica, sin uso de equipo de protección personal.', '¿Tuvo contacto cercano con un caso CONFIRMADO de COVID-19 14 días antes de los síntomas?', 'CHECK', 6);
+
+INSERT INTO public.item(
+	id, subtitle, title, type, order_level)
+	VALUES (7, 'Debe marcar la opción sólo si se ha realizado el hisopado.', '¿Se ha hecho la prueba del COVID-19?', 'CHECK', 7);
 
 
 INSERT INTO public.form(
-	id, subtitle, title)
-	VALUES (1, 'Debe ingresar los síntomas de las últimas 24hs.', 'Formulario de síntomas');
-	
+	id, subtitle, title, order_level)
+	VALUES (1, 'Debe ingresar los síntomas de las últimas 24hs.', 'Formulario de síntomas', 1);
 	
 INSERT INTO public.form_items(
 	form_id, item_id)
@@ -110,70 +109,68 @@ INSERT INTO public.form_items(
 INSERT INTO public.person_forms(
 	person_id, form_id)
 	VALUES (1, 1);
-	
 
 // FORMULARIO PARA ENFERMEDADES BASE
+INSERT INTO public.item(
+	id, subtitle, title, type, order_level)
+	VALUES (8, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Problema del corazón', 'INPUT_TEXT', 1);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (8, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Problema del corazón', 'INPUT_TEXT');
+	id, subtitle, title, type, order_level)
+	VALUES (9, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Problema renal', 'INPUT_TEXT', 2);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (9, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Problema renal', 'INPUT_TEXT');
+	id, subtitle, title, type, order_level)
+	VALUES (10, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Hipertensión arterial', 'INPUT_TEXT', 3);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (10, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Hipertensión arterial', 'INPUT_TEXT');
+	id, subtitle, title, type, order_level)
+	VALUES (11, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Problema de tiroides', 'INPUT_TEXT', 4);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (11, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Problema de tiroides', 'INPUT_TEXT');
+	id, subtitle, title, type, order_level)
+	VALUES (12, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Diabetes tipo 1', 'INPUT_TEXT', 5);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (12, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Diabetes tipo 1', 'INPUT_TEXT');
+	id, subtitle, title, type, order_level)
+	VALUES (13, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Diabetes tipo 2', 'INPUT_TEXT', 6);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (13, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Diabetes tipo 2', 'INPUT_TEXT');
+	id, subtitle, title, type, order_level)
+	VALUES (14, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Diabetes gestacional', 'INPUT_TEXT', 7);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (14, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Diabetes gestacional', 'INPUT_TEXT');
+	id, subtitle, title, type, order_level)
+	VALUES (15, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Problemas pulmonares', 'INPUT_TEXT', 8);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (15, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Problemas pulmonares', 'INPUT_TEXT');
+	id, subtitle, title, type, order_level)
+	VALUES (16, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Asma / Rinitis', 'INPUT_TEXT', 9);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (16, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Asma / Rinitis', 'INPUT_TEXT');
+	id, subtitle, title, type, order_level)
+	VALUES (17, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Problemas reumatólogos', 'INPUT_TEXT', 10);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (17, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Problemas reumatólogos', 'INPUT_TEXT');
+	id, subtitle, title, type, order_level)
+	VALUES (18, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Problemas de autoinmunidad', 'INPUT_TEXT', 11);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (18, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Problemas de autoinmunidad', 'INPUT_TEXT');
+	id, subtitle, title, type, order_level)
+	VALUES (19, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'HIV / Sida', 'INPUT_TEXT', 12);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (19, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'HIV / Sida', 'INPUT_TEXT');
+	id, subtitle, title, type, order_level)
+	VALUES (20, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Cáncer', 'INPUT_TEXT', 13);
 
 INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (20, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Cáncer', 'INPUT_TEXT');
-
-INSERT INTO public.item(
-	id, subtitle, title, type)
-	VALUES (21, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Otros (especificar)', 'INPUT_TEXT');
+	id, subtitle, title, type, order_level)
+	VALUES (21, '¿Usted sufre de esta enfermedad? (en caso afirmativo, seleccione y complete la medicación y dósis que utiliza).', 'Otros (especificar)', 'INPUT_TEXT', 14);
 	
 
 INSERT INTO public.form(
-	id, subtitle, title)
-	VALUES (2, 'Debe ingresar las enfermedades base que posee.', 'Formulario de Enfermedades Base');
+	id, subtitle, title, order_level)
+	VALUES (2, 'Debe ingresar las enfermedades base que posee.', 'Formulario de Enfermedades Base', 2);
 	
 INSERT INTO public.form_items(
 	form_id, item_id)
@@ -235,3 +232,40 @@ INSERT INTO public.form_items(
 INSERT INTO public.person_forms(
 	person_id, form_id)
 	VALUES (1, 2);
+	
+
+// FORMULARIO HOSPITALARIO
+INSERT INTO public.item(
+	id, subtitle, title, type, order_level)
+	VALUES (22, 'En caso afirmativo, especifique donde y la medicación otorgada en dicha consulta.', '¿Ha consultado con algún médico?', 'INPUT_TEXT', 1);
+
+INSERT INTO public.item(
+	id, subtitle, title, type, order_level)
+	VALUES (23, 'En caso afirmativo, especifique donde y la medicación.', '¿Retira medicamentos de algún lugar habitualmente?', 'INPUT_TEXT', 2);
+
+INSERT INTO public.item(
+	id, subtitle, title, type, order_level)
+	VALUES (24, 'Especifique.', '¿Cómo se llama el Hospital público, Centro de Salud o Atención Primaria de Salud que le queda más cerca de su casa?', 'INPUT_TEXT', 3);
+
+INSERT INTO public.form(
+	id, subtitle, title, order_level)
+	VALUES (3, 'Debe ingresar los datos hospitalarios.', 'Formulario Hospitalario', 3);
+
+INSERT INTO public.form_items(
+	form_id, item_id)
+	VALUES (3, 22);
+	
+INSERT INTO public.form_items(
+	form_id, item_id)
+	VALUES (3, 23);
+	
+INSERT INTO public.form_items(
+	form_id, item_id)
+	VALUES (3, 24);
+
+	
+INSERT INTO public.person_forms(
+	person_id, form_id)
+	VALUES (1, 3);
+	
+	
