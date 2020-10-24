@@ -29,8 +29,10 @@ public class Answer implements Serializable {
 	@Column(unique=true, nullable=false)
 	private Integer id;
 
-	@Column(nullable=false, length=700)
-	@JsonIgnoreProperties("itemsForm")
+	//bi-directional many-to-one association to Person
+	@ManyToOne
+	@JoinColumn(name="form_id")
+	@JsonIgnoreProperties({"itemsForm", "answers"})
 	private Form form;
 
 	@Column(name="answer_date", nullable=false)

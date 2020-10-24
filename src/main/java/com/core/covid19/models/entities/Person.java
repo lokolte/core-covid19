@@ -57,7 +57,7 @@ public class Person implements Serializable {
 	@JsonIgnoreProperties("person")
 	@EqualsAndHashCode.Exclude
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private List<Account> accounts;
+	private Set<Account> accounts;
 	
 	@ManyToMany
 	@JoinTable(name = "person_forms",
@@ -152,11 +152,11 @@ public class Person implements Serializable {
 		this.address = address;
 	}
 
-	public List<Account> getAccounts() {
+	public Set<Account> getAccounts() {
 		return accounts;
 	}
 
-	public void setAccounts(List<Account> accounts) {
+	public void setAccounts(Set<Account> accounts) {
 		this.accounts = accounts;
 	}
 

@@ -15,21 +15,25 @@ public class FormItemResponse implements Serializable, Comparable<FormItemRespon
 
 	private final String subtitle;
 	
-	private final Integer order;
+	private final Integer orderLevel;
 
 	private final List<Item> itemsForm;
 
-    public FormItemResponse(Integer id, String title, String subtitle, Integer order, List<Item> itemsForm) {
+    public FormItemResponse(Integer id, String title, String subtitle, Integer orderLevel, List<Item> itemsForm) {
     	this.id = id;
     	this.title = title;
     	this.subtitle = subtitle;
-    	this.order = order;
+    	this.orderLevel = orderLevel;
         this.itemsForm = itemsForm;
     }
 
 	@Override
 	public int compareTo(FormItemResponse fir){
-		return this.getOrder().compareTo(fir.getOrder());
+		return this.getOrderLevel().compareTo(fir.getOrderLevel());
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	public Integer getId() {
@@ -44,8 +48,8 @@ public class FormItemResponse implements Serializable, Comparable<FormItemRespon
 		return subtitle;
 	}
 
-	public Integer getOrder() {
-		return order;
+	public Integer getOrderLevel() {
+		return orderLevel;
 	}
 
 	public List<Item> getItemsForm() {

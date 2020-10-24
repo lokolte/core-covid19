@@ -35,8 +35,8 @@ public class AccountController {
 	}
 
 	@PostMapping(value = "/signup")
-	public void insert(@RequestBody AccountRequest accountRequest){
-		accountService.insert(accountRequest);
+	public Account insert(@RequestBody AccountRequest accountRequest){
+		return accountService.insert(accountRequest);
 	}
 	
 	@PutMapping

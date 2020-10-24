@@ -9,8 +9,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Set;
-
 /**
  * The persistent class for the contact database table.
  * 
@@ -28,19 +26,19 @@ public class ItemsAnswer implements Serializable {
 	private Integer id;
 
 	@Column(nullable=true, length=1500)
-	private String answer_text;
+	private String answerText;
 
 	@ManyToOne
     @JoinColumn(name = "answer_id")
 	@JsonIgnoreProperties("answers")
 	@EqualsAndHashCode.Exclude
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    Answer answer;
+    private Answer answer;
 
     @ManyToOne
     @JoinColumn(name = "item_id")
     @JsonIgnoreProperties({"forms","answers"})
-    Item item;
+    private Item item;
 
 	public ItemsAnswer() {
 	}
@@ -53,12 +51,12 @@ public class ItemsAnswer implements Serializable {
 		this.id = id;
 	}
 
-	public String getAnswer_text() {
-		return answer_text;
+	public String getAnswerText() {
+		return answerText;
 	}
 
-	public void setAnswer_text(String answer_text) {
-		this.answer_text = answer_text;
+	public void setAnswerText(String answerText) {
+		this.answerText = answerText;
 	}
 
 	public Answer getAnswer() {

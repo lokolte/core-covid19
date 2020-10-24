@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -49,6 +50,13 @@ public class Form implements Serializable {
 	@EqualsAndHashCode.Exclude
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Set<Person> formPersons;
+
+	//bi-directional many-to-one association to Account
+	@OneToMany(mappedBy="form")
+	@JsonIgnoreProperties("form")
+	@EqualsAndHashCode.Exclude
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private Set<Answer> answers;
 
 	public Form() {
 	}
@@ -99,6 +107,14 @@ public class Form implements Serializable {
 
 	public void setFormPersons(Set<Person> formPersons) {
 		this.formPersons = formPersons;
+	}
+
+	public Set<Answer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(Set<Answer> answers) {
+		this.answers = answers;
 	}
 
 	public static long getSerialversionuid() {
