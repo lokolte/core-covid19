@@ -11,6 +11,7 @@ import com.core.covid19.models.entities.Account;
 import com.core.covid19.models.entities.Hospital;
 import com.core.covid19.models.entities.Location;
 import com.core.covid19.models.entities.location.HospitalDistance;
+import com.core.covid19.models.responses.HospitalsResponse;
 import com.core.covid19.repos.AccountRepo;
 import com.core.covid19.repos.HospitalRepo;
 
@@ -24,7 +25,7 @@ public class HospitalService {
 	
 	private Integer maxHospitals = 2;
 
-	public List<Hospital> getTenCloser(String email) {
+	public HospitalsResponse getTenCloser(String email) {
 		Account account = accountRepo.findByEmail(email);
 
 		List<Hospital> hospitals = hospitalRepo.findAll();
@@ -36,7 +37,7 @@ public class HospitalService {
 
 		hospitalsDistance = hospitalsDistance.stream().sorted().collect(Collectors.toList());
 
-		return tenClosers(hospitalsDistance);
+		return new HospitalsResponse(account.getPerson(), tenClosers(hospitalsDistance));
 	}
 
 	private List<Hospital> tenClosers(List<HospitalDistance> closers) {
