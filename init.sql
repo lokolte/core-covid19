@@ -268,4 +268,28 @@ INSERT INTO public.person_forms(
 	person_id, form_id)
 	VALUES (1, 3);
 	
+//FOR HOSPITALS
+INSERT INTO public.location(
+	id, latitude, longitude)
+	VALUES (4, -25.324497, -57.561438);
+
+INSERT INTO public.location(
+	id, latitude, longitude)
+	VALUES (5, -25.324274, -57.557479);
+
+INSERT INTO public.location(
+	id, latitude, longitude)
+	VALUES (6, -25.322431, -57.553745);
+
+
+INSERT INTO public.hospital(
+	id, address, name, location)
+	VALUES (1, 'Fernando de la mora A', 'Hospital A', 4);
 	
+INSERT INTO public.hospital(
+	id, address, name, location)
+	VALUES (2, 'Fernando de la mora B', 'Hospital B', 5);
+	
+INSERT INTO public.hospital(
+	id, address, name, location)
+	VALUES (3, 'Fernando de la mora C', 'Hospital C', 6);

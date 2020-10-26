@@ -48,6 +48,13 @@ public class Location implements Serializable {
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private List<Person> persons;
 
+	//bi-directional many-to-one association to Person
+	@OneToMany(mappedBy="location")
+	@JsonIgnoreProperties("location")
+	@EqualsAndHashCode.Exclude
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private List<Hospital> hospitals;
+
 	public Location() {
 	}
 
@@ -119,4 +126,25 @@ public class Location implements Serializable {
 		return person;
 	}
 
+	public List<Hospital> getHospitals() {
+		return this.hospitals;
+	}
+
+	public void setHospitals(List<Hospital> hospitals) {
+		this.hospitals = hospitals;
+	}
+
+	public Hospital addHospital(Hospital hospital) {
+		getHospitals().add(hospital);
+		hospital.setLocation(this);
+
+		return hospital;
+	}
+
+	public Hospital removeHospital(Hospital hospital) {
+		getHospitals().remove(hospital);
+		hospital.setLocation(null);
+
+		return hospital;
+	}
 }

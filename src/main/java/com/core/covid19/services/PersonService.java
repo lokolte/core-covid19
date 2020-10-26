@@ -77,7 +77,7 @@ public class PersonService {
 		return accountRepo.findByEmail(email).getPerson();
 	}
 
-	public void modify(Person person) {
+	public Person modify(Person person) {
 		if (person.getStatus().getName().equals(PersonStatus.INFECTED.toString())) {
 			List<Contact> contactsAsContactor = contactRepo.findByPersonId1(person.getId());
 			List<Contact> contactsAsContacted = contactRepo.findByPersonId2(person.getId());
@@ -107,8 +107,20 @@ public class PersonService {
 
 			person.setStatus(statusInfected);
 		}
+		
+		Person personRecovered = personRepo.findByDocument(person.getDocument());
+		
+		personRecovered.setDocument(person.getDocument());
+		personRecovered.setName(person.getName());
+		personRecovered.setLastname(person.getLastname());
+		personRecovered.setBirthDate(person.getBirthDate());
+		personRecovered.setPhone(person.getPhone());
+		personRecovered.setSex(person.getSex());
+		personRecovered.setAddress(person.getAddress());
+		personRecovered.setLocation(person.getLocation());
+		personRecovered.setStatus(person.getStatus());
 
-		personRepo.save(person);
+		return personRepo.save(personRecovered);
 	}
 
 	public void delete(String email) {

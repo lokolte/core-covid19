@@ -14,43 +14,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.core.covid19.authentication.util.JwtUtil;
+import com.core.covid19.models.entities.Hospital;
 import com.core.covid19.models.entities.Person;
 import com.core.covid19.models.requests.PersonRequest;
+import com.core.covid19.services.HospitalService;
 import com.core.covid19.services.PersonService;
 
 @RestController
-@RequestMapping("/persons")
-public class PersonController {
-	
+@RequestMapping("/hospitals")
+public class HospitalController {
+
 	@Autowired
-	private PersonService personService;
-	
+	private HospitalService hospitalService;
+
 	@Autowired
 	private JwtUtil jwtUtil;
-	
+
 	@GetMapping
-	public List<Person> list(){
-		return personService.findAll();
+	public List<Hospital> get(@RequestHeader("Authorization") String authorization){
+		return hospitalService.getTenCloser(jwtUtil.getEmailFromJwtToken(authorization));
 	}
-	
-	@GetMapping(value="/my")
-	public Person get(@RequestHeader("Authorization") String authorization){
-		return personService.findByEmail(jwtUtil.getEmailFromJwtToken(authorization));
-	}
-
-	@PostMapping
-	public Person insert(@RequestHeader("Authorization") String authorization, @RequestBody PersonRequest personRequest){
-		return personService.insert(personRequest, jwtUtil.getEmailFromJwtToken(authorization));
-	}
-	
-	@PutMapping
-	public Person modify(@RequestBody Person person){
-		return personService.modify(person);
-	}
-	
-	@DeleteMapping
-	public void delete(@RequestHeader("Authorization") String authorization) {
-		personService.delete(jwtUtil.getEmailFromJwtToken(authorization));
-	}
-
 }
