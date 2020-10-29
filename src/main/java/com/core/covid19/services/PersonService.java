@@ -1,6 +1,7 @@
 package com.core.covid19.services;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import com.core.covid19.models.entities.Status;
 import com.core.covid19.models.enums.PersonStatus;
 import com.core.covid19.models.entities.Account;
 import com.core.covid19.models.entities.Contact;
+import com.core.covid19.models.entities.Form;
 import com.core.covid19.models.entities.Location;
 import com.core.covid19.models.entities.Person;
 import com.core.covid19.models.requests.PersonRequest;
@@ -77,7 +79,7 @@ public class PersonService {
 		return accountRepo.findByEmail(email).getPerson();
 	}
 
-	public Person modify(Person person) {
+	public Person modify(String email, Person person) {
 		if (person.getStatus().getName().equals(PersonStatus.INFECTED.toString())) {
 			List<Contact> contactsAsContactor = contactRepo.findByPersonId1(person.getId());
 			List<Contact> contactsAsContacted = contactRepo.findByPersonId2(person.getId());
@@ -107,9 +109,24 @@ public class PersonService {
 
 			person.setStatus(statusInfected);
 		}
-		
+
+		Account account = accountRepo.findByEmail(email);
+
 		Person personRecovered = personRepo.findByDocument(person.getDocument());
-		
+
+		if(personRecovered == null) {
+			Location location = new Location();
+			location.setLatitude(person.getLocation().getLatitude());
+			location.setLongitude(person.getLocation().getLongitude());
+			Location locationStored = locationRepo.save(location);
+
+			Status status = statusRepo.findByName(person.getStatus().getName());
+
+			personRecovered = new Person();
+			personRecovered.setLocation(locationStored);
+			personRecovered.setStatus(status);
+		}
+
 		personRecovered.setDocument(person.getDocument());
 		personRecovered.setName(person.getName());
 		personRecovered.setLastname(person.getLastname());
@@ -117,10 +134,21 @@ public class PersonService {
 		personRecovered.setPhone(person.getPhone());
 		personRecovered.setSex(person.getSex());
 		personRecovered.setAddress(person.getAddress());
-		personRecovered.setLocation(person.getLocation());
-		personRecovered.setStatus(person.getStatus());
 
-		return personRepo.save(personRecovered);
+		if(personRecovered.getPersonForms() == null) {
+			Set<Form> forms = formService.getDefaultForms();
+			personRecovered.setPersonForms(forms);
+		}else if(personRecovered.getPersonForms().isEmpty()) {
+			Set<Form> forms = formService.getDefaultForms();
+			for(Form form : forms) personRecovered.addForm(form);
+		}
+
+		Person personResult = personRepo.save(personRecovered);
+
+		account.setPerson(personResult);
+		accountRepo.save(account);
+
+		return personResult;
 	}
 
 	public void delete(String email) {

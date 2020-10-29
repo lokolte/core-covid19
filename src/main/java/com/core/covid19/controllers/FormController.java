@@ -20,12 +20,12 @@ public class FormController {
 	@Autowired
 	private JwtUtil jwtUtil;
 
-	@GetMapping(value="")
+	@GetMapping
 	public PersonFormsResponse listAll(@RequestHeader("Authorization") String authorization) {
 		return formService.findAllByPersonEmail(jwtUtil.getEmailFromJwtToken(authorization));
 	}
 
-	@PostMapping(value = "/{id}")
+	@PostMapping
 	public void asign(@RequestHeader("Authorization") String authorization) {
 		formService.addDefaultFormsToPerson(jwtUtil.getEmailFromJwtToken(authorization));
 	}

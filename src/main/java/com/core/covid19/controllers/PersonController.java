@@ -21,18 +21,18 @@ import com.core.covid19.services.PersonService;
 @RestController
 @RequestMapping("/persons")
 public class PersonController {
-	
+
 	@Autowired
 	private PersonService personService;
-	
+
 	@Autowired
 	private JwtUtil jwtUtil;
-	
+
 	@GetMapping
 	public List<Person> list(){
 		return personService.findAll();
 	}
-	
+
 	@GetMapping(value="/my")
 	public Person get(@RequestHeader("Authorization") String authorization){
 		return personService.findByEmail(jwtUtil.getEmailFromJwtToken(authorization));
@@ -42,12 +42,12 @@ public class PersonController {
 	public Person insert(@RequestHeader("Authorization") String authorization, @RequestBody PersonRequest personRequest){
 		return personService.insert(personRequest, jwtUtil.getEmailFromJwtToken(authorization));
 	}
-	
+
 	@PutMapping
-	public Person modify(@RequestBody Person person){
-		return personService.modify(person);
+	public Person modify(@RequestHeader("Authorization") String authorization, @RequestBody Person person){
+		return personService.modify(jwtUtil.getEmailFromJwtToken(authorization), person);
 	}
-	
+
 	@DeleteMapping
 	public void delete(@RequestHeader("Authorization") String authorization) {
 		personService.delete(jwtUtil.getEmailFromJwtToken(authorization));

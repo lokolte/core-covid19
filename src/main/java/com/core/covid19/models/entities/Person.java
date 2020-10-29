@@ -167,6 +167,16 @@ public class Person implements Serializable {
 	public void setPersonForms(Set<Form> personForms) {
 		this.personForms = personForms;
 	}
+	
+	public void addForm(Form form) {
+        this.personForms.add(form);
+        form.getFormPersons().add(this);
+    }
+ 
+    public void removeForm(Form form) {
+        this.personForms.remove(form);
+        form.getFormPersons().remove(this);
+    }
 
 	public Set<Answer> getPersonAnswers() {
 		return personAnswers;

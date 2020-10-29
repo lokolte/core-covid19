@@ -38,6 +38,8 @@ public class AnswerService {
 	public PersonAnswersResponse findAllByPersonEmail(String email) {
 		Account account = accountRepo.findByEmail(email);
 
+		if(account.getPerson() == null) return null;
+
 		Person person = account.getPerson();
 
 		List<AnswerItemResponse> answers = new ArrayList<AnswerItemResponse>();

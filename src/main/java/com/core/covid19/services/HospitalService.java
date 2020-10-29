@@ -28,6 +28,8 @@ public class HospitalService {
 	public HospitalsResponse getTenCloser(String email) {
 		Account account = accountRepo.findByEmail(email);
 
+		if(account.getPerson() == null) return null;
+
 		List<Hospital> hospitals = hospitalRepo.findAll();
 
 		List<HospitalDistance> hospitalsDistance = new ArrayList<HospitalDistance>();

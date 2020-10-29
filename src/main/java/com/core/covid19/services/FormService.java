@@ -30,6 +30,8 @@ public class FormService {
 	public PersonFormsResponse findAllByPersonEmail(String email) {
 		Account account = accountRepo.findByEmail(email);
 
+		if(account.getPerson() == null) return null;
+
 		Person person = account.getPerson();
 
 		List<FormItemResponse> formList = new ArrayList<FormItemResponse>();
@@ -50,7 +52,12 @@ public class FormService {
 	public void addDefaultFormsToPerson(String email) {
 		Account account = accountRepo.findByEmail(email);
 
+		if(account.getPerson() == null) return;
+
 		Person person = account.getPerson();
+
+		if(person.getPersonForms().isEmpty())
+			for(Form form : getDefaultForms()) person.addForm(form);
 
 		person.setPersonForms(getDefaultForms());
 	}
