@@ -125,6 +125,13 @@ public class PersonService {
 			personRecovered = new Person();
 			personRecovered.setLocation(locationStored);
 			personRecovered.setStatus(status);
+		} else if(person.getLocation().getId() == null){
+			Location location = new Location();
+			location.setLatitude(person.getLocation().getLatitude());
+			location.setLongitude(person.getLocation().getLongitude());
+			Location locationStored = locationRepo.save(location);
+			
+			personRecovered.setLocation(locationStored);
 		}
 
 		personRecovered.setDocument(person.getDocument());
