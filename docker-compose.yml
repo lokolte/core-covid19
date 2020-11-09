@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  covid19.core:
+    ports:
+      - "9900:9900"
+    build: .
+    env_file:
+      - docker/covid19.env
