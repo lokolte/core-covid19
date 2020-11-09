@@ -12,4 +12,4 @@ echo "Starting core-covid19 by jar..."
 
 VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
 
-java -jar target/core-covid19-${VERSION}.jar
+sudo java -jar target/core-covid19-${VERSION}.jar
