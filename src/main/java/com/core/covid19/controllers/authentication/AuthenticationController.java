@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.core.covid19.authentication.util.JwtUtil;
+import com.core.covid19.models.entities.Account;
 import com.core.covid19.models.requests.AuthenticationRequest;
 import com.core.covid19.models.responses.AuthenticationResponse;
+import com.core.covid19.repos.AccountRepo;
 import com.core.covid19.services.CustomUserDetailService;
 
 @RestController
@@ -26,6 +28,9 @@ public class AuthenticationController {
 
 	@Autowired
 	private JwtUtil jwtTokenUtil;
+	
+	@Autowired
+	private AccountRepo accountRepo;
 
 	@Autowired
 	private CustomUserDetailService customUserDetailService;
@@ -41,11 +46,13 @@ public class AuthenticationController {
 			throw new Exception("Usuario o contraseña incorrectos.", e);
 		}
 
+		Account account = accountRepo.findByEmail(authenticationRequest.getEmail());
+
 		final UserDetails userDetails = customUserDetailService
 				.loadUserByUsername(authenticationRequest.getEmail());
 
 		final String jwt = jwtTokenUtil.generateToken(userDetails);
 
-		return ResponseEntity.ok(new AuthenticationResponse(jwt));
+		return ResponseEntity.ok(new AuthenticationResponse(jwt, account));
 	}
 }
