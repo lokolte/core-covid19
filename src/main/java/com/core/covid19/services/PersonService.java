@@ -1,5 +1,6 @@
 package com.core.covid19.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -14,6 +15,8 @@ import com.core.covid19.models.entities.Form;
 import com.core.covid19.models.entities.Location;
 import com.core.covid19.models.entities.Person;
 import com.core.covid19.models.requests.PersonRequest;
+import com.core.covid19.models.responses.PersonResponse;
+import com.core.covid19.models.responses.PersonsResponse;
 import com.core.covid19.repos.AccountRepo;
 import com.core.covid19.repos.ContactRepo;
 import com.core.covid19.repos.LocationRepo;
@@ -73,6 +76,21 @@ public class PersonService {
 
 	public List<Person> findAll() {
 		return personRepo.findAll();
+	}
+	
+	public PersonsResponse getPatients(String email) {
+		
+		Account account = accountRepo.findByEmail(email);
+		if (account.getPerson() == null) return new PersonsResponse();
+		Person person = account.getPerson();
+		if (person.getProvince() == null) return new PersonsResponse();
+		
+		List<Person> persons = personRepo.getPatients(person.getProvince().getId());
+		List<PersonResponse> list = new ArrayList<PersonResponse>();
+		for (Person p : persons) {
+			list.add(new PersonResponse(p));
+		}
+		return new PersonsResponse(list);
 	}
 
 	public Person findByEmail(String email) {

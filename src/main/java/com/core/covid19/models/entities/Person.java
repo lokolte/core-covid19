@@ -23,6 +23,8 @@ import java.util.Set;
 @Table(name="person")
 @Data
 @NamedQuery(name="Person.findAll", query="SELECT p FROM Person p")
+@NamedQuery(name="Person.getPatients", query="SELECT p FROM Person p, Account a "
+		+ "WHERE a.person.id = p.id and a.role.id = 1 and p.province.id = :province")
 public class Person implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -84,6 +86,11 @@ public class Person implements Serializable {
 	@JoinColumn(name="status", nullable=false)
 	@JsonIgnoreProperties("persons")
 	private Status status;
+	
+	@ManyToOne
+	@JoinColumn(name="province", nullable=true)
+	@JsonIgnoreProperties("persons")
+	private Province province;
 
 	public Person() {
 	}
@@ -200,5 +207,13 @@ public class Person implements Serializable {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public Province getProvince() {
+		return province;
+	}
+
+	public void setProvince(Province province) {
+		this.province = province;
 	}
 }

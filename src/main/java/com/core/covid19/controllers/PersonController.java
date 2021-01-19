@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.core.covid19.authentication.util.JwtUtil;
 import com.core.covid19.models.entities.Person;
 import com.core.covid19.models.requests.PersonRequest;
+import com.core.covid19.models.responses.PersonResponse;
+import com.core.covid19.models.responses.PersonsResponse;
 import com.core.covid19.services.PersonService;
 
 @RestController
@@ -31,6 +34,11 @@ public class PersonController {
 	@GetMapping
 	public List<Person> list(){
 		return personService.findAll();
+	}
+	
+	@GetMapping(value="/patients")
+	public PersonsResponse getPatients(@RequestHeader("Authorization") String authorization) {
+		return personService.getPatients(jwtUtil.getEmailFromJwtToken(authorization));
 	}
 
 	@GetMapping(value="/my")
