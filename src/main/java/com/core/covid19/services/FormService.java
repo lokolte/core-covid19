@@ -3,6 +3,7 @@ package com.core.covid19.services;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -10,13 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.core.covid19.models.entities.Account;
+import com.core.covid19.models.entities.Answer;
 import com.core.covid19.models.entities.Form;
 import com.core.covid19.models.entities.Item;
+import com.core.covid19.models.entities.ItemsAnswer;
 import com.core.covid19.models.entities.Person;
+import com.core.covid19.models.responses.AnswerItemResponse;
 import com.core.covid19.models.responses.FormItemResponse;
+import com.core.covid19.models.responses.PersonAnswersResponse;
 import com.core.covid19.models.responses.PersonFormsResponse;
 import com.core.covid19.repos.AccountRepo;
 import com.core.covid19.repos.FormRepo;
+import com.core.covid19.repos.PersonRepo;
 
 @Service
 public class FormService {
@@ -26,6 +32,9 @@ public class FormService {
 	
 	@Autowired
 	private AccountRepo accountRepo;
+	
+	@Autowired
+	private PersonRepo personRepo;
 
 	public PersonFormsResponse findAllByPersonEmail(String email) {
 		Account account = accountRepo.findByEmail(email);
@@ -70,6 +79,29 @@ public class FormService {
 		forms.add(formRepo.findById(3).get()); // Formulario referente a COVID19
 
 		return forms;
+	}
+	
+	public PersonAnswersResponse getAnswersForm(int idPerson, int idForm) {
+
+		Optional<Person> p = personRepo.findById(idPerson);
+		if (p.isEmpty()) return null;
+		Person person = p.get();
+
+		List<AnswerItemResponse> answers = new ArrayList<AnswerItemResponse>();
+
+        for (Answer a : person.getPersonAnswers()) {
+        	int id = a.getForm().getId();
+	        if (id == idForm) {
+	        	List<ItemsAnswer> itemsAnswerList = new ArrayList<ItemsAnswer>();
+	        	for(ItemsAnswer ia : a.getAnswers())
+	        		itemsAnswerList.add(ia);
+	        	AnswerItemResponse answerItemResponse = new AnswerItemResponse(a.getId(), 
+	        			a.getForm(), a.getAnswerDate(), itemsAnswerList);
+	        	answers.add(answerItemResponse);
+        	}
+        }
+        answers = answers.stream().sorted().collect(Collectors.toList());
+		return new PersonAnswersResponse(answers);
 	}
 
 }
