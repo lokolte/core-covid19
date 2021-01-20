@@ -1,5 +1,6 @@
 package com.core.covid19.models.entities;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -20,8 +21,9 @@ import lombok.EqualsAndHashCode;
 @Table(name="province")
 @Data
 @NamedQuery(name="Province.findAll", query="SELECT p FROM Province p")
-public class Province {
-	
+public class Province implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(unique=true, nullable=false)
