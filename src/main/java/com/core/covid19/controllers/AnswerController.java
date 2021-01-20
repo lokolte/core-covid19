@@ -3,6 +3,7 @@ package com.core.covid19.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,11 @@ public class AnswerController {
 	@GetMapping
 	public PersonAnswersResponse listAll(@RequestHeader("Authorization") String authorization) {
 		return answerService.findAllByPersonEmail(jwtUtil.getEmailFromJwtToken(authorization));
+	}
+
+	@GetMapping("/{id}")
+	public PersonAnswersResponse listAnswersFromPatients(@PathVariable("id") Integer id) {
+		return answerService.findAllByPersonId(id);
 	}
 
 	@PostMapping

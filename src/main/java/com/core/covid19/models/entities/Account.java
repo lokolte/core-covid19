@@ -17,6 +17,8 @@ import lombok.Data;
 @Table(name="account")
 @Data
 @NamedQuery(name="Account.findAll", query="SELECT a FROM Account a")
+@NamedQuery(name="Account.getAccountByPersonId", query="SELECT a FROM Person p, Account a "
+		+ "WHERE a.person.id = p.id and p.id = :person")
 public class Account implements Serializable {
 	private static final long serialVersionUID = 1L;
 
