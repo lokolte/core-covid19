@@ -38,14 +38,11 @@ public class FormController {
 	}
 	
 	@GetMapping("/{idForm}/answers/{idPerson}")
-	public List<ItemsAnswer> getAnswersForm(
+	public PersonAnswersResponse getAnswersForm(
 			@PathVariable("idPerson") int idPerson,
 			@PathVariable("idForm") int idForm) {
 		
-		PersonAnswersResponse p = formService.getAnswersForm(idPerson, idForm);
-		if (p.getAnswers() != null && p.getAnswers().size() > 0)
-			return p.getAnswers().get(0).getAnswers();
-		return new ArrayList<ItemsAnswer>();
+		return formService.getAnswersForm(idPerson, idForm);
 	}
 
 }

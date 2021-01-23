@@ -87,9 +87,12 @@ public class FormService {
 		if (p.isEmpty()) return null;
 		Person person = p.get();
 
+		Set<Form> forms = person.getPersonForms();
+		Set<Answer> list = person.getPersonAnswers();
+		
 		List<AnswerItemResponse> answers = new ArrayList<AnswerItemResponse>();
 
-        for (Answer a : person.getPersonAnswers()) {
+        for (Answer a : list) {
         	int id = a.getForm().getId();
 	        if (id == idForm) {
 	        	List<ItemsAnswer> itemsAnswerList = new ArrayList<ItemsAnswer>();
