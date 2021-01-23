@@ -1,17 +1,13 @@
 INSERT INTO public.role(id, name)
-	VALUES (1, 'CIVIL');
-INSERT INTO public.role(id, name)
-	VALUES (2, 'PROFESIONAL_MEDICO');
-INSERT INTO public.role(id, name)
-	VALUES (3, 'ADMIN');
+	VALUES (1, 'CIVIL'),
+	VALUES (2, 'PROFESIONAL_MEDICO'),
+	VALUES (3, 'ADMIN'),
+    VALUES (4, 'COORDINADOR');
 
 INSERT INTO public.status(id, name)
-	VALUES (1, 'HEALTHY');
-INSERT INTO public.status(id, name)
-	VALUES (2, 'SUSPECT');
-INSERT INTO public.status(id, name)
-	VALUES (3, 'INFECTED');
-INSERT INTO public.status(id, name)
+	VALUES (1, 'HEALTHY'),
+	VALUES (2, 'SUSPECT'),
+	VALUES (3, 'INFECTED'),
 	VALUES (4, 'RECOVERED');
 	
 INSERT INTO province (id,code,"name",capital) VALUES

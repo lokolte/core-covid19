@@ -83,28 +83,25 @@ public class FormService {
 	
 	public PersonAnswersResponse getAnswersForm(int idPerson, int idForm) {
 
-		Optional<Person> p = personRepo.findById(idPerson);
-		if (p.isEmpty()) return null;
-		Person person = p.get();
+		Person person = personRepo.findById(idPerson).orElseGet(null);
 
-		Set<Form> forms = person.getPersonForms();
-		Set<Answer> list = person.getPersonAnswers();
+		Set<Answer> answers = person.getPersonAnswers();
 		
-		List<AnswerItemResponse> answers = new ArrayList<AnswerItemResponse>();
+		List<AnswerItemResponse> answersItemsResponse = new ArrayList();
 
-        for (Answer a : list) {
+        for (Answer a : answers) {
         	int id = a.getForm().getId();
 	        if (id == idForm) {
-	        	List<ItemsAnswer> itemsAnswerList = new ArrayList<ItemsAnswer>();
+	        	List<ItemsAnswer> itemsAnswerList = new ArrayList();
 	        	for(ItemsAnswer ia : a.getAnswers())
 	        		itemsAnswerList.add(ia);
 	        	AnswerItemResponse answerItemResponse = new AnswerItemResponse(a.getId(), 
 	        			a.getForm(), a.getAnswerDate(), itemsAnswerList);
-	        	answers.add(answerItemResponse);
+				answersItemsResponse.add(answerItemResponse);
         	}
         }
-        answers = answers.stream().sorted().collect(Collectors.toList());
-		return new PersonAnswersResponse(answers);
+		answersItemsResponse = answersItemsResponse.stream().sorted().collect(Collectors.toList());
+		return new PersonAnswersResponse(answersItemsResponse);
 	}
 
 }
