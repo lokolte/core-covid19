@@ -7,5 +7,5 @@ import com.core.covid19.models.entities.Account;
 public interface AccountRepo extends JpaRepository<Account, Integer>{
 	
 	Account findByEmail(String email);
-
+	Account getAccountByPersonId(int person);
 }

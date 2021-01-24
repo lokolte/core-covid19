@@ -1,18 +1,21 @@
 INSERT INTO public.role(id, name)
-	VALUES (1, 'CIVIL');
-INSERT INTO public.role(id, name)
-	VALUES (2, 'PROFESIONAL_MEDICO');
-INSERT INTO public.role(id, name)
-	VALUES (3, 'ADMIN');
+	VALUES (1, 'CIVIL'),
+	VALUES (2, 'PROFESIONAL_MEDICO'),
+	VALUES (3, 'ADMIN'),
+    VALUES (4, 'COORDINADOR');
 
 INSERT INTO public.status(id, name)
-	VALUES (1, 'HEALTHY');
-INSERT INTO public.status(id, name)
-	VALUES (2, 'SUSPECT');
-INSERT INTO public.status(id, name)
-	VALUES (3, 'INFECTED');
-INSERT INTO public.status(id, name)
+	VALUES (1, 'HEALTHY'),
+	VALUES (2, 'SUSPECT'),
+	VALUES (3, 'INFECTED'),
 	VALUES (4, 'RECOVERED');
+	
+INSERT INTO province (id,code,"name",capital) VALUES
+	 (1,'PY-ASU','Distrito Capital','Asunción'),
+	 (2,'PY-1','Concepción','Concepción'),
+	 (3,'PY-2','San Pedro','San Pedro de Ycuamandiyú'),
+	 (4,'PY-3','Cordillera','Caacupé'),
+	 (5,'PY-4','Guairá','Villarrica');
 
 
 INSERT INTO public.location(id, latitude, longitude)

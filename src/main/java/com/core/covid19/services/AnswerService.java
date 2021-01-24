@@ -57,6 +57,28 @@ public class AnswerService {
 		return new PersonAnswersResponse(answers);
 	}
 
+	public PersonAnswersResponse findAllByPersonId(Integer id) {
+		Account account = accountRepo.getAccountByPersonId(id);
+
+		if(account.getPerson() == null) return null;
+
+		Person person = account.getPerson();
+
+		List<AnswerItemResponse> answers = new ArrayList<AnswerItemResponse>();
+
+		for (Answer a : person.getPersonAnswers()) {
+			List<ItemsAnswer> itemsAnswerList = new ArrayList<ItemsAnswer>();
+			for(ItemsAnswer ia : a.getAnswers())
+				itemsAnswerList.add(ia);
+			AnswerItemResponse answerItemResponse = new AnswerItemResponse(a.getId(), a.getForm(), a.getAnswerDate(), itemsAnswerList);
+			answers.add(answerItemResponse);
+		}
+
+		answers = answers.stream().sorted().collect(Collectors.toList());
+
+		return new PersonAnswersResponse(answers);
+	}
+
 	public Answer addAnswersToPerson(String email, Answer answer){
 		Account account = accountRepo.findByEmail(email);
 

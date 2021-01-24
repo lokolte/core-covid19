@@ -3,6 +3,7 @@ package com.core.covid19.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import com.core.covid19.services.AnswerService;
 @RestController
 @RequestMapping("/answers")
 public class AnswerController {
+
 	@Autowired
 	private AnswerService answerService;
 

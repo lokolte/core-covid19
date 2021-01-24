@@ -27,22 +27,24 @@ public class CustomUserDetailService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Account account = accountRepo.findByEmail(email);
-						
+
+		if(account == null) return null;
+
 		List<GrantedAuthority> roles = new ArrayList<>();
 		roles.add(new SimpleGrantedAuthority(account.getRole().getName()));
-		
+
 		UserDetails userDet = new User(account.getEmail(), account.getPassword(), roles);
-		
+
 		return userDet;
 	}
 	
 	public Map<String, Object> createClaims(UserDetails userDetails){
 		Map<String, Object> claims = new HashMap<>();
-		
+
 		Account account = accountRepo.findByEmail(userDetails.getUsername());
-		
+
 		claims.put(ClaimsTypes.ROLE.toString(), (Object)account.getRole().getName());
-		
+
 		return claims;
 	}
 	
