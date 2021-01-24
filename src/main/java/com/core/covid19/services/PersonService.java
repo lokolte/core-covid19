@@ -3,7 +3,6 @@ package com.core.covid19.services;
 import java.util.*;
 
 import com.core.covid19.models.entities.*;
-import com.core.covid19.models.enums.Roles;
 import com.core.covid19.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,9 +32,6 @@ public class PersonService {
 	
 	@Autowired
 	private FormService formService;
-
-	@Autowired
-	private RoleRepo roleRepo;
 
 	public Person insert(PersonRequest personRequest, String email) {
 		Location location = new Location();
