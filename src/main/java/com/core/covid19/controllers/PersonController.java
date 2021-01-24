@@ -2,6 +2,7 @@ package com.core.covid19.controllers;
 
 import java.util.List;
 
+import com.core.covid19.models.Resultado;
 import com.core.covid19.models.responses.PersonAnswersResponse;
 import com.core.covid19.services.AnswerService;
 import com.core.covid19.services.FormService;
@@ -53,6 +54,16 @@ public class PersonController {
 	@GetMapping("/{id}")
 	public PersonAnswersResponse listAnswersFromPatients(@PathVariable("id") Integer id) {
 		return answerService.findAllByPersonId(id);
+	}
+
+	@GetMapping("/{id}/doctors")
+	public List<PersonResponse> getDoctors(@PathVariable("id") Integer id) {
+		return personService.getDoctors(id);
+	}
+
+	@PostMapping("/{id}/doctors/{doctor}")
+	public Resultado assignDoctor(@PathVariable("id") Integer id, @PathVariable("doctor") int data){
+		return personService.assignDoctor(id, data);
 	}
 
 	@GetMapping("/{idPerson}/forms/{idForm}/answers")
