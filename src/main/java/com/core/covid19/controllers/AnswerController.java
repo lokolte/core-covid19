@@ -17,6 +17,7 @@ import com.core.covid19.services.AnswerService;
 @RestController
 @RequestMapping("/answers")
 public class AnswerController {
+
 	@Autowired
 	private AnswerService answerService;
 
@@ -26,11 +27,6 @@ public class AnswerController {
 	@GetMapping
 	public PersonAnswersResponse listAll(@RequestHeader("Authorization") String authorization) {
 		return answerService.findAllByPersonEmail(jwtUtil.getEmailFromJwtToken(authorization));
-	}
-
-	@GetMapping("/{id}")
-	public PersonAnswersResponse listAnswersFromPatients(@PathVariable("id") Integer id) {
-		return answerService.findAllByPersonId(id);
 	}
 
 	@PostMapping

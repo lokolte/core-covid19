@@ -5,7 +5,7 @@ import java.util.List;
 
 public class PersonsResponse {
 
-private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	
 	private final List<PersonResponse> persons;
 	

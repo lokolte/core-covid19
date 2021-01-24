@@ -9,6 +9,10 @@ public class PersonResponse implements Serializable {
 	private int id;
 	private String name;
 	private String phone;
+
+	public PersonResponse(int id) {
+		this.id = id;
+	}
 	
 	public PersonResponse(Person p) {
 		this.id = p.getId();
@@ -39,5 +43,4 @@ public class PersonResponse implements Serializable {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-
 }

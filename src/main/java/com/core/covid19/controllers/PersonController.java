@@ -2,6 +2,9 @@ package com.core.covid19.controllers;
 
 import java.util.List;
 
+import com.core.covid19.models.responses.PersonAnswersResponse;
+import com.core.covid19.services.AnswerService;
+import com.core.covid19.services.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +34,12 @@ public class PersonController {
 	@Autowired
 	private JwtUtil jwtUtil;
 
+	@Autowired
+	private AnswerService answerService;
+
+	@Autowired
+	private FormService formService;
+
 	@GetMapping
 	public List<Person> list(){
 		return personService.findAll();
@@ -39,6 +48,19 @@ public class PersonController {
 	@GetMapping(value="/patients")
 	public PersonsResponse getPatients(@RequestHeader("Authorization") String authorization) {
 		return personService.getPatients(jwtUtil.getEmailFromJwtToken(authorization));
+	}
+
+	@GetMapping("/{id}")
+	public PersonAnswersResponse listAnswersFromPatients(@PathVariable("id") Integer id) {
+		return answerService.findAllByPersonId(id);
+	}
+
+	@GetMapping("/{idPerson}/forms/{idForm}/answers")
+	public PersonAnswersResponse getAnswersForm(
+			@PathVariable("idPerson") int idPerson,
+			@PathVariable("idForm") int idForm) {
+
+		return formService.getAnswersForm(idPerson, idForm);
 	}
 
 	@GetMapping(value="/my")

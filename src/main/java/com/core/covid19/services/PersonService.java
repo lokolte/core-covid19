@@ -1,28 +1,17 @@
 package com.core.covid19.services;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.core.covid19.models.entities.*;
+import com.core.covid19.models.enums.Roles;
+import com.core.covid19.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.core.covid19.models.entities.Status;
 import com.core.covid19.models.enums.PersonStatus;
-import com.core.covid19.models.entities.Account;
-import com.core.covid19.models.entities.Contact;
-import com.core.covid19.models.entities.Form;
-import com.core.covid19.models.entities.Location;
-import com.core.covid19.models.entities.Person;
 import com.core.covid19.models.requests.PersonRequest;
 import com.core.covid19.models.responses.PersonResponse;
 import com.core.covid19.models.responses.PersonsResponse;
-import com.core.covid19.repos.AccountRepo;
-import com.core.covid19.repos.ContactRepo;
-import com.core.covid19.repos.LocationRepo;
-import com.core.covid19.repos.PersonRepo;
-import com.core.covid19.repos.StatusRepo;
-import com.core.covid19.services.FormService;
 
 @Service
 public class PersonService {
@@ -44,6 +33,9 @@ public class PersonService {
 	
 	@Autowired
 	private FormService formService;
+
+	@Autowired
+	private RoleRepo roleRepo;
 
 	public Person insert(PersonRequest personRequest, String email) {
 		Location location = new Location();

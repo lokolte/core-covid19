@@ -36,13 +36,5 @@ public class FormController {
 	public void asign(@RequestHeader("Authorization") String authorization) {
 		formService.addDefaultFormsToPerson(jwtUtil.getEmailFromJwtToken(authorization));
 	}
-	
-	@GetMapping("/{idForm}/answers/{idPerson}")
-	public PersonAnswersResponse getAnswersForm(
-			@PathVariable("idPerson") int idPerson,
-			@PathVariable("idForm") int idForm) {
-		
-		return formService.getAnswersForm(idPerson, idForm);
-	}
 
 }
