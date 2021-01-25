@@ -14,6 +14,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -41,6 +42,7 @@ public class Province implements Serializable {
 	@OneToMany(mappedBy="province")
 	@JsonIgnoreProperties("province")
 	@EqualsAndHashCode.Exclude
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private List<Person> persons;
 	
 	public Province() {

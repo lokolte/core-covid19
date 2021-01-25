@@ -1,14 +1,14 @@
-INSERT INTO public.role(id, name)
-	VALUES (1, 'CIVIL'),
-	VALUES (2, 'PROFESIONAL_MEDICO'),
-	VALUES (3, 'ADMIN'),
-    VALUES (4, 'COORDINADOR');
+INSERT INTO public.role(id, name) VALUES
+    (1, 'CIVIL'),
+	(2, 'PROFESIONAL_MEDICO'),
+	(3, 'ADMIN'),
+    (4, 'COORDINADOR');
 
-INSERT INTO public.status(id, name)
-	VALUES (1, 'HEALTHY'),
-	VALUES (2, 'SUSPECT'),
-	VALUES (3, 'INFECTED'),
-	VALUES (4, 'RECOVERED');
+INSERT INTO public.status(id, name) VALUES
+    (1, 'HEALTHY'),
+	(2, 'SUSPECT'),
+	(3, 'INFECTED'),
+	(4, 'RECOVERED');
 	
 INSERT INTO province (id,code,"name",capital) VALUES
 	 (1,'PY-ASU','Asunción','Asunción'),
@@ -20,31 +20,13 @@ INSERT INTO province (id,code,"name",capital) VALUES
 
 INSERT INTO public.location(id, latitude, longitude)
 	VALUES (1, -25.326650, -57.559925);
-	
-INSERT INTO public.person(id, document, name, lastname, birth_date, phone, sex, address, location, status)
-	VALUES (1, '4204613', 'Jesus', 'Aguilar', now(), '0982912326', 'MASCULINO', 'Juan de Garay 1634', 1, 1);
+
+INSERT INTO public.person
+    (id, address, birth_date, document, lastname, name, phone, sex, location, province, status) VALUES
+    (1, 'Juan de Garay 1634', now(), '4204613', 'Aguilar', 'Jesus', '0982912326', 'MASCULINO', 1, 1, 1);
 
 INSERT INTO public.account(id, email, password, person_id, role_id)
 	VALUES (1, 'jaaguilarmeza@gmail.com', 'l0k0lte.', 1, 3);
-	
-
-INSERT INTO public.location(id, latitude, longitude)
-	VALUES (2, -25.342138, -57.511109);
-	
-INSERT INTO public.person(id, document, name, lastname, birth_date, phone, sex, address, location, status)
-	VALUES (2, '4653346', 'Veronica', 'Gayoso', now(), '0981719893', 'FEMENINO', 'Juan de Garay 1634', 2, 1);
-
-INSERT INTO public.account(id, email, password, person_id, role_id)
-	VALUES (2, 'vritogayoso@gmail.com', 'vrito', 2, 1);
-
-
-INSERT INTO public.location(id, latitude, longitude)
-	VALUES (3, -25.295729, -57.625436);
-
-INSERT INTO public.contact(
-	id, contact_date, person_id1, person_id2, contact_location)
-	VALUES (1, now(), 1, 2, 3);
-	
 
 
 
