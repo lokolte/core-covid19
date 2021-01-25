@@ -2,7 +2,6 @@ package com.core.covid19.services;
 
 import java.util.*;
 
-import com.core.covid19.models.Resultado;
 import com.core.covid19.models.entities.*;
 import com.core.covid19.models.enums.Roles;
 import com.core.covid19.repos.*;
@@ -109,7 +108,7 @@ public class PersonService {
 		return accountRepo.findByEmail(email).getPerson();
 	}
 
-	public Resultado assignDoctor(int patient, int doctor) {
+	public void assignDoctor(int patient, int doctor) {
 
 		PatientDoctor p = patientDoctorRepo.getDoctor(patient);
 		if (p != null) {
@@ -118,7 +117,6 @@ public class PersonService {
 		PatientDoctorPk id = new PatientDoctorPk(patient, doctor);
 		PatientDoctor pd = new PatientDoctor(id);
 		patientDoctorRepo.save(pd);
-		return new Resultado(true, "");
 	}
 
 	public Person modify(String email, Person person) {

@@ -2,7 +2,6 @@ package com.core.covid19.controllers;
 
 import java.util.List;
 
-import com.core.covid19.models.Resultado;
 import com.core.covid19.models.responses.PersonAnswersResponse;
 import com.core.covid19.services.AnswerService;
 import com.core.covid19.services.FormService;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.core.covid19.authentication.util.JwtUtil;
@@ -62,8 +60,8 @@ public class PersonController {
 	}
 
 	@PostMapping("/{id}/doctors/{doctor}")
-	public Resultado assignDoctor(@PathVariable("id") Integer id, @PathVariable("doctor") int data){
-		return personService.assignDoctor(id, data);
+	public void assignDoctor(@PathVariable("id") Integer id, @PathVariable("doctor") int data){
+		personService.assignDoctor(id, data);
 	}
 
 	@GetMapping("/{idPerson}/forms/{idForm}/answers")
