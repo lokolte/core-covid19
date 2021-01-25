@@ -11,7 +11,7 @@ INSERT INTO public.status(id, name)
 	VALUES (4, 'RECOVERED');
 	
 INSERT INTO province (id,code,"name",capital) VALUES
-	 (1,'PY-ASU','Distrito Capital','Asunción'),
+	 (1,'PY-ASU','Asunción','Asunción'),
 	 (2,'PY-1','Concepción','Concepción'),
 	 (3,'PY-2','San Pedro','San Pedro de Ycuamandiyú'),
 	 (4,'PY-3','Cordillera','Caacupé'),

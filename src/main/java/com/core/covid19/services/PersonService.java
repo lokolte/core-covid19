@@ -181,6 +181,7 @@ public class PersonService {
 		personRecovered.setPhone(person.getPhone());
 		personRecovered.setSex(person.getSex());
 		personRecovered.setAddress(person.getAddress());
+		personRecovered.setProvince(person.getProvince());
 
 		if(personRecovered.getPersonForms() == null) {
 			Set<Form> forms = formService.getDefaultForms();
