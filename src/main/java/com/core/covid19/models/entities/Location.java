@@ -34,13 +34,6 @@ public class Location implements Serializable {
 	@Column(nullable=false)
 	private double longitude;
 
-	//bi-directional many-to-one association to Contact
-	@OneToMany(mappedBy="location")
-	@JsonIgnoreProperties("location")
-	@EqualsAndHashCode.Exclude
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private List<Contact> contacts;
-
 	//bi-directional many-to-one association to Person
 	@OneToMany(mappedBy="location")
 	@JsonIgnoreProperties("location")
@@ -80,28 +73,6 @@ public class Location implements Serializable {
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
-	}
-
-	public List<Contact> getContacts() {
-		return this.contacts;
-	}
-
-	public void setContacts(List<Contact> contacts) {
-		this.contacts = contacts;
-	}
-
-	public Contact addContact(Contact contact) {
-		getContacts().add(contact);
-		contact.setLocation(this);
-
-		return contact;
-	}
-
-	public Contact removeContact(Contact contact) {
-		getContacts().remove(contact);
-		contact.setLocation(null);
-
-		return contact;
 	}
 
 	public List<Person> getPersons() {

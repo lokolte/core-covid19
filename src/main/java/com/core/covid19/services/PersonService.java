@@ -8,7 +8,6 @@ import com.core.covid19.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.core.covid19.models.enums.PersonStatus;
 import com.core.covid19.models.requests.PersonRequest;
 import com.core.covid19.models.responses.PersonResponse;
 import com.core.covid19.models.responses.PersonsResponse;
@@ -27,9 +26,6 @@ public class PersonService {
 
 	@Autowired
 	private AccountRepo accountRepo;
-
-	@Autowired
-	private ContactRepo contactRepo;
 	
 	@Autowired
 	private FormService formService;
@@ -120,36 +116,6 @@ public class PersonService {
 	}
 
 	public Person modify(String email, Person person) {
-		if (person.getStatus().getName().equals(PersonStatus.INFECTED.toString())) {
-			List<Contact> contactsAsContactor = contactRepo.findByPersonId1(person.getId());
-			List<Contact> contactsAsContacted = contactRepo.findByPersonId2(person.getId());
-
-			Status statusInfected = statusRepo.findByName(PersonStatus.INFECTED.toString());
-			Status statusSuspect = statusRepo.findByName(PersonStatus.SUSPECT.toString());
-
-			if (contactsAsContactor != null)
-				for (Contact contact : contactsAsContactor) {
-					Person personContacted = personRepo.findById(contact.getPersonId2()).orElse(null);
-					Status statusContacted = personContacted.getStatus();
-					if (statusContacted.getName().equals(PersonStatus.HEALTHY.toString())) {
-						personContacted.setStatus(statusSuspect);
-						personRepo.save(personContacted);
-					}
-				}
-
-			if (contactsAsContacted != null)
-				for (Contact contact : contactsAsContacted) {
-					Person personContactor = personRepo.findById(contact.getPersonId2()).orElse(null);
-					Status statusContactor = personContactor.getStatus();
-					if (statusContactor.getName().equals(PersonStatus.HEALTHY.toString())) {
-						personContactor.setStatus(statusSuspect);
-						personRepo.save(personContactor);
-					}
-				}
-
-			person.setStatus(statusInfected);
-		}
-
 		Account account = accountRepo.findByEmail(email);
 
 		Person personRecovered = personRepo.findByDocument(person.getDocument());
