@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.core.covid19.authentication.util.JwtUtil;
@@ -53,6 +52,16 @@ public class PersonController {
 	@GetMapping("/{id}")
 	public PersonAnswersResponse listAnswersFromPatients(@PathVariable("id") Integer id) {
 		return answerService.findAllByPersonId(id);
+	}
+
+	@GetMapping("/{id}/doctors")
+	public List<PersonResponse> getDoctors(@PathVariable("id") Integer id) {
+		return personService.getDoctors(id);
+	}
+
+	@PostMapping("/{id}/doctors/{doctor}")
+	public void assignDoctor(@PathVariable("id") Integer id, @PathVariable("doctor") int data){
+		personService.assignDoctor(id, data);
 	}
 
 	@GetMapping("/{idPerson}/forms/{idForm}/answers")

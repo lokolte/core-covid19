@@ -3,6 +3,7 @@ package com.core.covid19.services;
 import java.util.*;
 
 import com.core.covid19.models.entities.*;
+import com.core.covid19.models.enums.Roles;
 import com.core.covid19.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,12 @@ public class PersonService {
 	
 	@Autowired
 	private FormService formService;
+
+	@Autowired
+	private RoleRepo roleRepo;
+
+	@Autowired
+	PatientDoctorRepo patientDoctorRepo;
 
 	public Person insert(PersonRequest personRequest, String email) {
 		Location location = new Location();
@@ -76,13 +83,40 @@ public class PersonService {
 		List<Person> persons = personRepo.getPatients(person.getProvince().getId());
 		List<PersonResponse> list = new ArrayList<PersonResponse>();
 		for (Person p : persons) {
-			list.add(new PersonResponse(p));
+			Person doctor = patientDoctorRepo.getDoctorPatient(p.getId());
+			String d = doctor == null ? "Sin asignar" : doctor.getName() + " " + doctor.getLastname();
+			list.add(new PersonResponse(p, d));
 		}
 		return new PersonsResponse(list);
 	}
 
+	public List<PersonResponse> getDoctors(Integer idPerson) {
+
+		Optional<Person> per = personRepo.findById(idPerson);
+		if (!per.isPresent()) return new ArrayList<>();
+		Person person = per.get();
+		if (person.getProvince() == null) return new ArrayList<>();
+		int province = person.getProvince().getId();
+		Role role = roleRepo.findByName(Roles.PROFESIONAL_MEDICO.toString());
+		List<Person> persons = patientDoctorRepo.getDoctors(province, role.getId());
+		List<PersonResponse> list = new ArrayList<>();
+		for (Person p : persons) list.add(new PersonResponse(p));
+		return list;
+	}
+
 	public Person findByEmail(String email) {
 		return accountRepo.findByEmail(email).getPerson();
+	}
+
+	public void assignDoctor(int patient, int doctor) {
+
+		PatientDoctor p = patientDoctorRepo.getDoctor(patient);
+		if (p != null) {
+			patientDoctorRepo.delete(p);
+		}
+		PatientDoctorPk id = new PatientDoctorPk(patient, doctor);
+		PatientDoctor pd = new PatientDoctor(id);
+		patientDoctorRepo.save(pd);
 	}
 
 	public Person modify(String email, Person person) {
@@ -147,6 +181,7 @@ public class PersonService {
 		personRecovered.setPhone(person.getPhone());
 		personRecovered.setSex(person.getSex());
 		personRecovered.setAddress(person.getAddress());
+		personRecovered.setProvince(person.getProvince());
 
 		if(personRecovered.getPersonForms() == null) {
 			Set<Form> forms = formService.getDefaultForms();
