@@ -16,6 +16,8 @@ import javax.persistence.Table;
         query="SELECT p FROM Person p, Account a WHERE p.id = a.id AND a.role.id = :role AND p.province.id = :province")
 @NamedQuery(name="PatientDoctor.getDoctorPatient",
         query="SELECT p FROM Person p, PatientDoctor pd WHERE pd.id.patient = :patient AND p.id = pd.id.doctor")
+@NamedQuery(name="PatientDoctor.getPatients",
+        query="SELECT p FROM Person p, PatientDoctor pd WHERE pd.id.patient = p.id AND pd.id.doctor = :doctor")
 public class PatientDoctor {
 
     @EmbeddedId

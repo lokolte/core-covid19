@@ -1,16 +1,17 @@
 package com.core.covid19.services;
 
+import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.core.covid19.models.entities.*;
 import com.core.covid19.models.enums.Roles;
+import com.core.covid19.models.responses.*;
 import com.core.covid19.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.core.covid19.models.requests.PersonRequest;
-import com.core.covid19.models.responses.PersonResponse;
-import com.core.covid19.models.responses.PersonsResponse;
 
 @Service
 public class PersonService {
@@ -32,6 +33,9 @@ public class PersonService {
 
 	@Autowired
 	private RoleRepo roleRepo;
+
+	@Autowired
+	private MessageRepo messageRepo;
 
 	@Autowired
 	PatientDoctorRepo patientDoctorRepo;
@@ -67,6 +71,51 @@ public class PersonService {
 
 	public List<Person> findAll() {
 		return personRepo.findAll();
+	}
+
+	public PatientsResponse getPatientsDoctor(int id) {
+
+		Optional<Person> per = personRepo.findById(id);
+		if (per == null || !per.isPresent()) return new PatientsResponse();
+		Person person = per.get();
+		List<Person> patiens = patientDoctorRepo.getPatients(person.getId());
+		List<PersonResponse> list = new ArrayList<>();
+		for (Person p : patiens) {
+			list.add(new PersonResponse(p));
+		}
+		return new PatientsResponse(list);
+	}
+
+	public MessageResponse getMessages(int id, int idPatient) {
+
+		Optional<Person> per = personRepo.findById(id);
+		if (per == null || !per.isPresent()) return new MessageResponse();
+		Person person = per.get();
+
+		List<Message> receiverMessages = messageRepo.findByPersonReceivedId(id);
+		List<Message> senderMessages = messageRepo.findByPersonSenderId(idPatient);
+
+		List<MessageItem> messages = new ArrayList<MessageItem>();
+
+		for(Message message : receiverMessages)
+			messages.add(new MessageItem(message.getId(), message.getMessageText(), message.getSendDate(), personRepo.findById(message.getPersonSenderId()).get(), false));
+
+		for(Message message : senderMessages)
+			messages.add(new MessageItem(message.getId(), message.getMessageText(), message.getSendDate(), personRepo.findById(message.getPersonSenderId()).get(), true));
+
+		messages = messages.stream().sorted().collect(Collectors.toList());
+
+		return new MessageResponse(messages, person);
+	}
+
+	public void sendMessage(int id, int idPatient, String message) {
+
+		Message m = new Message();
+		m.setPersonSenderId(id);
+		m.setPersonReceivedId(idPatient);
+		m.setMessageText(message);
+		m.setSendDate(new Timestamp(new Date().getTime()));
+		messageRepo.save(m);
 	}
 	
 	public PersonsResponse getPatients(String email) {
