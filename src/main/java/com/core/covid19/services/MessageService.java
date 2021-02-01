@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.core.covid19.models.entities.PatientDoctor;
+import com.core.covid19.repos.PatientDoctorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,9 @@ public class MessageService {
 
 	@Autowired
 	private AccountRepo accountRepo;
+
+	@Autowired
+	private PatientDoctorRepo patientDoctorRepo;
 
 	public MessageResponse findAllMyMessageByEmail(String email) {
 		Account account = accountRepo.findByEmail(email);
@@ -56,7 +61,16 @@ public class MessageService {
 		Message messageToSave = new Message();
 		messageToSave.setMessageText(message.getMessageText());
 		messageToSave.setSendDate(message.getSendDate());
-		if(message.getPersonReceivedId() != 0) messageToSave.setPersonReceivedId(message.getPersonReceivedId());
+
+		if(message.getPersonReceivedId() != 0) {
+			messageToSave.setPersonReceivedId(message.getPersonReceivedId());
+		} else {
+			// Obtener el doctor asignado al paciente
+			PatientDoctor doctor = patientDoctorRepo.getDoctor(message.getPersonSenderId());
+			if (doctor != null) {
+				messageToSave.setPersonReceivedId(doctor.getId().getDoctor());
+			}
+		}
 		messageToSave.setPersonSenderId(message.getPersonSenderId());
 		
 		return messageRepo.save(messageToSave);
