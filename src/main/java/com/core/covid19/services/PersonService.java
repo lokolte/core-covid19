@@ -92,7 +92,7 @@ public class PersonService {
 		if (per == null || !per.isPresent()) return new MessageResponse();
 		Person person = per.get();
 
-		List<Message> receiverMessages = messageRepo.findByPersonReceivedId(id);
+		List<Message> receiverMessages = messageRepo.findByPersonReceivedId(idPatient);
 		List<Message> senderMessages = messageRepo.findByPersonSenderId(idPatient);
 
 		List<MessageItem> messages = new ArrayList<MessageItem>();
