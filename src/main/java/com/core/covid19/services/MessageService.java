@@ -3,6 +3,8 @@ package com.core.covid19.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import com.core.covid19.models.entities.PatientDoctor;
 import com.core.covid19.repos.PatientDoctorRepo;
@@ -60,7 +62,7 @@ public class MessageService {
 		
 		Message messageToSave = new Message();
 		messageToSave.setMessageText(message.getMessageText());
-		messageToSave.setSendDate(message.getSendDate());
+		messageToSave.setSendDate(new Timestamp(new Date().getTime()));
 
 		if(message.getPersonReceivedId() != 0) {
 			messageToSave.setPersonReceivedId(message.getPersonReceivedId());
