@@ -36,11 +36,14 @@ public class MessageService {
 	private PatientDoctorRepo patientDoctorRepo;
 
 	public MessageResponse findAllMyMessageByEmail(String email) {
+
 		Account account = accountRepo.findByEmail(email);
-
 		if(account.getPerson() == null) return null;
-
 		Person person = account.getPerson();
+		return findAllMyMessagePerson(person);
+	}
+
+	public MessageResponse findAllMyMessagePerson(Person person) {
 
 		List<Message> receiverMessages = messageRepo.findByPersonReceivedId(person.getId());
 		List<Message> senderMessages = messageRepo.findByPersonSenderId(person.getId());
@@ -54,7 +57,7 @@ public class MessageService {
 			messages.add(new MessageItem(message.getId(), message.getMessageText(), message.getSendDate(), personRepo.findById(message.getPersonSenderId()).get(), true));
 
 		messages = messages.stream().sorted().collect(Collectors.toList());
-	
+
 		return new MessageResponse(messages, person);
 	}
 
@@ -63,6 +66,7 @@ public class MessageService {
 		Message messageToSave = new Message();
 		messageToSave.setMessageText(message.getMessageText());
 		messageToSave.setSendDate(new Timestamp(new Date().getTime()));
+		messageToSave.setPersonSenderId(message.getPersonSenderId());
 
 		if(message.getPersonReceivedId() != 0) {
 			messageToSave.setPersonReceivedId(message.getPersonReceivedId());
@@ -73,7 +77,6 @@ public class MessageService {
 				messageToSave.setPersonReceivedId(doctor.getId().getDoctor());
 			}
 		}
-		messageToSave.setPersonSenderId(message.getPersonSenderId());
 		
 		return messageRepo.save(messageToSave);
 	}

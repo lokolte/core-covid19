@@ -38,6 +38,9 @@ public class PersonService {
 	private MessageRepo messageRepo;
 
 	@Autowired
+	private MessageService messageService;
+
+	@Autowired
 	PatientDoctorRepo patientDoctorRepo;
 
 	public Person insert(PersonRequest personRequest, String email) {
@@ -73,49 +76,25 @@ public class PersonService {
 		return personRepo.findAll();
 	}
 
-	public PatientsResponse getPatientsDoctor(int id) {
+	public PersonsResponse getPatientsDoctor(int id) {
 
 		Optional<Person> per = personRepo.findById(id);
-		if (per == null || !per.isPresent()) return new PatientsResponse();
+		if (per == null || !per.isPresent()) return new PersonsResponse();
 		Person person = per.get();
 		List<Person> patiens = patientDoctorRepo.getPatients(person.getId());
 		List<PersonResponse> list = new ArrayList<>();
 		for (Person p : patiens) {
 			list.add(new PersonResponse(p));
 		}
-		return new PatientsResponse(list);
+		return new PersonsResponse(list);
 	}
 
 	public MessageResponse getMessages(int id, int idPatient) {
 
-		Optional<Person> per = personRepo.findById(id);
+		Optional<Person> per = personRepo.findById(idPatient);
 		if (per == null || !per.isPresent()) return new MessageResponse();
 		Person person = per.get();
-
-		List<Message> receiverMessages = messageRepo.findByPersonReceivedId(idPatient);
-		List<Message> senderMessages = messageRepo.findByPersonSenderId(idPatient);
-
-		List<MessageItem> messages = new ArrayList<MessageItem>();
-
-		for(Message message : receiverMessages)
-			messages.add(new MessageItem(message.getId(), message.getMessageText(), message.getSendDate(), personRepo.findById(message.getPersonSenderId()).get(), false));
-
-		for(Message message : senderMessages)
-			messages.add(new MessageItem(message.getId(), message.getMessageText(), message.getSendDate(), personRepo.findById(message.getPersonSenderId()).get(), true));
-
-		messages = messages.stream().sorted().collect(Collectors.toList());
-
-		return new MessageResponse(messages, person);
-	}
-
-	public void sendMessage(int id, int idPatient, String message) {
-
-		Message m = new Message();
-		m.setPersonSenderId(id);
-		m.setPersonReceivedId(idPatient);
-		m.setMessageText(message);
-		m.setSendDate(new Timestamp(new Date().getTime()));
-		messageRepo.save(m);
+		return messageService.findAllMyMessagePerson(person);
 	}
 	
 	public PersonsResponse getPatients(String email) {
@@ -165,8 +144,8 @@ public class PersonService {
 	}
 
 	public Person modify(String email, Person person) {
+		
 		Account account = accountRepo.findByEmail(email);
-
 		Person personRecovered = personRepo.findByDocument(person.getDocument());
 
 		if(personRecovered == null) {
