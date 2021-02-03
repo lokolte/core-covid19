@@ -1,10 +1,6 @@
 package com.core.covid19.services;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +32,28 @@ public class FormService {
 	@Autowired
 	private PersonRepo personRepo;
 
+	private List<FormItemResponse> orderedForms(List<Form> forms){
+		List<FormItemResponse> formList = new ArrayList<FormItemResponse>();
+
+		for (Form f : forms) {
+			List<Item> itemList = new ArrayList<Item>();
+			for(Item i : f.getItemsForm())
+				itemList.add(i);
+			FormItemResponse formItemResponse = new FormItemResponse(f.getId(), f.getTitle(), f.getSubtitle(), f.getOrderLevel(), itemList.stream().sorted().collect(Collectors.toList()));
+			formList.add(formItemResponse);
+		}
+
+		formList = formList.stream().sorted().collect(Collectors.toList());
+
+		return formList;
+	}
+
+	public PersonFormsResponse findAll() {
+		List<Form> forms = formRepo.findAll();
+
+		return new PersonFormsResponse(orderedForms(forms));
+	}
+
 	public PersonFormsResponse findAllByPersonEmail(String email) {
 		Account account = accountRepo.findByEmail(email);
 
@@ -43,19 +61,15 @@ public class FormService {
 
 		Person person = account.getPerson();
 
-		List<FormItemResponse> formList = new ArrayList<FormItemResponse>();
+		return new PersonFormsResponse(orderedForms(new ArrayList<>(person.getPersonForms())));
+	}
 
-        for (Form f : person.getPersonForms()) {
-        	List<Item> itemList = new ArrayList<Item>();
-        	for(Item i : f.getItemsForm())
-        		itemList.add(i);
-        	FormItemResponse formItemResponse = new FormItemResponse(f.getId(), f.getTitle(), f.getSubtitle(), f.getOrderLevel(), itemList.stream().sorted().collect(Collectors.toList()));
-        	formList.add(formItemResponse);
-        }
+	public PersonFormsResponse findAllById(Integer id) {
+		Person person = personRepo.findById(id).orElseGet(null);
 
-        formList = formList.stream().sorted().collect(Collectors.toList());
+		if(person == null) return null;
 
-		return new PersonFormsResponse(formList);
+		return new PersonFormsResponse(orderedForms(new ArrayList<>(person.getPersonForms())));
 	}
 
 	public void addDefaultFormsToPerson(String email) {
