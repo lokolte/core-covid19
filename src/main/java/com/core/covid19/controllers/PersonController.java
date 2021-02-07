@@ -2,9 +2,11 @@ package com.core.covid19.controllers;
 
 import java.util.List;
 
-import com.core.covid19.models.responses.PersonAnswersResponse;
+import com.core.covid19.models.entities.Message;
+import com.core.covid19.models.responses.*;
 import com.core.covid19.services.AnswerService;
 import com.core.covid19.services.FormService;
+import com.core.covid19.services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.core.covid19.authentication.util.JwtUtil;
 import com.core.covid19.models.entities.Person;
 import com.core.covid19.models.requests.PersonRequest;
-import com.core.covid19.models.responses.PersonResponse;
-import com.core.covid19.models.responses.PersonsResponse;
 import com.core.covid19.services.PersonService;
 
 @RestController
@@ -39,6 +39,9 @@ public class PersonController {
 	@Autowired
 	private FormService formService;
 
+	@Autowired
+	private MessageService messageService;
+
 	@GetMapping
 	public List<Person> list(){
 		return personService.findAll();
@@ -47,6 +50,17 @@ public class PersonController {
 	@GetMapping(value="/patients")
 	public PersonsResponse getPatients(@RequestHeader("Authorization") String authorization) {
 		return personService.getPatients(jwtUtil.getEmailFromJwtToken(authorization));
+	}
+
+	@GetMapping(value="/{id}/patients")
+	public PersonsResponse getPatientsDoctor(@PathVariable("id") Integer id) {
+		return personService.getPatientsDoctor(id);
+	}
+
+	@GetMapping(value="/{id}/patients/{idPatient}/messages")
+	public MessageResponse getMessages(@PathVariable("id") Integer id,
+									   @PathVariable("idPatient") Integer idPatient) {
+		return personService.getMessages(id, idPatient);
 	}
 
 	@GetMapping("/{id}")

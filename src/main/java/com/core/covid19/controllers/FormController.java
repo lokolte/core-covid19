@@ -2,7 +2,9 @@ package com.core.covid19.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.core.covid19.models.entities.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,8 +30,18 @@ public class FormController {
 	private JwtUtil jwtUtil;
 
 	@GetMapping
-	public PersonFormsResponse listAll(@RequestHeader("Authorization") String authorization) {
+	public PersonFormsResponse listAll() {
+		return formService.findAll();
+	}
+
+	@GetMapping(value="/my")
+	public PersonFormsResponse listAllByEmail(@RequestHeader("Authorization") String authorization) {
 		return formService.findAllByPersonEmail(jwtUtil.getEmailFromJwtToken(authorization));
+	}
+
+	@GetMapping(value = "/{id}")
+	public PersonFormsResponse listAllById(@PathVariable("id") Integer id) {
+		return formService.findAllById(id);
 	}
 
 	@PostMapping

@@ -12,6 +12,9 @@ public class MessageResponse implements Serializable {
 	
 	private Person myData;
 
+	public MessageResponse() {
+	}
+
 	public MessageResponse(List<MessageItem> messages, Person myData) {
 		this.messages = messages;
 		this.myData = myData;

@@ -31,8 +31,8 @@ public class MessageController {
 	}
 
 	@PostMapping
-	public Message insert(@RequestHeader("Authorization") String authorization, @RequestBody Message message) {
-		return messageService.insert(jwtUtil.getEmailFromJwtToken(authorization), message);
+	public Message insert(@RequestBody Message message) {
+		return messageService.insert(message);
 	}
 
 }
