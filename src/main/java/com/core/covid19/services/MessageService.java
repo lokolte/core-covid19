@@ -61,8 +61,7 @@ public class MessageService {
 		return new MessageResponse(messages, person);
 	}
 
-	public Message insert(String email, Message message) {
-		
+	public Message insert(Message message) {
 		Message messageToSave = new Message();
 		messageToSave.setMessageText(message.getMessageText());
 		messageToSave.setSendDate(new Timestamp(new Date().getTime()));

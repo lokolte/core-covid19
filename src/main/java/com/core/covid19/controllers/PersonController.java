@@ -63,18 +63,6 @@ public class PersonController {
 		return personService.getMessages(id, idPatient);
 	}
 
-	@PostMapping(value="/{id}/patients/{idPatient}/messages")
-	public void sendMessage(
-			@RequestHeader("Authorization") String authorization,
-			@PathVariable("id") Integer id,
-			@PathVariable("idPatient") Integer idPatient,
-			@RequestBody Message message) {
-
-		message.setPersonSenderId(id);
-		message.setPersonReceivedId(idPatient);
-		messageService.insert(jwtUtil.getEmailFromJwtToken(authorization), message);
-	}
-
 	@GetMapping("/{id}")
 	public PersonAnswersResponse listAnswersFromPatients(@PathVariable("id") Integer id) {
 		return answerService.findAllByPersonId(id);
