@@ -1,14 +1,17 @@
 package com.core.covid19.controllers;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.core.covid19.authentication.util.JwtUtil;
 import com.core.covid19.models.responses.HospitalsResponse;
 import com.core.covid19.services.HospitalService;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Iterator;
 
 @RestController
 @RequestMapping("/hospitals")
@@ -23,5 +26,11 @@ public class HospitalController {
 	@GetMapping
 	public HospitalsResponse get(@RequestHeader("Authorization") String authorization){
 		return hospitalService.getTenCloser(jwtUtil.getEmailFromJwtToken(authorization));
+	}
+
+	@PostMapping(value="/cargar")
+	public void cargar(@RequestParam("file") MultipartFile file) throws IOException, InvalidFormatException {
+
+		hospitalService.cargar(file);
 	}
 }

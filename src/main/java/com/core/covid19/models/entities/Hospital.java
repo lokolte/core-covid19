@@ -28,13 +28,41 @@ public class Hospital implements Serializable {
 	private String name;
 
 	@Column(nullable=false, length=1000)
+	private String code;
+
+	@Column(nullable=false, length=1000)
 	private String address;
+
+	@Column(nullable=true)
+	private Boolean state;
+
+	@Column(nullable=true, length=50)
+	private String phone;
+
+	@Column(nullable=false, length=15)
+	private String area;
+
+	@Column(nullable=true, length=100)
+	private String director;
+
+	@Column(nullable=false, length=100)
+	private String type;
 
 	//bi-directional many-to-one association to Location
 	@ManyToOne
-	@JoinColumn(name="location", nullable=false)
+	@JoinColumn(name="location", nullable=true)
 	@JsonIgnoreProperties("hospitals")
 	private Location location;
+
+	@ManyToOne
+	@JoinColumn(name="district", nullable=true)
+	@JsonIgnoreProperties("hospitals")
+	private District district;
+
+	@ManyToOne
+	@JoinColumn(name="province", nullable=true)
+	@JsonIgnoreProperties("hospitals")
+	private Province province;
 
 	public Hospital() {
 	}
@@ -73,5 +101,69 @@ public class Hospital implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public Province getProvince() {
+		return province;
+	}
+
+	public void setProvince(Province province) {
+		this.province = province;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public Boolean getState() {
+		return state;
+	}
+
+	public void setState(Boolean state) {
+		this.state = state;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+
+	public String getDirector() {
+		return director;
+	}
+
+	public void setDirector(String director) {
+		this.director = director;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public District getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(District district) {
+		this.district = district;
 	}
 }
