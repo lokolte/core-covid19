@@ -35,6 +35,10 @@ public class HospitalService {
 
 	private Integer maxHospitals = 10;
 
+	public List<Hospital> getAll(){
+		return hospitalRepo.findAll();
+	}
+
 	public HospitalsResponse getTenCloser(String email) {
 		Account account = accountRepo.findByEmail(email);
 
