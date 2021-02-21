@@ -23,7 +23,7 @@ public class HospitalController {
 	@Autowired
 	private JwtUtil jwtUtil;
 
-	@GetMapping
+	@GetMapping(value="/my")
 	public HospitalsResponse get(@RequestHeader("Authorization") String authorization){
 		return hospitalService.getTenCloser(jwtUtil.getEmailFromJwtToken(authorization));
 	}

@@ -47,12 +47,6 @@ public class Province implements Serializable {
 	@JsonIgnoreProperties("province")
 	@EqualsAndHashCode.Exclude
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private List<Hospital> hospitals;
-
-	@OneToMany(mappedBy="province")
-	@JsonIgnoreProperties("province")
-	@EqualsAndHashCode.Exclude
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private List<District> districts;
 	
 	public Province() {
@@ -96,14 +90,6 @@ public class Province implements Serializable {
 
 	public void setPersons(List<Person> persons) {
 		this.persons = persons;
-	}
-
-	public List<Hospital> getHospitals() {
-		return hospitals;
-	}
-
-	public void setHospitals(List<Hospital> hospitals) {
-		this.hospitals = hospitals;
 	}
 
 	public List<District> getDistricts() {

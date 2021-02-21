@@ -33,14 +33,14 @@ public class HospitalService {
 	@Autowired
 	private DistrictRepo districtRepo;
 
-	private Integer maxHospitals = 2;
+	private Integer maxHospitals = 10;
 
 	public HospitalsResponse getTenCloser(String email) {
 		Account account = accountRepo.findByEmail(email);
 
 		if(account.getPerson() == null) return null;
 
-		List<Hospital> hospitals = hospitalRepo.findAll();
+		List<Hospital> hospitals = hospitalRepo.findAll().stream().filter(hospital -> hospital.getLocation() != null).collect(Collectors.toList());
 
 		List<HospitalDistance> hospitalsDistance = new ArrayList<HospitalDistance>();
 
@@ -87,7 +87,6 @@ public class HospitalService {
 				Double longitude = null;
 
 				while (cellIterator.hasNext()) {
-
 					Cell cell = cellIterator.next();
 					String cellValue = dataFormatter.formatCellValue(cell);
 					if (col == 0) idProvince = new Integer(cellValue);
@@ -110,11 +109,11 @@ public class HospitalService {
 					else if (col == 11) director = cellValue;
 					else if (col == 12)
 						try {
-							latitude = new Double(cellValue);
+							longitude = new Double(cellValue);
 						} catch (Exception e) {}
 					else if (col == 13)
 						try {
-							longitude = new Double(cellValue);
+							latitude = new Double(cellValue);
 						} catch (Exception e) {}
 					col++;
 				}
@@ -152,7 +151,6 @@ public class HospitalService {
 				h.setPhone(phone);
 				h.setState(state);
 				h.setDistrict(d);
-				h.setProvince(p);
 				if (latitude != null && longitude != null) {
 					Location loc = new Location();
 					loc.setLatitude(latitude);

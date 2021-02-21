@@ -30,8 +30,8 @@ public class District implements Serializable {
     @JsonIgnoreProperties("districts")
     private Province province;
 
-    @OneToMany(mappedBy="province")
-    @JsonIgnoreProperties("province")
+    @OneToMany(mappedBy="district")
+    @JsonIgnoreProperties("district")
     @EqualsAndHashCode.Exclude
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Hospital> hospitals;

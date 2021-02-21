@@ -59,11 +59,6 @@ public class Hospital implements Serializable {
 	@JsonIgnoreProperties("hospitals")
 	private District district;
 
-	@ManyToOne
-	@JoinColumn(name="province", nullable=true)
-	@JsonIgnoreProperties("hospitals")
-	private Province province;
-
 	public Hospital() {
 	}
 
@@ -101,14 +96,6 @@ public class Hospital implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
-	}
-
-	public Province getProvince() {
-		return province;
-	}
-
-	public void setProvince(Province province) {
-		this.province = province;
 	}
 
 	public String getCode() {
