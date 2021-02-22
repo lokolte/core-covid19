@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -23,20 +21,20 @@ import lombok.EqualsAndHashCode;
 @Data
 @NamedQuery(name="Province.findAll", query="SELECT p FROM Province p")
 public class Province implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(unique=true, nullable=false)
 	private Integer id;
 	
-	@Column(unique=true, nullable=false, length=10)
+	@Column(unique=true, nullable=true, length=10)
 	private String code;
 
 	@Column(nullable=false, length=100)
 	private String name;
 
-	@Column(nullable=false, length=100)
+	@Column(nullable=true, length=100)
 	private String capital;
 	
 	@OneToMany(mappedBy="province")
@@ -44,6 +42,12 @@ public class Province implements Serializable {
 	@EqualsAndHashCode.Exclude
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private List<Person> persons;
+
+	@OneToMany(mappedBy="province")
+	@JsonIgnoreProperties("province")
+	@EqualsAndHashCode.Exclude
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private List<District> districts;
 	
 	public Province() {
 	}
@@ -88,4 +92,11 @@ public class Province implements Serializable {
 		this.persons = persons;
 	}
 
+	public List<District> getDistricts() {
+		return districts;
+	}
+
+	public void setDistricts(List<District> districts) {
+		this.districts = districts;
+	}
 }

@@ -18,6 +18,8 @@ import com.core.covid19.models.entities.Account;
 import com.core.covid19.models.enums.ClaimsTypes;
 import com.core.covid19.repos.AccountRepo;
 
+import javax.transaction.Transactional;
+
 @Service
 public class CustomUserDetailService implements UserDetailsService {
 	
@@ -25,6 +27,7 @@ public class CustomUserDetailService implements UserDetailsService {
 	private AccountRepo accountRepo;
 
 	@Override
+	@Transactional
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Account account = accountRepo.findByEmail(email);
 
