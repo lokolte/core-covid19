@@ -10,4 +10,5 @@ public interface PersonRepo extends JpaRepository<Person, Integer> {
 	
 	Person findByDocument(String document);
 	List<Person> getPatients(int province);
+	List<Person> getDoctors(int role);
 }

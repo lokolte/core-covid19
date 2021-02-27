@@ -25,6 +25,8 @@ import java.util.Set;
 @NamedQuery(name="Person.findAll", query="SELECT p FROM Person p")
 @NamedQuery(name="Person.getPatients", query="SELECT p FROM Person p, Account a "
 		+ "WHERE a.person.id = p.id and a.role.id = 1 and p.province.id = :province")
+@NamedQuery(name="Person.getDoctors", query="SELECT p FROM Person p, Account a " +
+		"WHERE a.person.id = p.id and a.role.id = :role")
 public class Person implements Serializable {
 	private static final long serialVersionUID = 1L;
 

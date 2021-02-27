@@ -6,4 +6,5 @@ import com.core.covid19.models.entities.Province;
 
 public interface ProvinceRepo extends JpaRepository<Province, Integer> {
 
+    Province findByName(String name);
 }

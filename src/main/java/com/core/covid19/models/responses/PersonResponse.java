@@ -9,12 +9,14 @@ public class PersonResponse implements Serializable {
 	private int id;
 	private String name;
 	private String phone;
+	private String document;
 	private String doctor;
 	
 	public PersonResponse(Person p) {
 		this.id = p.getId();
 		this.name = p.getName() + " " + p.getLastname();
 		this.phone = p.getPhone();
+		this.document = p.getDocument();
 	}
 
 	public PersonResponse(Person p, String doctor) {
@@ -54,5 +56,13 @@ public class PersonResponse implements Serializable {
 
 	public void setDoctor(String doctor) {
 		this.doctor = doctor;
+	}
+
+	public String getDocument() {
+		return document;
+	}
+
+	public void setDocument(String document) {
+		this.document = document;
 	}
 }
