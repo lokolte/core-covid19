@@ -11,7 +11,7 @@ public class PersonResponse implements Serializable {
 	private String phone;
 	private String document;
 	private String doctor;
-	
+
 	public PersonResponse(Person p) {
 		this.id = p.getId();
 		this.name = p.getName() + " " + p.getLastname();

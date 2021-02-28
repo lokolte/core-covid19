@@ -5,12 +5,15 @@ import java.sql.Timestamp;
 
 import javax.persistence.*;
 
+import com.core.covid19.models.requests.DoctorRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Set;
 
@@ -95,6 +98,25 @@ public class Person implements Serializable {
 	private Province province;
 
 	public Person() {
+	}
+
+	public Person(DoctorRequest data) {
+		this.name = data.getName();
+		this.lastname = data.getLastname();
+		this.phone = data.getPhone();
+		this.document = data.getDocument();
+		this.address = data.getAddress();
+		this.sex = data.getSex();
+		Status s = new Status();
+		s.setName(data.getStatus());
+		this.status = s;
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		try {
+			this.birthDate = new Timestamp(format.parse(data.getBirthDate()).getTime());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		this.location = new Location(data.getLatitude(), data.getLongitude());
 	}
 
 	public Integer getId() {

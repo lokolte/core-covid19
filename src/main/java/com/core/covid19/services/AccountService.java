@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.core.covid19.models.entities.*;
+import com.core.covid19.models.requests.DoctorResponse;
 import com.core.covid19.models.responses.PersonResponse;
 import com.core.covid19.repos.*;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -84,6 +85,14 @@ public class AccountService {
 		List<PersonResponse> list = new ArrayList<>();
 		for (Person p : persons) list.add(new PersonResponse(p));
 		return list;
+	}
+
+	public DoctorResponse getDoctor(int id) {
+
+		Optional<Person> person = personRepo.findById(id);
+		if (person != null && person.isPresent())
+			return new DoctorResponse(person.get());
+		return null;
 	}
 
 	public void loadData(MultipartFile file) throws IOException, InvalidFormatException {
@@ -207,7 +216,7 @@ public class AccountService {
 
 	private Timestamp getFecha(String birthDate) {
 
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");//("yyyy-MM-dd");
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 		try {
 			Date d = format.parse(birthDate);
 			if (d != null)

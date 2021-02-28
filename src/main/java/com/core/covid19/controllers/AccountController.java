@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import com.core.covid19.models.entities.Person;
+import com.core.covid19.models.requests.DoctorRequest;
+import com.core.covid19.models.requests.DoctorResponse;
 import com.core.covid19.models.responses.PersonResponse;
+import com.core.covid19.services.PersonService;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +24,9 @@ public class AccountController {
 
 	@Autowired
 	private AccountService accountService;
+
+	@Autowired
+	private PersonService personService;
 	
 	@GetMapping
 	public List<Account> list(){
@@ -56,6 +63,17 @@ public class AccountController {
 
 		System.err.println("Cargar datos !!!");
 		accountService.loadData(file);
+	}
+
+	@GetMapping("/doctors/{id}")
+	public DoctorResponse getDoctors(@PathVariable("id") Integer id) {
+		return accountService.getDoctor(id);
+	}
+
+	@PostMapping("/doctors")
+	public void update(@RequestBody DoctorRequest data) {
+		Person p = new Person(data);
+		personService.modify(data.getEmail(), p);
 	}
 
 }
