@@ -3,15 +3,10 @@ package com.core.covid19.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import com.core.covid19.authentication.util.JwtUtil;
+import com.core.covid19.models.requests.ChangePasswordRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.core.covid19.models.entities.Account;
 import com.core.covid19.models.requests.AccountRequest;
@@ -23,6 +18,9 @@ public class AccountController {
 
 	@Autowired
 	private AccountService accountService;
+
+	@Autowired
+	private JwtUtil jwtUtil;
 	
 	@GetMapping
 	public List<Account> list(){
@@ -47,6 +45,13 @@ public class AccountController {
 	@DeleteMapping(value = "/{email}")
 	public void delete(@PathVariable("email") String email) {
 		accountService.deleteById(email);
+	}
+
+	@PostMapping(value = "/doctors/change-password")
+	public void changePassword(@RequestHeader("Authorization") String authorization,
+								  @RequestBody ChangePasswordRequest data) throws Exception {
+
+		accountService.changePassword(data, jwtUtil.getEmailFromJwtToken(authorization));
 	}
 
 }
