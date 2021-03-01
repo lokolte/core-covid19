@@ -1,5 +1,6 @@
 package com.core.covid19.services;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -12,6 +13,8 @@ import com.core.covid19.models.responses.PersonResponse;
 import com.core.covid19.repos.*;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -212,6 +215,39 @@ public class AccountService {
 				accountRepo.save(a);
 			}
 		}
+	}
+
+	public ByteArrayOutputStream export() throws Exception {
+
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet = workbook.createSheet("Doctores");
+		sheet.setDefaultColumnWidth(20);
+		List<PersonResponse> doctors = getDoctors();
+		int rowCount = 0;
+
+		// Header
+		Row rowHeader = sheet.createRow(rowCount++);
+		rowHeader.createCell(0).setCellValue("Nro. Documento");
+		rowHeader.createCell(1).setCellValue("Nombre completo");
+		rowHeader.createCell(2).setCellValue("Nro. de telefono");
+
+		for (PersonResponse doctor : doctors) {
+			Row row = sheet.createRow(rowCount++);
+			row.createCell(0).setCellValue(doctor.getDocument());
+			row.createCell(1).setCellValue(doctor.getName());
+			row.createCell(2).setCellValue(doctor.getPhone());
+		}
+
+		ByteArrayOutputStream res = new ByteArrayOutputStream();
+		try {
+			workbook.write(res);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new Exception("Error al generar planilla");
+		} finally {
+			workbook.close();
+		}
+		return res;
 	}
 
 	private Timestamp getFecha(String birthDate) {

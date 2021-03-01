@@ -1,5 +1,6 @@
 package com.core.covid19.controllers;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,9 @@ import com.core.covid19.models.responses.PersonResponse;
 import com.core.covid19.services.PersonService;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.core.covid19.models.entities.Account;
@@ -63,6 +67,17 @@ public class AccountController {
 
 		System.err.println("Cargar datos !!!");
 		accountService.loadData(file);
+	}
+
+	@GetMapping("/doctors/export")
+	public ResponseEntity<byte[]> export() throws Exception {
+
+		ByteArrayOutputStream salida = accountService.export();
+		byte[] res = salida.toByteArray();
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Content-Type", "application/vnd.ms-excel");
+		headers.set("Content-Disposition", "attachment; filename=\"Planilla.xlsx\"");
+		return new ResponseEntity<>(res, headers, HttpStatus.OK);
 	}
 
 	@GetMapping("/doctors/{id}")
