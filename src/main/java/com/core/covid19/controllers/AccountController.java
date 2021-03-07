@@ -12,8 +12,11 @@ import com.core.covid19.models.responses.PersonResponse;
 import com.core.covid19.services.PersonService;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,14 +73,19 @@ public class AccountController {
 	}
 
 	@GetMapping("/doctors/export")
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<Resource> export() throws Exception {
 
 		ByteArrayOutputStream salida = accountService.export();
 		byte[] res = salida.toByteArray();
+		ByteArrayResource resource = new ByteArrayResource(res);
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Content-Type", "application/vnd.ms-excel");
+		headers.set("Content-Type", "application/octet-stream");
 		headers.set("Content-Disposition", "attachment; filename=\"Planilla.xlsx\"");
-		return new ResponseEntity<>(res, headers, HttpStatus.OK);
+		String contentType = "application/octet-stream";
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(contentType))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "doctores.xlsx" + "\"")
+				.body(resource);
 	}
 
 	@GetMapping("/doctors/{id}")
