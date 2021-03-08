@@ -33,10 +33,45 @@ public class HospitalService {
 	@Autowired
 	private DistrictRepo districtRepo;
 
+	@Autowired
+	private PersonRepo personRepo;
+
+	@Autowired
+	HospitalDoctorRepo hospitalDoctorRepo;
+
 	private Integer maxHospitals = 10;
 
 	public List<Hospital> getAll(){
 		return hospitalRepo.findAll();
+	}
+
+	public List<Hospital> getHospitalsByDoctor(Integer idDoctor) {
+
+		Optional<Person> person = personRepo.findById(idDoctor);
+		List<Hospital> res = new ArrayList<>();
+		if (person != null && person.isPresent()) {
+			Person p = person.get();
+			Province province = p.getProvince();
+			if (province != null) {
+				List<Hospital> hospitals = hospitalRepo.findAByProvince(province.getId());
+				List<HospitalDoctor> asignados = hospitalDoctorRepo.getAsignados(p.getId());
+				List<Integer> hospitalesAsignados = getHospitalesAsignados(asignados);
+				for (Hospital h : hospitals) {
+					if (!hospitalesAsignados.contains(h.getId())) {
+						res.add(h);
+					}
+				}
+			}
+		}
+		return res;
+	}
+
+	private List<Integer> getHospitalesAsignados(List<HospitalDoctor> asignados) {
+		List<Integer> res = new ArrayList<>();
+		for (HospitalDoctor h : asignados) {
+			res.add(h.getId().getHospital());
+		}
+		return res;
 	}
 
 	public HospitalsResponse getTenCloser(String email) {

@@ -24,7 +24,9 @@ public class HospitalController {
 	private JwtUtil jwtUtil;
 
 	@GetMapping
-	public List<Hospital> getAll(){
+	public List<Hospital> getAll(@RequestParam(value = "idDoctor", required = false) Integer idDoctor) {
+		if (idDoctor != null)
+			return hospitalService.getHospitalsByDoctor(idDoctor);
 		return hospitalService.getAll();
 	}
 

@@ -43,6 +43,9 @@ public class AccountService {
 	@Autowired
 	private LocationRepo locationRepo;
 
+	@Autowired
+	HospitalDoctorRepo hospitalDoctorRepo;
+
 	public Account insert(AccountRequest accountRequest) {
 		Role role = null;
 		
@@ -96,6 +99,32 @@ public class AccountService {
 		if (person != null && person.isPresent())
 			return new DoctorResponse(person.get());
 		return null;
+	}
+
+	public List<Hospital> getHospitalsDoctor(int id) {
+
+		Optional<Person> person = personRepo.findById(id);
+		if (person != null && person.isPresent()) {
+			Person p = person.get();
+			return hospitalDoctorRepo.getHospitalsDoctor(p.getId());
+		}
+		return new ArrayList<>();
+	}
+
+	public void saveHospitalsDoctor(int id, List<Hospital> hospitalList) {
+
+		Optional<Person> person = personRepo.findById(id);
+		if (person != null && person.isPresent()) {
+			Person p = person.get();
+			List<HospitalDoctor> hospitals = hospitalDoctorRepo.getAsignados(p.getId());
+			for (HospitalDoctor h : hospitals) {
+				hospitalDoctorRepo.delete(h);
+			}
+			for (Hospital h : hospitalList) {
+				HospitalDoctor hd = new HospitalDoctor(new HospitalDoctorPk(id, h.getId()));
+				hospitalDoctorRepo.save(hd);
+			}
+		}
 	}
 
 	public void loadData(MultipartFile file) throws IOException, InvalidFormatException {

@@ -16,6 +16,8 @@ import lombok.Data;
 @Table(name="hospital")
 @Data
 @NamedQuery(name="Hospital.findAll", query="SELECT h FROM Hospital h")
+@NamedQuery(name="Hospital.findAByProvince",
+		query="SELECT h from Hospital h, District d WHERE h.district.id = d.id and d.province.id = :province")
 public class Hospital implements Serializable {
 	private static final long serialVersionUID = 1L;
 

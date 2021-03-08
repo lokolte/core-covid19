@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import com.core.covid19.models.entities.Hospital;
 import com.core.covid19.models.entities.Person;
 import com.core.covid19.models.requests.DoctorRequest;
 import com.core.covid19.models.requests.DoctorResponse;
@@ -63,6 +64,16 @@ public class AccountController {
 	@GetMapping("/doctors")
 	public List<PersonResponse> getDoctors() {
 		return accountService.getDoctors();
+	}
+
+	@GetMapping("/doctors/{id}/hospitals")
+	public List<Hospital> getHospitalsDoctor(@PathVariable("id") Integer id) {
+		return accountService.getHospitalsDoctor(id);
+	}
+
+	@PostMapping("/doctors/{id}/hospitals")
+	public void saveHospitalsDoctor(@PathVariable("id") Integer id, @RequestBody List<Hospital> hospitals) {
+		accountService.saveHospitalsDoctor(id, hospitals);
 	}
 
 	@PostMapping(value="/doctors/import")
