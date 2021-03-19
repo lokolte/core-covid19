@@ -15,6 +15,7 @@ public class DoctorRequest {
     private String address;
     private String birthDate;
     private String status;
+    private Integer province;
     private double latitude;
     private double longitude;
 
@@ -115,5 +116,13 @@ public class DoctorRequest {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getProvince() {
+        return province;
+    }
+
+    public void setProvince(Integer province) {
+        this.province = province;
     }
 }

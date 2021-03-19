@@ -76,6 +76,10 @@ public class PersonService {
 		return personRepo.findAll();
 	}
 
+	public Person get(int id) {
+		return personRepo.findById(id).get();
+	}
+
 	public PersonsResponse getPatientsDoctor(int id) {
 
 		Optional<Person> per = personRepo.findById(id);
@@ -103,7 +107,7 @@ public class PersonService {
 		if (account.getPerson() == null) return new PersonsResponse();
 		Person person = account.getPerson();
 		if (person.getProvince() == null) return new PersonsResponse();
-		
+
 		List<Person> persons = personRepo.getPatients(person.getProvince().getId());
 		List<PersonResponse> list = new ArrayList<PersonResponse>();
 		for (Person p : persons) {

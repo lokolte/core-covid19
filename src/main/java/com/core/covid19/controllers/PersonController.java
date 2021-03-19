@@ -52,6 +52,11 @@ public class PersonController {
 		return personService.getPatients(jwtUtil.getEmailFromJwtToken(authorization));
 	}
 
+	@GetMapping(value="/patients/{id}")
+	public Person get(@PathVariable("id") Integer id) {
+		return personService.get(id);
+	}
+
 	@GetMapping(value="/{id}/patients")
 	public PersonsResponse getPatientsDoctor(@PathVariable("id") Integer id) {
 		return personService.getPatientsDoctor(id);

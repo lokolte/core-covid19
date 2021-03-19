@@ -1,6 +1,8 @@
 package com.core.covid19.controllers;
 
 import com.core.covid19.models.entities.Hospital;
+import com.core.covid19.models.entities.Person;
+import com.core.covid19.models.requests.DoctorRequest;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,16 @@ public class HospitalController {
 		if (idDoctor != null)
 			return hospitalService.getHospitalsByDoctor(idDoctor);
 		return hospitalService.getAll();
+	}
+
+	@GetMapping("/{id}")
+	public Hospital get(@PathVariable("id") Integer id) {
+		return hospitalService.get(id);
+	}
+
+	@PostMapping
+	public void save(@RequestBody Hospital data) {
+		hospitalService.save(data);
 	}
 
 	@GetMapping(value="/my")

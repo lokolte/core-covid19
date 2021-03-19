@@ -117,6 +117,9 @@ public class Person implements Serializable {
 			e.printStackTrace();
 		}
 		this.location = new Location(data.getLatitude(), data.getLongitude());
+		if (data.getProvince() != null) {
+			this.province = new Province(data.getProvince());
+		}
 	}
 
 	public Integer getId() {

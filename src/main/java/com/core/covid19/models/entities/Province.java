@@ -52,6 +52,10 @@ public class Province implements Serializable {
 	public Province() {
 	}
 
+	public Province(int id) {
+		this.id = id;
+	}
+
 	public Integer getId() {
 		return id;
 	}

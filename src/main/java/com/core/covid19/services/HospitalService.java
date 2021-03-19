@@ -45,6 +45,21 @@ public class HospitalService {
 		return hospitalRepo.findAll();
 	}
 
+	public Hospital get(int id){
+		return hospitalRepo.findById(id).get();
+	}
+
+	public void save(Hospital data) {
+		Hospital h = hospitalRepo.getOne(data.getId());
+		h.setName(data.getName());
+		h.setCode(data.getCode());
+		h.setDirector(data.getDirector());
+		h.setAddress(data.getAddress());
+		h.setArea(data.getArea());
+		h.setPhone(data.getPhone());
+		hospitalRepo.save(h);
+	}
+
 	public List<Hospital> getHospitalsByDoctor(Integer idDoctor) {
 
 		Optional<Person> person = personRepo.findById(idDoctor);

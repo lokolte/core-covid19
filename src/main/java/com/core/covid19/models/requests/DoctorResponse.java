@@ -19,6 +19,7 @@ public class DoctorResponse implements Serializable {
     private String birthDate;
     private String sex;
     private String document;
+    private int provinceId;
     private String province;
     private String email;
     private double latitude;
@@ -49,6 +50,7 @@ public class DoctorResponse implements Serializable {
             this.email = accounts.get(0).getEmail();
         }
         if (p.getProvince() != null) {
+            this.provinceId = p.getProvince().getId();
             this.province = p.getProvince().getName();
         }
         if (p.getStatus() != null) {
@@ -158,5 +160,13 @@ public class DoctorResponse implements Serializable {
 
     public void setDocument(String document) {
         this.document = document;
+    }
+
+    public int getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(int provinceId) {
+        this.provinceId = provinceId;
     }
 }
