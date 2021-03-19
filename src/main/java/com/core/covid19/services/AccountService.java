@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.core.covid19.models.entities.*;
+import com.core.covid19.models.requests.ChangePasswordRequest;
 import com.core.covid19.models.requests.DoctorResponse;
 import com.core.covid19.models.responses.PersonResponse;
 import com.core.covid19.repos.*;
@@ -27,7 +28,7 @@ public class AccountService {
 
 	@Autowired
 	private RoleRepo roleRepo;
-	
+
 	@Autowired
 	private AccountRepo accountRepo;
 
@@ -48,38 +49,38 @@ public class AccountService {
 
 	public Account insert(AccountRequest accountRequest) {
 		Role role = null;
-		
+
 		if(accountRequest.getRole() != null)
 			role = roleRepo.findByName(accountRequest.getRole().getName());
 		else role = roleRepo.findByName(Roles.CIVIL.toString());
-		
+
 		Account account = new Account();
 		account.setEmail(accountRequest.getEmail());
 		account.setPassword(accountRequest.getPassword());
 		account.setRole(role);
-		
+
 		return accountRepo.save(account);
 	}
-	
+
 	public List<Account> findAll(){
 		return accountRepo.findAll();
 	}
-	
+
 	public Optional<Account> findById(Integer id) {
 		return accountRepo.findById(id);
 	}
-	
+
 	public Account modify(AccountRequest accountRequest){
 		Role role = roleRepo.findByName(accountRequest.getRole().getName());
-		
+
 		Account account = new Account();
 		account.setEmail(accountRequest.getEmail());
 		account.setPassword(accountRequest.getPassword());
 		account.setRole(role);
-		
+
 		return accountRepo.save(account);
 	}
-	
+
 	public void deleteById(String email) {
 		accountRepo.delete(accountRepo.findByEmail(email));
 	}
@@ -124,6 +125,19 @@ public class AccountService {
 				HospitalDoctor hd = new HospitalDoctor(new HospitalDoctorPk(id, h.getId()));
 				hospitalDoctorRepo.save(hd);
 			}
+		}
+	}
+
+	public void changePassword(ChangePasswordRequest data, String email) throws Exception {
+
+		Account account = accountRepo.findByEmail(email);
+		if (account != null) {
+			String passwordActual = account.getPassword();
+			if (!data.getPassword().equals(passwordActual)) {
+				throw new Exception("Password incorrecto");
+			}
+			account.setPassword(data.getNewpassword());
+			accountRepo.save(account);
 		}
 	}
 

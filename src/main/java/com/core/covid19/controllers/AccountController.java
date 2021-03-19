@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import com.core.covid19.authentication.util.JwtUtil;
 import com.core.covid19.models.entities.Hospital;
 import com.core.covid19.models.entities.Person;
+import com.core.covid19.models.requests.ChangePasswordRequest;
 import com.core.covid19.models.requests.DoctorRequest;
 import com.core.covid19.models.requests.DoctorResponse;
 import com.core.covid19.models.responses.PersonResponse;
@@ -35,12 +37,15 @@ public class AccountController {
 
 	@Autowired
 	private PersonService personService;
-	
+
+	@Autowired
+	private JwtUtil jwtUtil;
+
 	@GetMapping
 	public List<Account> list(){
 		return accountService.findAll();
 	}
-	
+
 	@GetMapping(value = "/{id}")
 	public Optional<Account> get(@PathVariable("id") Integer id){
 		return accountService.findById(id);
@@ -50,12 +55,12 @@ public class AccountController {
 	public Account insert(@RequestBody AccountRequest accountRequest){
 		return accountService.insert(accountRequest);
 	}
-	
+
 	@PutMapping
 	public Account modify(@RequestBody AccountRequest accountRequest){
 		return accountService.modify(accountRequest);
 	}
-	
+
 	@DeleteMapping(value = "/{email}")
 	public void delete(@PathVariable("email") String email) {
 		accountService.deleteById(email);
@@ -81,6 +86,13 @@ public class AccountController {
 
 		System.err.println("Cargar datos !!!");
 		accountService.loadData(file);
+	}
+
+	@PostMapping(value = "/doctors/change-password")
+	public void changePassword(@RequestHeader("Authorization") String authorization,
+							   @RequestBody ChangePasswordRequest data) throws Exception {
+
+		accountService.changePassword(data, jwtUtil.getEmailFromJwtToken(authorization));
 	}
 
 	@GetMapping("/doctors/export")
