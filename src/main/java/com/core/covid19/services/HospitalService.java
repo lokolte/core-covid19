@@ -49,6 +49,11 @@ public class HospitalService {
 		return hospitalRepo.findById(id).get();
 	}
 
+	public void delete(int id){
+		Hospital h = hospitalRepo.findById(id).get();
+		hospitalRepo.delete(h);
+	}
+
 	public void save(Hospital data) {
 		Hospital h = hospitalRepo.getOne(data.getId());
 		h.setName(data.getName());

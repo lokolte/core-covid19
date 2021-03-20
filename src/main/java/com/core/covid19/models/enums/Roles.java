@@ -6,6 +6,8 @@ public enum Roles {
 	
 	PROFESIONAL_MEDICO,
 	
-	ADMIN
+	ADMIN,
+
+	COORDINADOR,
 	
 }

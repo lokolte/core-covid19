@@ -37,6 +37,11 @@ public class HospitalController {
 		return hospitalService.get(id);
 	}
 
+	@DeleteMapping("/{id}")
+	public void delete(@PathVariable("id") Integer id) {
+		hospitalService.delete(id);
+	}
+
 	@PostMapping
 	public void save(@RequestBody Hospital data) {
 		hospitalService.save(data);

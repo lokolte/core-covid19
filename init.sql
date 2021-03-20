@@ -9,13 +9,6 @@ INSERT INTO public.status(id, name) VALUES
 	(2, 'SUSPECT'),
 	(3, 'INFECTED'),
 	(4, 'RECOVERED');
-	
-INSERT INTO province (id,code,"name",capital) VALUES
-	 (1,'PY-ASU','Asunción','Asunción'),
-	 (2,'PY-1','Concepción','Concepción'),
-	 (3,'PY-2','San Pedro','San Pedro de Ycuamandiyú'),
-	 (4,'PY-3','Cordillera','Caacupé'),
-	 (5,'PY-4','Guairá','Villarrica');
 
 
 INSERT INTO public.location(id, latitude, longitude)
@@ -328,32 +321,3 @@ INSERT INTO public.form_items(
 INSERT INTO public.person_forms(
 	person_id, form_id)
 	VALUES (1, 3);
-	
-
-
-
-
-INSERT INTO public.location(
-	id, latitude, longitude)
-	VALUES (4, -25.324497, -57.561438);
-
-INSERT INTO public.location(
-	id, latitude, longitude)
-	VALUES (5, -25.324274, -57.557479);
-
-INSERT INTO public.location(
-	id, latitude, longitude)
-	VALUES (6, -25.322431, -57.553745);
-
-
-INSERT INTO public.hospital(
-	id, address, name, location)
-	VALUES (1, 'Fernando de la mora A', 'Hospital A', 4);
-	
-INSERT INTO public.hospital(
-	id, address, name, location)
-	VALUES (2, 'Fernando de la mora B', 'Hospital B', 5);
-	
-INSERT INTO public.hospital(
-	id, address, name, location)
-	VALUES (3, 'Fernando de la mora C', 'Hospital C', 6);

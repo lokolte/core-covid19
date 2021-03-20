@@ -24,7 +24,7 @@ public class CoordinatorService {
 
     public List<PersonResponse> getCoordinators() {
 
-        Role role = roleRepo.findByName(Roles.ADMIN.toString());
+        Role role = roleRepo.findByName(Roles.COORDINADOR.toString());
         List<Person> persons = personRepo.getDoctors(role.getId());
         List<PersonResponse> list = new ArrayList<>();
         for (Person p : persons) list.add(new PersonResponse(p));
