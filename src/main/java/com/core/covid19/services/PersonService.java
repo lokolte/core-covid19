@@ -85,9 +85,10 @@ public class PersonService {
 		Optional<Person> per = personRepo.findById(id);
 		if (per == null || !per.isPresent()) return new PersonsResponse();
 		Person person = per.get();
-		List<Person> patiens = patientDoctorRepo.getPatients(person.getId());
+		List<Object[]> patiens = patientDoctorRepo.getPatients(person.getId());
 		List<PersonResponse> list = new ArrayList<>();
-		for (Person p : patiens) {
+		for (Object[] d : patiens) {
+			Person p = personRepo.getOne((Integer) d[0]);
 			list.add(new PersonResponse(p));
 		}
 		return new PersonsResponse(list);

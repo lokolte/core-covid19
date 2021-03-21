@@ -12,5 +12,5 @@ public interface PatientDoctorRepo extends JpaRepository<PatientDoctor, Integer>
     PatientDoctor getDoctor(int patient);
     List<Person> getDoctors(int province, int role);
     Person getDoctorPatient(int patient);
-    List<Person> getPatients(int doctor);
+    List<Object[]> getPatients(int doctor);
 }

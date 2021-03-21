@@ -11,5 +11,4 @@ public interface MessageRepo extends JpaRepository<Message, Integer>{
 	List<Message> findByPersonSenderId(Integer personSenderId);
 	
 	List<Message> findByPersonReceivedId(Integer personReceiverId);
-
 }
