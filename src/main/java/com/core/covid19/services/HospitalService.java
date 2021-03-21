@@ -55,7 +55,9 @@ public class HospitalService {
 	}
 
 	public void save(Hospital data) {
-		Hospital h = hospitalRepo.getOne(data.getId());
+		Hospital h = new Hospital();
+		if (data.getId() != null)
+			h = hospitalRepo.getOne(data.getId());
 		h.setName(data.getName());
 		h.setCode(data.getCode());
 		h.setDirector(data.getDirector());

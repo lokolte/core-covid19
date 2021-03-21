@@ -2,6 +2,7 @@ package com.core.covid19.models.responses;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.core.covid19.models.entities.Form;
@@ -17,12 +18,19 @@ public class AnswerItemResponse implements Serializable, Comparable<AnswerItemRe
 
 	private Timestamp answerDate;
 
+	private String date;
+
 	private List<ItemsAnswer> answers;
 
     public AnswerItemResponse(Integer id, Form form, Timestamp answerDate, List<ItemsAnswer> answers) {
     	this.id = id;
     	this.form = form;
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     	this.answerDate = answerDate;
+    	try {
+    		this.date = format.format(answerDate);
+		} catch (Exception e) {
+		}
         this.answers = answers;
     }
 
@@ -61,5 +69,13 @@ public class AnswerItemResponse implements Serializable, Comparable<AnswerItemRe
 
 	public void setAnswers(List<ItemsAnswer> answers) {
 		this.answers = answers;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
 	}
 }

@@ -66,6 +66,16 @@ public class AccountController {
 		accountService.deleteById(email);
 	}
 
+	@PostMapping("/doctors/new")
+	public void insert(@RequestBody DoctorRequest data) throws Exception {
+		accountService.insertDoctor(data);
+	}
+
+	@DeleteMapping("/person/{id}")
+	public void delete(@PathVariable("id") Integer id) {
+		accountService.delete(id);
+	}
+
 	@GetMapping("/doctors")
 	public List<PersonResponse> getDoctors() {
 		return accountService.getDoctors();
@@ -84,7 +94,6 @@ public class AccountController {
 	@PostMapping(value="/doctors/import")
 	public void cargar(@RequestParam("file") MultipartFile file) throws IOException, InvalidFormatException {
 
-		System.err.println("Cargar datos !!!");
 		accountService.loadData(file);
 	}
 

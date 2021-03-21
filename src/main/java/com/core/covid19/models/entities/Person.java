@@ -107,16 +107,42 @@ public class Person implements Serializable {
 		this.document = data.getDocument();
 		this.address = data.getAddress();
 		this.sex = data.getSex();
-		Status s = new Status();
-		s.setName(data.getStatus());
-		this.status = s;
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		try {
-			this.birthDate = new Timestamp(format.parse(data.getBirthDate()).getTime());
-		} catch (ParseException e) {
-			e.printStackTrace();
+		if (data.getStatus() != null) {
+			Status s = new Status();
+			s.setName(data.getStatus());
+			this.status = s;
+		}
+		if (data.getBirthDate() != null) {
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+			try {
+				this.birthDate = new Timestamp(format.parse(data.getBirthDate()).getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
 		this.location = new Location(data.getLatitude(), data.getLongitude());
+		if (data.getProvince() != null) {
+			this.province = new Province(data.getProvince());
+		}
+	}
+
+	public Person(DoctorRequest data, Location location, Status status) {
+		this.name = data.getName();
+		this.lastname = data.getLastname();
+		this.phone = data.getPhone();
+		this.document = data.getDocument();
+		this.address = data.getAddress();
+		this.sex = data.getSex();
+		this.status = status;
+		if (data.getBirthDate() != null) {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				this.birthDate = new Timestamp(format.parse(data.getBirthDate()).getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		this.location = location;
 		if (data.getProvince() != null) {
 			this.province = new Province(data.getProvince());
 		}

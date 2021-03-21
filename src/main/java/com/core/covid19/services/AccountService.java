@@ -9,6 +9,7 @@ import java.util.*;
 
 import com.core.covid19.models.entities.*;
 import com.core.covid19.models.requests.ChangePasswordRequest;
+import com.core.covid19.models.requests.DoctorRequest;
 import com.core.covid19.models.requests.DoctorResponse;
 import com.core.covid19.models.responses.PersonResponse;
 import com.core.covid19.repos.*;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.core.covid19.models.enums.Roles;
 import com.core.covid19.models.requests.AccountRequest;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -62,12 +64,54 @@ public class AccountService {
 		return accountRepo.save(account);
 	}
 
+	@Transactional
+	public Account insertDoctor(DoctorRequest data) throws Exception {
+		return create(data, Roles.PROFESIONAL_MEDICO.toString());
+	}
+
+	@Transactional
+	public Account insertCoordinador(DoctorRequest data) throws Exception {
+		return create(data, Roles.COORDINADOR.toString());
+	}
+
+	private Account create(DoctorRequest data, String rol) throws Exception {
+
+		if (!data.getPassword().equals(data.getPassword2()))
+			throw new Exception("Los passwords no coinciden");
+
+		Status status = statusRepo.findByName("HEALTHY");
+		Location location = new Location(data.getLatitude(), data.getLongitude());
+		locationRepo.save(location);
+		Person person = new Person(data, location, status);
+		personRepo.save(person);
+
+		Role role = roleRepo.findByName(rol);
+		Account account = new Account();
+		account.setEmail(data.getEmail());
+		account.setPerson(person);
+		account.setPassword(data.getPassword());
+		account.setRole(role);
+
+		return accountRepo.save(account);
+	}
+
 	public List<Account> findAll(){
 		return accountRepo.findAll();
 	}
 
 	public Optional<Account> findById(Integer id) {
 		return accountRepo.findById(id);
+	}
+
+	@Transactional
+	public void delete(int id) {
+		Optional<Person> person = personRepo.findById(id);
+		if (person != null && person.isPresent()) {
+			Person p = person.get();
+			Account a = accountRepo.getAccountByPersonId(p.getId());
+			accountRepo.delete(a);
+			personRepo.delete(p);
+		}
 	}
 
 	public Account modify(AccountRequest accountRequest){

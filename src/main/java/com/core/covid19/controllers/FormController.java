@@ -3,8 +3,11 @@ package com.core.covid19.controllers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.core.covid19.models.entities.Account;
+import com.core.covid19.models.entities.Answer;
+import com.core.covid19.models.responses.QuestionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +45,11 @@ public class FormController {
 	@GetMapping(value = "/{id}")
 	public PersonFormsResponse listAllById(@PathVariable("id") Integer id) {
 		return formService.findAllById(id);
+	}
+
+	@GetMapping(value = "/{id}/questions")
+	public List<QuestionResponse> getAnswer(@PathVariable("id") Integer id) {
+		return formService.getAnswer(id);
 	}
 
 	@PostMapping

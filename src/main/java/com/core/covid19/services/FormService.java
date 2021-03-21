@@ -3,6 +3,7 @@ package com.core.covid19.services;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.core.covid19.models.responses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +13,6 @@ import com.core.covid19.models.entities.Form;
 import com.core.covid19.models.entities.Item;
 import com.core.covid19.models.entities.ItemsAnswer;
 import com.core.covid19.models.entities.Person;
-import com.core.covid19.models.responses.AnswerItemResponse;
-import com.core.covid19.models.responses.FormItemResponse;
-import com.core.covid19.models.responses.PersonAnswersResponse;
-import com.core.covid19.models.responses.PersonFormsResponse;
 import com.core.covid19.repos.AccountRepo;
 import com.core.covid19.repos.FormRepo;
 import com.core.covid19.repos.PersonRepo;
@@ -53,6 +50,16 @@ public class FormService {
 		List<Form> forms = formRepo.findAll();
 
 		return new PersonFormsResponse(orderedForms(forms));
+	}
+
+	public List<QuestionResponse> getAnswer(int id) {
+		Form f = formRepo.getOne(id);
+		Set<Item> items = f.getItemsForm();
+		List<QuestionResponse> res = new ArrayList<>();
+		for (Item item : items) {
+			res.add(new QuestionResponse(item));
+		}
+		return res;
 	}
 
 	public PersonFormsResponse findAllByPersonEmail(String email) {
