@@ -26,10 +26,10 @@ import java.util.Set;
 @Table(name="person")
 @Data
 @NamedQuery(name="Person.findAll", query="SELECT p FROM Person p")
-@NamedQuery(name="Person.getPatients", query="SELECT p FROM Person p, Account a "
-		+ "WHERE a.person.id = p.id and a.role.id = 1 and p.province.id = :province")
-@NamedQuery(name="Person.getDoctors", query="SELECT p FROM Person p, Account a " +
-		"WHERE a.person.id = p.id and a.role.id = :role")
+@NamedQuery(name="Person.getPatients",
+		query="SELECT a FROM Person p, Account a WHERE a.person.id = p.id and p.province.id = :province")
+@NamedQuery(name="Person.getAccounts",
+		query="SELECT a FROM Person p, Account a WHERE a.person.id = p.id")
 public class Person implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -75,7 +75,7 @@ public class Person implements Serializable {
 
 	@ManyToMany
 	@JoinTable(name = "person_answers",
-	joinColumns = @JoinColumn(name = "person_id"), 
+	joinColumns = @JoinColumn(name = "person_id"),
 	inverseJoinColumns = @JoinColumn(name = "answer_id"))
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Set<Answer> personAnswers;

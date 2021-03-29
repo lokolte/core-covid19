@@ -32,6 +32,9 @@ public class AccountService {
 	private RoleRepo roleRepo;
 
 	@Autowired
+	private RoleAccountRepo roleAccountRepo;
+
+	@Autowired
 	private AccountRepo accountRepo;
 
 	@Autowired
@@ -50,8 +53,8 @@ public class AccountService {
 	HospitalDoctorRepo hospitalDoctorRepo;
 
 	public Account insert(AccountRequest accountRequest) {
-		Role role = null;
 
+		Role role = null;
 		if(accountRequest.getRole() != null)
 			role = roleRepo.findByName(accountRequest.getRole().getName());
 		else role = roleRepo.findByName(Roles.CIVIL.toString());
@@ -59,9 +62,13 @@ public class AccountService {
 		Account account = new Account();
 		account.setEmail(accountRequest.getEmail());
 		account.setPassword(accountRequest.getPassword());
-		account.setRole(role);
+		Account a = accountRepo.save(account);
 
-		return accountRepo.save(account);
+		RoleAccountPk pk = new RoleAccountPk(a.getId(), role.getId());
+		RoleAccount roleAccount = new RoleAccount(pk);
+		roleAccountRepo.save(roleAccount);
+
+		return a;
 	}
 
 	@Transactional
@@ -85,14 +92,18 @@ public class AccountService {
 		Person person = new Person(data, location, status);
 		personRepo.save(person);
 
-		Role role = roleRepo.findByName(rol);
 		Account account = new Account();
 		account.setEmail(data.getEmail());
 		account.setPerson(person);
 		account.setPassword(data.getPassword());
-		account.setRole(role);
+		Account a = accountRepo.save(account);
 
-		return accountRepo.save(account);
+		Role role = roleRepo.findByName(rol);
+		RoleAccountPk pk = new RoleAccountPk(a.getId(), role.getId());
+		RoleAccount roleAccount = new RoleAccount(pk);
+		roleAccountRepo.save(roleAccount);
+
+		return a;
 	}
 
 	public List<Account> findAll(){
@@ -120,9 +131,13 @@ public class AccountService {
 		Account account = new Account();
 		account.setEmail(accountRequest.getEmail());
 		account.setPassword(accountRequest.getPassword());
-		account.setRole(role);
+		Account a = accountRepo.save(account);
 
-		return accountRepo.save(account);
+		RoleAccountPk pk = new RoleAccountPk(a.getId(), role.getId());
+		RoleAccount roleAccount = new RoleAccount(pk);
+		roleAccountRepo.save(roleAccount);
+
+		return a;
 	}
 
 	public void deleteById(String email) {
@@ -132,7 +147,15 @@ public class AccountService {
 	public List<PersonResponse> getDoctors() {
 
 		Role role = roleRepo.findByName(Roles.PROFESIONAL_MEDICO.toString());
-		List<Person> persons = personRepo.getDoctors(role.getId());
+		List<Account> accounts = personRepo.getAccounts();
+		List<Person> persons = new ArrayList<>();
+		for (Account a : accounts) {
+			for (Role r : a.getRoles()) {
+				if (r.getId() == role.getId())
+					persons.add(a.getPerson());
+			}
+		}
+
 		List<PersonResponse> list = new ArrayList<>();
 		for (Person p : persons) list.add(new PersonResponse(p));
 		return list;
@@ -297,9 +320,12 @@ public class AccountService {
 				a.setEmail(email);
 				a.setPassword(password);
 				a.setPerson(p);
+				Account account = accountRepo.save(a);
+
 				Role role = roleRepo.findByName(Roles.PROFESIONAL_MEDICO.toString());
-				a.setRole(role);
-				accountRepo.save(a);
+				RoleAccountPk pk = new RoleAccountPk(account.getId(), role.getId());
+				RoleAccount roleAccount = new RoleAccount(pk);
+				roleAccountRepo.save(roleAccount);
 			}
 		}
 	}

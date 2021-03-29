@@ -32,7 +32,7 @@ public class CoordinatorController {
     @PostMapping
     public void update(@RequestBody DoctorRequest data) {
         Person p = new Person(data);
-        personService.modify(data.getEmail(), p);
+        personService.modify(data.getEmail(), p, data.getRoles());
     }
 
     @PostMapping("/new")

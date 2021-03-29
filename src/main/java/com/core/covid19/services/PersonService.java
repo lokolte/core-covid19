@@ -43,6 +43,9 @@ public class PersonService {
 	@Autowired
 	PatientDoctorRepo patientDoctorRepo;
 
+	@Autowired
+	private RoleAccountRepo roleAccountRepo;
+
 	public Person insert(PersonRequest personRequest, String email) {
 		Location location = new Location();
 		location.setLatitude(personRequest.getLocation().getLatitude());
@@ -109,7 +112,16 @@ public class PersonService {
 		Person person = account.getPerson();
 		if (person.getProvince() == null) return new PersonsResponse();
 
-		List<Person> persons = personRepo.getPatients(person.getProvince().getId());
+		Role role = roleRepo.findByName(Roles.CIVIL.toString());
+		List<Account> accounts = personRepo.getPatients(person.getProvince().getId());
+		List<Person> persons = new ArrayList<>();
+		for (Account a : accounts) {
+			for (Role r : a.getRoles()) {
+				if (r.getId() == role.getId())
+					persons.add(a.getPerson());
+			}
+		}
+
 		List<PersonResponse> list = new ArrayList<PersonResponse>();
 		for (Person p : persons) {
 			Person doctor = patientDoctorRepo.getDoctorPatient(p.getId());
@@ -125,11 +137,20 @@ public class PersonService {
 		if (!per.isPresent()) return new ArrayList<>();
 		Person person = per.get();
 		if (person.getProvince() == null) return new ArrayList<>();
+
 		int province = person.getProvince().getId();
 		Role role = roleRepo.findByName(Roles.PROFESIONAL_MEDICO.toString());
-		List<Person> persons = patientDoctorRepo.getDoctors(province, role.getId());
+		List<Account> accounts = patientDoctorRepo.getDoctors(province);
+		List<Person> doctors = new ArrayList<>();
+		for (Account a : accounts) {
+			for (Role r : a.getRoles()) {
+				if (r.getId() == role.getId())
+					doctors.add(a.getPerson());
+			}
+		}
+
 		List<PersonResponse> list = new ArrayList<>();
-		for (Person p : persons) list.add(new PersonResponse(p));
+		for (Person p : doctors) list.add(new PersonResponse(p));
 		return list;
 	}
 
@@ -148,7 +169,7 @@ public class PersonService {
 		patientDoctorRepo.save(pd);
 	}
 
-	public Person modify(String email, Person person) {
+	public Person modify(String email, Person person, List<RoleResponse> roles) {
 		
 		Account account = accountRepo.findByEmail(email);
 		Person personRecovered = personRepo.findByDocument(person.getDocument());
@@ -192,9 +213,21 @@ public class PersonService {
 		}
 
 		Person personResult = personRepo.save(personRecovered);
-
 		account.setPerson(personResult);
 		accountRepo.save(account);
+
+		if (roles != null) {
+			account.getRoles();
+			List<RoleAccount> rolesAccount = roleAccountRepo.getRolesByAccount(account.getId());
+			for (RoleAccount ra : rolesAccount) {
+				roleAccountRepo.delete(ra);
+			}
+			for (RoleResponse r : roles) {
+				RoleAccountPk pk = new RoleAccountPk(account.getId(), r.getId());
+				RoleAccount roleAccount = new RoleAccount(pk);
+				roleAccountRepo.save(roleAccount);
+			}
+		}
 
 		return personResult;
 	}

@@ -1,7 +1,8 @@
 package com.core.covid19.models.requests;
 
-import com.core.covid19.models.entities.Person;
-import com.core.covid19.models.entities.Status;
+import com.core.covid19.models.responses.RoleResponse;
+
+import java.util.List;
 
 public class DoctorRequest {
 
@@ -20,6 +21,7 @@ public class DoctorRequest {
     private double longitude;
     private String password;
     private String password2;
+    private List<RoleResponse> roles;
 
     public DoctorRequest() {
     }
@@ -142,5 +144,13 @@ public class DoctorRequest {
 
     public void setPassword2(String password2) {
         this.password2 = password2;
+    }
+
+    public List<RoleResponse> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<RoleResponse> roles) {
+        this.roles = roles;
     }
 }

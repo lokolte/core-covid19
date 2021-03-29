@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.core.covid19.models.entities.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,8 +35,9 @@ public class CustomUserDetailService implements UserDetailsService {
 		if(account == null) return null;
 
 		List<GrantedAuthority> roles = new ArrayList<>();
-		roles.add(new SimpleGrantedAuthority(account.getRole().getName()));
-
+		for (Role r : account.getRoles()) {
+			roles.add(new SimpleGrantedAuthority(r.getName()));
+		}
 		UserDetails userDet = new User(account.getEmail(), account.getPassword(), roles);
 
 		return userDet;
@@ -46,8 +48,9 @@ public class CustomUserDetailService implements UserDetailsService {
 
 		Account account = accountRepo.findByEmail(userDetails.getUsername());
 
-		claims.put(ClaimsTypes.ROLE.toString(), (Object)account.getRole().getName());
-
+		for (Role r : account.getRoles()) {
+			claims.put(ClaimsTypes.ROLE.toString(), (Object) r.getName());
+		}
 		return claims;
 	}
 	

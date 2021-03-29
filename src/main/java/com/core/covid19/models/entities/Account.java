@@ -1,6 +1,7 @@
 package com.core.covid19.models.entities;
 
 import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -41,10 +42,17 @@ public class Account implements Serializable {
 	private Person person;
 
 	//bi-directional many-to-one association to Role
-	@ManyToOne
+	/*@ManyToOne
 	@JoinColumn(name="role_id")
 	@JsonIgnoreProperties("accounts")
-	private Role role;
+	private Role role;*/
+
+	@ManyToMany
+	@JoinTable(name = "role_account",
+			joinColumns = @JoinColumn(name = "account_id"),
+			inverseJoinColumns = @JoinColumn(name = "role_id"))
+	//@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private Set<Role> roles;
 
 	public Account() {
 	}
@@ -81,12 +89,8 @@ public class Account implements Serializable {
 		this.person = person;
 	}
 
-	public Role getRole() {
-		return this.role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
+	public Set<Role> getRoles() {
+		return this.roles;
 	}
 
 }

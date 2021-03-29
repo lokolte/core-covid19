@@ -30,12 +30,6 @@ public class Role implements Serializable {
 	@Column(nullable=false, length=100)
 	private String name;
 
-	//bi-directional many-to-one association to Account
-	@OneToMany(mappedBy="role")
-	@JsonIgnoreProperties("role")
-	@EqualsAndHashCode.Exclude
-	private List<Account> accounts;
-
 	public Role() {
 	}
 
@@ -53,28 +47,6 @@ public class Role implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<Account> getAccounts() {
-		return this.accounts;
-	}
-
-	public void setAccounts(List<Account> accounts) {
-		this.accounts = accounts;
-	}
-
-	public Account addAccount(Account account) {
-		getAccounts().add(account);
-		account.setRole(this);
-
-		return account;
-	}
-
-	public Account removeAccount(Account account) {
-		getAccounts().remove(account);
-		account.setRole(null);
-
-		return account;
 	}
 
 }
