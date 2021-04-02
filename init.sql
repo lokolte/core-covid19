@@ -16,10 +16,14 @@ INSERT INTO public.location(id, latitude, longitude)
 
 INSERT INTO public.person
     (id, address, birth_date, document, lastname, name, phone, sex, location, province, status) VALUES
-    (1, 'Juan de Garay 1634', now(), '4204613', 'Aguilar', 'Jesus', '0982912326', 'MASCULINO', 1, 1, 1);
+    (1, 'Juan de Garay 1634', now(), '4204613', 'Aguilar', 'Jesus', '0982912326', 'MASCULINO', 1, NULL, 1);
 
-INSERT INTO public.account(id, email, password, person_id, role_id)
-	VALUES (1, 'jaaguilarmeza@gmail.com', 'l0k0lte.', 1, 3);
+INSERT INTO public.account(id, email, password, person_id)
+	VALUES (1, 'jaaguilarmeza@gmail.com', 'l0k0lte.', 1);
+
+INSERT INTO public.role_account(
+    account_id, role_id)
+VALUES (1, 3);
 
 
 
