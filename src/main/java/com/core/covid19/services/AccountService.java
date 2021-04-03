@@ -52,6 +52,9 @@ public class AccountService {
 	@Autowired
 	HospitalDoctorRepo hospitalDoctorRepo;
 
+	@Autowired
+	EmailSender emailSender;
+
 	public Account insert(AccountRequest accountRequest) {
 
 		Role role = null;

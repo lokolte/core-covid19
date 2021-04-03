@@ -4,9 +4,7 @@ import java.util.List;
 
 import com.core.covid19.models.entities.Message;
 import com.core.covid19.models.responses.*;
-import com.core.covid19.services.AnswerService;
-import com.core.covid19.services.FormService;
-import com.core.covid19.services.MessageService;
+import com.core.covid19.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.core.covid19.authentication.util.JwtUtil;
 import com.core.covid19.models.entities.Person;
 import com.core.covid19.models.requests.PersonRequest;
-import com.core.covid19.services.PersonService;
 
 @RestController
 @RequestMapping("/persons")
