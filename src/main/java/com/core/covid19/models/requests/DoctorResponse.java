@@ -2,11 +2,14 @@ package com.core.covid19.models.requests;
 
 import com.core.covid19.models.entities.Account;
 import com.core.covid19.models.entities.Person;
+import com.core.covid19.models.entities.Role;
+import com.core.covid19.models.responses.RoleResponse;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class DoctorResponse implements Serializable {
 
@@ -24,6 +27,7 @@ public class DoctorResponse implements Serializable {
     private String email;
     private double latitude;
     private double longitude;
+    private List<RoleResponse> roles;
 
     public DoctorResponse(Person p) {
 
@@ -55,6 +59,13 @@ public class DoctorResponse implements Serializable {
         }
         if (p.getStatus() != null) {
             this.status = p.getStatus().getName();
+        }
+        Set<Account> accounts = p.getAccounts();
+        this.roles = new ArrayList<>();
+        for (Account a : accounts) {
+            for (Role r : a.getRoles()) {
+                this.roles.add(new RoleResponse(r));
+            }
         }
     }
 
@@ -168,5 +179,13 @@ public class DoctorResponse implements Serializable {
 
     public void setProvinceId(int provinceId) {
         this.provinceId = provinceId;
+    }
+
+    public List<RoleResponse> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<RoleResponse> roles) {
+        this.roles = roles;
     }
 }

@@ -103,7 +103,7 @@ public class PersonController {
 
 	@PutMapping
 	public Person modify(@RequestHeader("Authorization") String authorization, @RequestBody Person person){
-		return personService.modify(jwtUtil.getEmailFromJwtToken(authorization), person);
+		return personService.modify(jwtUtil.getEmailFromJwtToken(authorization), person, null);
 	}
 
 	@DeleteMapping

@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @NamedQuery(name="PatientDoctor.getDoctor",
         query="SELECT p FROM PatientDoctor p WHERE p.id.patient = :patient ")
 @NamedQuery(name="PatientDoctor.getDoctors",
-        query="SELECT p FROM Person p, Account a WHERE p.id = a.id AND a.role.id = :role AND p.province.id = :province")
+        query="SELECT a FROM Person p, Account a WHERE p.id = a.id AND p.province.id = :province")
 @NamedQuery(name="PatientDoctor.getDoctorPatient",
         query="SELECT p FROM Person p, PatientDoctor pd WHERE pd.id.patient = :patient AND p.id = pd.id.doctor")
 @NamedQuery(name="PatientDoctor.getPatients",

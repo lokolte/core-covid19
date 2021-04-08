@@ -121,14 +121,14 @@ public class AccountController {
 	}
 
 	@GetMapping("/doctors/{id}")
-	public DoctorResponse getDoctors(@PathVariable("id") Integer id) {
+	public DoctorResponse getDoctor(@PathVariable("id") Integer id) {
 		return accountService.getDoctor(id);
 	}
 
 	@PostMapping("/doctors")
 	public void update(@RequestBody DoctorRequest data) {
 		Person p = new Person(data);
-		personService.modify(data.getEmail(), p);
+		personService.modify(data.getEmail(), p, data.getRoles());
 	}
 
 }
