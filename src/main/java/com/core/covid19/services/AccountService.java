@@ -106,6 +106,8 @@ public class AccountService {
 		RoleAccount roleAccount = new RoleAccount(pk);
 		roleAccountRepo.save(roleAccount);
 
+		emailSender.send(data.getEmail(), "", "");
+
 		return a;
 	}
 

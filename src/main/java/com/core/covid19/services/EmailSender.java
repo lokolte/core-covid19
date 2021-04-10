@@ -1,5 +1,6 @@
 package com.core.covid19.services;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Properties;
@@ -19,12 +20,19 @@ import javax.mail.internet.MimeMultipart;
 @Service
 public class EmailSender {
 
-    public void send(String correoDestinatario, String asunto, String mensaje) {
+    @Value("${mail.smtp.host}")
+    private String host;
 
-        final String host = "";
-        final String port = "";
-        final String username = "";
-        final String password = "";
+    @Value("${mail.smtp.port}")
+    private String port;
+
+    @Value("${mail.smtp.user}")
+    private String username;
+
+    @Value("${mail.smtp.pass}")
+    private String password;
+
+    public void send(String correoDestinatario, String asunto, String mensaje) {
 
         Properties prop = new Properties();
         prop.put("mail.smtp.host", host);

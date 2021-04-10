@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.core.covid19.models.entities.*;
+import com.core.covid19.models.requests.HospitalRequest;
 import com.core.covid19.repos.*;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
@@ -54,7 +55,7 @@ public class HospitalService {
 		hospitalRepo.delete(h);
 	}
 
-	public void save(Hospital data) {
+	public void save(HospitalRequest data) {
 		Hospital h = new Hospital();
 		if (data.getId() != null)
 			h = hospitalRepo.getOne(data.getId());
@@ -64,6 +65,21 @@ public class HospitalService {
 		h.setAddress(data.getAddress());
 		h.setArea(data.getArea());
 		h.setPhone(data.getPhone());
+		if (h.getLocation() == null) {
+			Location l = new Location(data.getLatitude(), data.getLongitude());
+			Location location = locationRepo.save(l);
+			h.setLocation(location);
+		} else {
+			Location l = h.getLocation();
+			l.setLatitude(data.getLatitude());
+			l.setLongitude(l.getLongitude());
+			locationRepo.save(l);
+			h.setLocation(l);
+		}
+		if (data.getDistrict() != null) {
+			District district = districtRepo.getOne(data.getDistrict());
+			h.setDistrict(district);
+		}
 		hospitalRepo.save(h);
 	}
 

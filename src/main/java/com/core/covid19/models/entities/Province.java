@@ -20,6 +20,7 @@ import lombok.EqualsAndHashCode;
 @Table(name="province")
 @Data
 @NamedQuery(name="Province.findAll", query="SELECT p FROM Province p")
+@NamedQuery(name="Province.getDistricts", query="SELECT p.districts FROM Province p WHERE p.id = :id")
 public class Province implements Serializable {
 
 	private static final long serialVersionUID = 1L;
