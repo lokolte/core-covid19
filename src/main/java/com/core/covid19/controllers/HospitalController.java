@@ -3,6 +3,7 @@ package com.core.covid19.controllers;
 import com.core.covid19.models.entities.Hospital;
 import com.core.covid19.models.entities.Person;
 import com.core.covid19.models.requests.DoctorRequest;
+import com.core.covid19.models.requests.HospitalRequest;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,7 @@ public class HospitalController {
 	}
 
 	@PostMapping
-	public void save(@RequestBody Hospital data) {
+	public void save(@RequestBody HospitalRequest data) {
 		hospitalService.save(data);
 	}
 

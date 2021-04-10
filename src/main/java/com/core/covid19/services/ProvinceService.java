@@ -2,6 +2,7 @@ package com.core.covid19.services;
 
 import java.util.List;
 
+import com.core.covid19.models.entities.District;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,10 @@ public class ProvinceService {
 	
 	public List<Province> findAll() {
 		return provinceRepo.findAll();
+	}
+
+	public List<District> getDistricts(int id) {
+		return provinceRepo.getDistricts(id);
 	}
 
 }

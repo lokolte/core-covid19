@@ -52,6 +52,9 @@ public class AccountService {
 	@Autowired
 	HospitalDoctorRepo hospitalDoctorRepo;
 
+	@Autowired
+	EmailSender emailSender;
+
 	public Account insert(AccountRequest accountRequest) {
 
 		Role role = null;
@@ -102,6 +105,8 @@ public class AccountService {
 		RoleAccountPk pk = new RoleAccountPk(a.getId(), role.getId());
 		RoleAccount roleAccount = new RoleAccount(pk);
 		roleAccountRepo.save(roleAccount);
+
+		emailSender.send(data.getEmail(), "", "");
 
 		return a;
 	}
