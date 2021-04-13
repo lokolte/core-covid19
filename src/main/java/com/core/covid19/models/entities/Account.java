@@ -35,23 +35,19 @@ public class Account implements Serializable {
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 
+	@Column(nullable=false)
+	private boolean verify;
+
 	//bi-directional many-to-one association to Person
 	@ManyToOne
 	@JoinColumn(name="person_id")
 	@JsonIgnoreProperties("accounts")
 	private Person person;
 
-	//bi-directional many-to-one association to Role
-	/*@ManyToOne
-	@JoinColumn(name="role_id")
-	@JsonIgnoreProperties("accounts")
-	private Role role;*/
-
 	@ManyToMany
 	@JoinTable(name = "role_account",
 			joinColumns = @JoinColumn(name = "account_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id"))
-	//@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Set<Role> roles;
 
 	public Account() {
@@ -93,4 +89,11 @@ public class Account implements Serializable {
 		return this.roles;
 	}
 
+	public boolean isVerify() {
+		return verify;
+	}
+
+	public void setVerify(boolean verify) {
+		this.verify = verify;
+	}
 }

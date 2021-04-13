@@ -135,7 +135,7 @@ public class AccountController {
 	}
 
 	@PostMapping("/send-email")
-	public void sendEmail(@RequestBody AccountRequest data) {
+	public void sendEmail(@RequestBody AccountRequest data) throws Exception {
 		accountService.sendEmail(data.getEmail());
 	}
 

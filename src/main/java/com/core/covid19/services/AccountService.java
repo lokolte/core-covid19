@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +63,12 @@ public class AccountService {
 
 	@Autowired
 	private CustomUserDetailService customUserDetailService;
+
+	@Value("${url.backend}")
+	private String urlBackend;
+
+	@Value("${url.frontend}")
+	private String urlFrontend;
 
 	public Account insert(AccountRequest accountRequest) {
 
@@ -235,17 +242,16 @@ public class AccountService {
 		}
 	}
 
-	public void sendEmail(String email) {
+	public void sendEmail(String email) throws Exception {
 
 		final UserDetails userDetails = customUserDetailService.loadUserByUsername(email);
 		final String jwt = jwtTokenUtil.generateToken(userDetails);
 
 		StringBuilder mensaje = new StringBuilder();
-		// TODO cambiar la url
-		String url = "http://localhost:8081/reset-password/" + jwt;
+		String url = urlFrontend + "reset-password/" + jwt;
 		mensaje.append("<p>Para cambiar la contraseña, haga click en el siguiente ");
 		mensaje.append("<a href=\"" + url + "\" target=\"_blank\">link</a></p>");
-		emailSender.send(email, "Recuperar contraseña", mensaje.toString());
+		emailSender.sendEmail(email, "Recuperar contraseña", mensaje.toString());
 	}
 
 	public void resetPassword(String email, String password, String password2) throws Exception {
@@ -258,13 +264,13 @@ public class AccountService {
 
 	public String verify(String jwt) throws Exception {
 
-		System.err.println("Validar jwt : " + jwt);
 		String email = jwtTokenUtil.getEmailFromJwtToken("Bearer " + jwt);
-		System.err.println("Validar email : " + email);
 		Account account = accountRepo.findByEmail(email);
 		if (account == null) {
 			return "El correo electronico no es valido";
 		}
+		account.setVerify(true);
+		accountRepo.save(account);
 		return "Correo validado exitosamente";
 	}
 
@@ -315,11 +321,11 @@ public class AccountService {
 					else if (col == 10) status = cellValue;
 					else if (col == 11) {
 						try {
-							longitude = new Double(cellValue);
+							latitude = new Double(cellValue);
 						} catch (Exception e) { }
 					} else if (col == 12) {
 						try {
-							latitude = new Double(cellValue);
+							longitude = new Double(cellValue);
 						} catch (Exception e) { }
 					}
 					col++;
@@ -335,6 +341,9 @@ public class AccountService {
 				}
 
 				// Location
+				System.err.println("province : " + province);
+				System.err.println("latitude : " + latitude);
+				System.err.println("longitude : " + longitude);
 				Location l = new Location(latitude, longitude);
 				Location loc = null;
 				if (isNew) {
@@ -379,6 +388,7 @@ public class AccountService {
 				}
 				a.setEmail(email);
 				a.setPassword(password);
+				a.setVerify(false);
 				a.setPerson(p);
 				Account account = accountRepo.save(a);
 
@@ -387,23 +397,23 @@ public class AccountService {
 				RoleAccount roleAccount = new RoleAccount(pk);
 				roleAccountRepo.save(roleAccount);
 
-				String mensaje = getMessage(email);
+				String mensaje = getMessage(email, password);
 				emailSender.send(email, "Validar correo", mensaje);
 			}
 		}
 	}
 
-	private String getMessage(String email) {
+	private String getMessage(String email, String password) {
 
 		final UserDetails userDetails = customUserDetailService.loadUserByUsername(email);
 		final String jwt = jwtTokenUtil.generateToken(userDetails);
-		String url = "https://saludtotal.cc.pol.una.py";
-		String verificarEmail = "https://saludtotal.cc.pol.una.py:9900/accounts/verify?jwt=" + jwt;
+		String verificarEmail = urlBackend + "/accounts/verify?jwt=" + jwt;
 		StringBuilder mensaje = new StringBuilder();
 		mensaje.append("<p>Se creo una cuenta con su correo en ");
-		mensaje.append("<a href=\"" + url + "\" target=\"_blank\">CroniWeb</a>");
+		mensaje.append("<a href=\"" + urlFrontend + "\" target=\"_blank\">CroniWeb</a>");
 		mensaje.append("</p><p>Verifique su email ");
 		mensaje.append("<a href=\"" + verificarEmail + "\" target=\"_blank\">CroniWeb</a></p>");
+		mensaje.append("<p>Su password es : " + password + "</p>");
 		return mensaje.toString();
 	}
 
