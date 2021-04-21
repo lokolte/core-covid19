@@ -35,8 +35,10 @@ public class CustomUserDetailService implements UserDetailsService {
 		if(account == null) return null;
 
 		List<GrantedAuthority> roles = new ArrayList<>();
-		for (Role r : account.getRoles()) {
-			roles.add(new SimpleGrantedAuthority(r.getName()));
+		if (account.getRoles() != null) {
+			for (Role r : account.getRoles()) {
+				roles.add(new SimpleGrantedAuthority(r.getName()));
+			}
 		}
 		UserDetails userDet = new User(account.getEmail(), account.getPassword(), roles);
 
@@ -48,8 +50,10 @@ public class CustomUserDetailService implements UserDetailsService {
 
 		Account account = accountRepo.findByEmail(userDetails.getUsername());
 
-		for (Role r : account.getRoles()) {
-			claims.put(ClaimsTypes.ROLE.toString(), (Object) r.getName());
+		if (account.getRoles() != null) {
+			for (Role r : account.getRoles()) {
+				claims.put(ClaimsTypes.ROLE.toString(), (Object) r.getName());
+			}
 		}
 		return claims;
 	}

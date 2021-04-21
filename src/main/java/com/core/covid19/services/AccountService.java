@@ -99,7 +99,6 @@ public class AccountService {
 		return create(data, Roles.COORDINADOR.toString());
 	}
 
-	@Transactional
 	private Account create(DoctorRequest data, String rol) throws Exception {
 
 		if (!data.getPassword().equals(data.getPassword2()))
@@ -122,9 +121,8 @@ public class AccountService {
 		RoleAccount roleAccount = new RoleAccount(pk);
 		roleAccountRepo.save(roleAccount);
 
-		//String mensaje = getMessage(data.getEmail(), data.getPassword());
-		//emailSender.send(data.getEmail(), "Validar correo", mensaje);
-
+		String mensaje = getMessage(data.getEmail(), data.getPassword());
+		emailSender.send(data.getEmail(), "Validar correo", mensaje);
 		return a;
 	}
 
