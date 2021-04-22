@@ -18,12 +18,57 @@ INSERT INTO public.person
     (id, address, birth_date, document, lastname, name, phone, sex, location, province, status) VALUES
     (1, 'Juan de Garay 1634', now(), '4204613', 'Aguilar', 'Jesus', '0982912326', 'MASCULINO', 1, NULL, 1);
 
-INSERT INTO public.account(id, email, password, person_id)
-	VALUES (1, 'jaaguilarmeza@gmail.com', 'l0k0lte.', 1);
+INSERT INTO public.account(id, email, password, verify, person_id)
+	VALUES (1, 'jaaguilarmeza@gmail.com', 'l0k0lte.', true, 1);
 
 INSERT INTO public.role_account(
     account_id, role_id)
 VALUES (1, 3);
+
+
+INSERT INTO public.location(id, latitude, longitude)
+VALUES (2, -25.328537, -57.609223);
+
+INSERT INTO public.person
+(id, address, birth_date, document, lastname, name, phone, sex, location, province, status) VALUES
+(2, 'De las Nieves 2060, Lambare', now(), '797148', 'Legal', 'Horacio', '0971336246', 'MASCULINO', 2, NULL, 1);
+
+INSERT INTO public.account(id, email, password, verify, person_id)
+VALUES (2, 'horacio.legal@gmail.com', '.h0r4c10.', true, 2);
+
+INSERT INTO public.role_account(
+    account_id, role_id)
+VALUES (2, 3);
+
+
+INSERT INTO public.location(id, latitude, longitude)
+VALUES (3, -25.328637, -57.609223);
+
+INSERT INTO public.person
+(id, address, birth_date, document, lastname, name, phone, sex, location, province, status) VALUES
+(3, 'Avenida siempre viva', now(), '123456', 'Villalba', 'Cynthia', '0981123456', 'FEMENINO', 3, NULL, 1);
+
+INSERT INTO public.account(id, email, password, verify, person_id)
+VALUES (3, 'cvillalba@pol.una.py', '.cynth14.', true, 3);
+
+INSERT INTO public.role_account(
+    account_id, role_id)
+VALUES (3, 3);
+
+
+INSERT INTO public.location(id, latitude, longitude)
+VALUES (4, -25.3265581,-57.5792112);
+
+INSERT INTO public.person
+(id, address, birth_date, document, lastname, name, phone, sex, location, province, status) VALUES
+(4, 'Yporã N° 1014', now(), '4697163', 'Derlis', 'Gómez', '0994289789', 'MASCULINO', 4, NULL, 1);
+
+INSERT INTO public.account(id, email, password, verify, person_id)
+VALUES (4, 'derlisrgomez@gmail.com', '.d3rl1s.', true, 4);
+
+INSERT INTO public.role_account(
+    account_id, role_id)
+VALUES (4, 3);
 
 
 

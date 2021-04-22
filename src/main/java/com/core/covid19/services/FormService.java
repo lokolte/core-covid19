@@ -37,7 +37,7 @@ public class FormService {
 			for(Item i : f.getItemsForm())
 				itemList.add(i);
 			FormItemResponse formItemResponse = new FormItemResponse(f.getId(), f.getTitle(), f.getSubtitle(),
-					f.getDescription(), f.getOrderLevel(), itemList.stream().sorted().collect(Collectors.toList()));
+					f.getOrderLevel(), itemList.stream().sorted().collect(Collectors.toList()));
 			formList.add(formItemResponse);
 		}
 

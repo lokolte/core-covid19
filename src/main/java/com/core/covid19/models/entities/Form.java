@@ -34,9 +34,6 @@ public class Form implements Serializable {
 	@Column(nullable=true, length=1500)
 	private String subtitle;
 
-	@Column(nullable=true, length=1500)
-	private String description;
-
 	@Column(name="order_level", nullable=false)
 	private Integer orderLevel;
 
@@ -122,13 +119,5 @@ public class Form implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 }
