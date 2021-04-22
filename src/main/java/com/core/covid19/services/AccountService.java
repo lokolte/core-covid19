@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.core.covid19.authentication.util.JwtUtil;
 import com.core.covid19.models.entities.*;
 import com.core.covid19.models.requests.ChangePasswordRequest;
 import com.core.covid19.models.requests.DoctorRequest;
@@ -18,6 +19,8 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.core.covid19.models.enums.Roles;
@@ -51,6 +54,21 @@ public class AccountService {
 
 	@Autowired
 	HospitalDoctorRepo hospitalDoctorRepo;
+
+	@Autowired
+	EmailSender emailSender;
+
+	@Autowired
+	private JwtUtil jwtTokenUtil;
+
+	@Autowired
+	private CustomUserDetailService customUserDetailService;
+
+	@Value("${url.backend}")
+	private String urlBackend;
+
+	@Value("${url.frontend}")
+	private String urlFrontend;
 
 	public Account insert(AccountRequest accountRequest) {
 
@@ -103,6 +121,8 @@ public class AccountService {
 		RoleAccount roleAccount = new RoleAccount(pk);
 		roleAccountRepo.save(roleAccount);
 
+		String mensaje = getMessage(data.getEmail(), data.getPassword());
+		emailSender.send(data.getEmail(), "Validar correo", mensaje);
 		return a;
 	}
 
@@ -161,6 +181,20 @@ public class AccountService {
 		return list;
 	}
 
+	public List<Person> listDoctors() {
+
+		Role role = roleRepo.findByName(Roles.PROFESIONAL_MEDICO.toString());
+		List<Account> accounts = personRepo.getAccounts();
+		List<Person> persons = new ArrayList<>();
+		for (Account a : accounts) {
+			for (Role r : a.getRoles()) {
+				if (r.getId() == role.getId())
+					persons.add(a.getPerson());
+			}
+		}
+		return persons;
+	}
+
 	public DoctorResponse getDoctor(int id) {
 
 		Optional<Person> person = personRepo.findById(id);
@@ -206,6 +240,38 @@ public class AccountService {
 			account.setPassword(data.getNewpassword());
 			accountRepo.save(account);
 		}
+	}
+
+	public void sendEmail(String email) throws Exception {
+
+		final UserDetails userDetails = customUserDetailService.loadUserByUsername(email);
+		final String jwt = jwtTokenUtil.generateToken(userDetails);
+
+		StringBuilder mensaje = new StringBuilder();
+		String url = urlFrontend + "reset-password/" + jwt;
+		mensaje.append("<p>Para cambiar la contraseña, haga click en el siguiente ");
+		mensaje.append("<a href=\"" + url + "\" target=\"_blank\">link</a></p>");
+		emailSender.sendEmail(email, "Recuperar contraseña", mensaje.toString());
+	}
+
+	public void resetPassword(String email, String password, String password2) throws Exception {
+
+		if (!password.equals(password2)) throw new Exception("Las contraseñas no coinciden");
+		Account account = accountRepo.findByEmail(email);
+		account.setPassword(password);
+		accountRepo.save(account);
+	}
+
+	public String verify(String jwt) throws Exception {
+
+		String email = jwtTokenUtil.getEmailFromJwtToken("Bearer " + jwt);
+		Account account = accountRepo.findByEmail(email);
+		if (account == null) {
+			return "El correo electronico no es valido";
+		}
+		account.setVerify(true);
+		accountRepo.save(account);
+		return "Correo validado exitosamente";
 	}
 
 	public void loadData(MultipartFile file) throws IOException, InvalidFormatException {
@@ -255,11 +321,11 @@ public class AccountService {
 					else if (col == 10) status = cellValue;
 					else if (col == 11) {
 						try {
-							longitude = new Double(cellValue);
+							latitude = new Double(cellValue);
 						} catch (Exception e) { }
 					} else if (col == 12) {
 						try {
-							latitude = new Double(cellValue);
+							longitude = new Double(cellValue);
 						} catch (Exception e) { }
 					}
 					col++;
@@ -275,6 +341,9 @@ public class AccountService {
 				}
 
 				// Location
+				System.err.println("province : " + province);
+				System.err.println("latitude : " + latitude);
+				System.err.println("longitude : " + longitude);
 				Location l = new Location(latitude, longitude);
 				Location loc = null;
 				if (isNew) {
@@ -319,6 +388,7 @@ public class AccountService {
 				}
 				a.setEmail(email);
 				a.setPassword(password);
+				a.setVerify(false);
 				a.setPerson(p);
 				Account account = accountRepo.save(a);
 
@@ -326,8 +396,25 @@ public class AccountService {
 				RoleAccountPk pk = new RoleAccountPk(account.getId(), role.getId());
 				RoleAccount roleAccount = new RoleAccount(pk);
 				roleAccountRepo.save(roleAccount);
+
+				String mensaje = getMessage(email, password);
+				emailSender.send(email, "Validar correo", mensaje);
 			}
 		}
+	}
+
+	private String getMessage(String email, String password) {
+
+		final UserDetails userDetails = customUserDetailService.loadUserByUsername(email);
+		final String jwt = jwtTokenUtil.generateToken(userDetails);
+		String verificarEmail = urlBackend + "/accounts/verify?jwt=" + jwt;
+		StringBuilder mensaje = new StringBuilder();
+		mensaje.append("<p>Se creo una cuenta con su correo en ");
+		mensaje.append("<a href=\"" + urlFrontend + "\" target=\"_blank\">CroniWeb</a>");
+		mensaje.append("</p><p>Verifique su email ");
+		mensaje.append("<a href=\"" + verificarEmail + "\" target=\"_blank\">CroniWeb</a></p>");
+		mensaje.append("<p>Su password es : " + password + "</p>");
+		return mensaje.toString();
 	}
 
 	public ByteArrayOutputStream export() throws Exception {
@@ -335,20 +422,56 @@ public class AccountService {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet("Doctores");
 		sheet.setDefaultColumnWidth(20);
-		List<PersonResponse> doctors = getDoctors();
+		List<Person> doctors = listDoctors();
 		int rowCount = 0;
 
 		// Header
 		Row rowHeader = sheet.createRow(rowCount++);
 		rowHeader.createCell(0).setCellValue("Nro. Documento");
-		rowHeader.createCell(1).setCellValue("Nombre completo");
-		rowHeader.createCell(2).setCellValue("Nro. de telefono");
+		rowHeader.createCell(1).setCellValue("Nombre");
+		rowHeader.createCell(2).setCellValue("Apellido");
+		rowHeader.createCell(3).setCellValue("Sexo");
+		rowHeader.createCell(4).setCellValue("Fecha de nacimiento");
+		rowHeader.createCell(5).setCellValue("Telefono");
+		rowHeader.createCell(6).setCellValue("Provincia");
+		rowHeader.createCell(7).setCellValue("Direccion");
+		rowHeader.createCell(8).setCellValue("Email");
+		rowHeader.createCell(9).setCellValue("Password");
+		rowHeader.createCell(10).setCellValue("Status");
+		rowHeader.createCell(11).setCellValue("Latitud");
+		rowHeader.createCell(12).setCellValue("Longitud");
 
-		for (PersonResponse doctor : doctors) {
+		for (Person doctor : doctors) {
 			Row row = sheet.createRow(rowCount++);
 			row.createCell(0).setCellValue(doctor.getDocument());
 			row.createCell(1).setCellValue(doctor.getName());
-			row.createCell(2).setCellValue(doctor.getPhone());
+			row.createCell(2).setCellValue(doctor.getLastname());
+
+			row.createCell(3).setCellValue(doctor.getSex());
+			if (doctor.getBirthDate() != null) {
+				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				String birthDate = format.format(doctor.getBirthDate());
+				row.createCell(4).setCellValue(birthDate);
+			}
+			row.createCell(5).setCellValue(doctor.getPhone());
+			if (doctor.getProvince() != null) {
+				row.createCell(6).setCellValue(doctor.getProvince().getName());
+			}
+			row.createCell(7).setCellValue(doctor.getAddress());
+			if (doctor.getAccounts() != null && doctor.getAccounts().size() > 0) {
+				Iterator<Account> iterator = doctor.getAccounts().iterator();
+				Account account = iterator.next();
+				row.createCell(8).setCellValue(account.getEmail());
+				row.createCell(9).setCellValue(account.getPassword());
+			}
+			if (doctor.getStatus() != null) {
+				row.createCell(10).setCellValue(doctor.getStatus().getName());
+			}
+			Location loc = doctor.getLocation();
+			if (loc != null) {
+				row.createCell(11).setCellValue(loc.getLatitude());
+				row.createCell(12).setCellValue(loc.getLongitude());
+			}
 		}
 
 		ByteArrayOutputStream res = new ByteArrayOutputStream();

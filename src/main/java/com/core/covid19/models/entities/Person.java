@@ -88,7 +88,7 @@ public class Person implements Serializable {
 
 	//bi-directional many-to-one association to Status
 	@ManyToOne
-	@JoinColumn(name="status", nullable=false)
+	@JoinColumn(name="status")
 	@JsonIgnoreProperties("persons")
 	private Status status;
 	

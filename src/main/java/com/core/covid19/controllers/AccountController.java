@@ -2,6 +2,7 @@ package com.core.covid19.controllers;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,8 @@ import com.core.covid19.models.entities.Account;
 import com.core.covid19.models.requests.AccountRequest;
 import com.core.covid19.services.AccountService;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/accounts")
@@ -129,6 +132,25 @@ public class AccountController {
 	public void update(@RequestBody DoctorRequest data) {
 		Person p = new Person(data);
 		personService.modify(data.getEmail(), p, data.getRoles());
+	}
+
+	@PostMapping("/send-email")
+	public void sendEmail(@RequestBody AccountRequest data) throws Exception {
+		accountService.sendEmail(data.getEmail());
+	}
+
+	@PostMapping("/reset-password")
+	public void resetPassword(@RequestParam(value = "jwt", required = false) String jwt,
+							  @RequestBody ChangePasswordRequest data) throws Exception {
+
+		String email = jwtUtil.getEmailFromJwtToken("Bearer " + jwt);
+		accountService.resetPassword(email, data.getNewpassword(), data.getNewpassword2());
+	}
+
+	@GetMapping("/verify")
+	public String verify(@RequestParam(value = "jwt", required = false) String jwt) throws Exception {
+
+		return accountService.verify(jwt);
 	}
 
 }

@@ -37,6 +37,12 @@ public class AuthenticationController {
 	@RequestMapping(value = "/authenticate", method=RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
 
+		Account account = accountRepo.findByEmail(authenticationRequest.getEmail());
+
+		if (!account.isVerify()) {
+			throw new Exception("Usuario no verificado. Verifique su correo electronico.");
+		}
+
 		try {
 			authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword())
@@ -44,8 +50,6 @@ public class AuthenticationController {
 		} catch (BadCredentialsException e) {
 			throw new Exception("Usuario o contraseña incorrectos.", e);
 		}
-
-		Account account = accountRepo.findByEmail(authenticationRequest.getEmail());
 
 		final UserDetails userDetails = customUserDetailService
 				.loadUserByUsername(authenticationRequest.getEmail());
