@@ -18,9 +18,9 @@ public class RoleController {
     private RoleService service;
 
     @GetMapping
-    public List<RoleResponse> listAll(@RequestParam(value = "accountId", required = false) Integer accountId) {
-        if (accountId != null)
-            return service.getByAccount(accountId);
+    public List<RoleResponse> listAll(@RequestParam(value = "idPerson", required = false) Integer idPerson) {
+        if (idPerson != null)
+            return service.getByAccount(idPerson);
         return service.getAll();
     }
 }
