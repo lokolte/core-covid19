@@ -23,7 +23,9 @@ public interface PatientDoctorRepo extends JpaRepository<PatientDoctor, Integer>
                     "SELECT DISTINCT p.id, (date '1900-01-01') as message_date " +
                     "FROM person p, patient_doctor pd " +
                     "WHERE pd.patient = p.id AND pd.doctor = :idDoctor " +
-                    "AND p.id NOT IN (SELECT DISTINCT p.id FROM person p, patient_doctor pd  WHERE pd.patient = p.id AND pd.doctor = 6 AND p.id IN (SELECT m.person_sender_id FROM message m)) " +
+                    "AND p.id NOT IN " +
+                    "(SELECT DISTINCT p.id FROM person p, patient_doctor pd WHERE pd.patient = p.id AND pd.doctor = :idDoctor\n" +
+                    "AND p.id IN (SELECT m.person_sender_id FROM message m)) " +
                     "ORDER BY message_date DESC ",
             nativeQuery = true
     )
