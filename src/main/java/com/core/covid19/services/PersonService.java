@@ -84,16 +84,33 @@ public class PersonService {
 	}
 
 	public PersonsResponse getPatientsDoctor(int id) {
-
 		Optional<Person> per = personRepo.findById(id);
 		if (per == null || !per.isPresent()) return new PersonsResponse();
+
 		Person person = per.get();
-		List<Object[]> patiens = patientDoctorRepo.getPatients(person.getId());
+		Account account = person.getAccounts().stream().collect(Collectors.toList()).get(0);
+		List<String> roles = account.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList());
+
 		List<PersonResponse> list = new ArrayList<>();
-		for (Object[] d : patiens) {
-			Person p = personRepo.getOne((Integer) d[0]);
-			list.add(new PersonResponse(p));
+		List<Object[]> patiens = new ArrayList<>();
+
+		if(roles.contains(Roles.ADMIN.name())) {
+			patiens = patientDoctorRepo.getAdminPatients();
+		} else if(roles.contains(Roles.COORDINADOR.name()) && person.getProvince().getId() != null) {
+			patiens = patientDoctorRepo.getCoordinatorPatients(person.getId(), person.getProvince().getId());
+		} else if(roles.contains(Roles.PROFESIONAL_MEDICO.name())) {
+			patiens = patientDoctorRepo.getPatients(person.getId());
 		}
+
+		for (Object[] d : patiens) {
+			Integer idPatient = (Integer) d[0];
+			Person p = personRepo.getOne(idPatient);
+			Person doctor = patientDoctorRepo.getDoctorPatient(idPatient);
+
+			if(doctor != null) list.add(new PersonResponse(p, doctor.getId(), doctor.getName()));
+			else list.add(new PersonResponse(p));
+		}
+
 		return new PersonsResponse(list);
 	}
 

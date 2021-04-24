@@ -10,6 +10,7 @@ public class PersonResponse implements Serializable {
 	private String name;
 	private String phone;
 	private String document;
+	private Integer idDoctor;
 	private String doctor;
 
 	public PersonResponse(Person p) {
@@ -23,6 +24,14 @@ public class PersonResponse implements Serializable {
 		this.id = p.getId();
 		this.name = p.getName() + " " + p.getLastname();
 		this.phone = p.getPhone();
+		this.doctor = doctor;
+	}
+
+	public PersonResponse(Person p, Integer idDoctor, String doctor) {
+		this.id = p.getId();
+		this.name = p.getName() + " " + p.getLastname();
+		this.phone = p.getPhone();
+		this.idDoctor = idDoctor;
 		this.doctor = doctor;
 	}
 
@@ -48,6 +57,14 @@ public class PersonResponse implements Serializable {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public Integer getIdDoctor() {
+		return idDoctor;
+	}
+
+	public void setIdDoctor(Integer idDoctor) {
+		this.idDoctor = idDoctor;
 	}
 
 	public String getDoctor() {
