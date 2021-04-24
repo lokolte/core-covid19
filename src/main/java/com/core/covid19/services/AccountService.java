@@ -86,6 +86,9 @@ public class AccountService {
 		RoleAccount roleAccount = new RoleAccount(pk);
 		roleAccountRepo.save(roleAccount);
 
+		String mensaje = getMessage(accountRequest.getEmail(), accountRequest.getPassword());
+		emailSender.send(accountRequest.getEmail(), "Validar correo", mensaje);
+
 		return a;
 	}
 
