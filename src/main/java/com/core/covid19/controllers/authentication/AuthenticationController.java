@@ -39,7 +39,9 @@ public class AuthenticationController {
 
 		Account account = accountRepo.findByEmail(authenticationRequest.getEmail());
 
-		if (!account.isVerify()) {
+		if (account == null) {
+			throw new Exception("Usuario inexistente.");
+		} else if (!account.isVerify()) {
 			throw new Exception("Usuario no verificado. Verifique su correo electronico.");
 		}
 
