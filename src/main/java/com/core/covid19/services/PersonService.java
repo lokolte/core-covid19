@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.core.covid19.models.requests.PersonRequest;
 
 @Service
-public class PersonService {
+public class PersonService extends BaseService {
 
 	@Autowired
 	private LocationRepo locationRepo;
@@ -121,24 +121,38 @@ public class PersonService {
 		Person person = per.get();
 		return messageService.findAllMyMessagePerson(person);
 	}
-	
+
+	/**
+	 * Obtiene la lista de pacientes de acuerdo al rol del usuario
+	 */
 	public PersonsResponse getPatients(String email) {
-		
+
+		// Obtener datos del usuario logueado
+		List<Person> persons = new ArrayList<>();
 		Account account = accountRepo.findByEmail(email);
 		if (account.getPerson() == null) return new PersonsResponse();
-		Person person = account.getPerson();
-		if (person.getProvince() == null) return new PersonsResponse();
 
-		Role role = roleRepo.findByName(Roles.CIVIL.toString());
-		List<Account> accounts = personRepo.getPatients(person.getProvince().getId());
-		List<Person> persons = new ArrayList<>();
-		for (Account a : accounts) {
-			for (Role r : a.getRoles()) {
-				if (r.getId() == role.getId())
-					persons.add(a.getPerson());
-			}
+		if (isAdmin(account.getRoles())) {
+			// Si es admin, retornamos todos los pacientes
+			Role role = roleRepo.findByName(Roles.CIVIL.toString());
+			List<Account> accounts = accountRepo.getAllByRole(role.getId());
+			persons = accounts.stream().map(Account::getPerson).collect(Collectors.toList());
+
+		} else if (isCoordinator(account.getRoles())) {
+			// Si es coordinador, retornamos todos los pacientes de su Region
+			Person person = account.getPerson();
+			if (person.getProvince() == null) return new PersonsResponse();
+			Role role = roleRepo.findByName(Roles.CIVIL.toString());
+			List<Account> accounts = accountRepo.getAllByRoleAndProvince(role.getId(), person.getProvince().getId());
+			persons = accounts.stream().map(Account::getPerson).collect(Collectors.toList());
+
+		} else if (isDoctor(account.getRoles())) {
+			// Si es medico, retornamos los pacientes asignados a el
+			Person person = account.getPerson();
+			persons = personRepo.getPatientsByDoctor(person.getId());
 		}
 
+		// Procesamos y retornamos la lista de pacientes
 		List<PersonResponse> list = new ArrayList<PersonResponse>();
 		for (Person p : persons) {
 			Person doctor = patientDoctorRepo.getDoctorPatient(p.getId());
@@ -148,24 +162,24 @@ public class PersonService {
 		return new PersonsResponse(list);
 	}
 
+	/**
+	 * Obtiene la lista de medicos que corresponden con la region del paciente
+	 */
 	public List<PersonResponse> getDoctors(Integer idPerson) {
 
+		// Obtener la region del paciente
 		Optional<Person> per = personRepo.findById(idPerson);
 		if (!per.isPresent()) return new ArrayList<>();
 		Person person = per.get();
 		if (person.getProvince() == null) return new ArrayList<>();
-
 		int province = person.getProvince().getId();
-		Role role = roleRepo.findByName(Roles.PROFESIONAL_MEDICO.toString());
-		List<Account> accounts = patientDoctorRepo.getDoctors(province);
-		List<Person> doctors = new ArrayList<>();
-		for (Account a : accounts) {
-			for (Role r : a.getRoles()) {
-				if (r.getId() == role.getId())
-					doctors.add(a.getPerson());
-			}
-		}
 
+		// Obtener los medicos de la provincia
+		Role role = roleRepo.findByName(Roles.PROFESIONAL_MEDICO.toString());
+		List<Account> accounts = accountRepo.getAllByRoleAndProvince(role.getId(), person.getProvince().getId());
+		List<Person> doctors = accounts.stream().map(Account::getPerson).collect(Collectors.toList());
+
+		// Procesamos y retornamos la lista de medicos
 		List<PersonResponse> list = new ArrayList<>();
 		for (Person p : doctors) list.add(new PersonResponse(p));
 		return list;
@@ -252,17 +266,11 @@ public class PersonService {
 	public void delete(String email) {
 
 		Account account = accountRepo.findByEmail(email);
-
 		Person personToDelete = account.getPerson();
-
 		account.setPerson(null);
-
 		accountRepo.save(account);
-
 		personToDelete.setAccounts(null);
-
 		personRepo.save(personToDelete);
-
 		personRepo.delete(personToDelete);
 	}
 

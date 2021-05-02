@@ -17,9 +17,15 @@ import lombok.Data;
 @Entity
 @Table(name="account")
 @Data
-@NamedQuery(name="Account.findAll", query="SELECT a FROM Account a")
-@NamedQuery(name="Account.getAccountByPersonId", query="SELECT a FROM Person p, Account a "
-		+ "WHERE a.person.id = p.id and p.id = :person")
+@NamedQuery(name="Account.findAll",
+		query="SELECT a FROM Account a")
+@NamedQuery(name="Account.getAllByRole",
+		query="SELECT a FROM Account a, RoleAccount ra WHERE a.id = ra.id.account AND ra.id.role = :role")
+@NamedQuery(name="Account.getAllByRoleAndProvince",
+		query="SELECT a FROM Account a, RoleAccount ra WHERE a.id = ra.id.account AND ra.id.role = :role "
+				+ "AND a.person.province.id = :province")
+@NamedQuery(name="Account.getAccountByPersonId",
+		query="SELECT a FROM Person p, Account a WHERE a.person.id = p.id and p.id = :person")
 public class Account implements Serializable {
 	private static final long serialVersionUID = 1L;
 

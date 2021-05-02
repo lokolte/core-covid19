@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.core.covid19.authentication.util.JwtUtil;
 import com.core.covid19.models.entities.*;
@@ -13,6 +14,7 @@ import com.core.covid19.models.requests.ChangePasswordRequest;
 import com.core.covid19.models.requests.DoctorRequest;
 import com.core.covid19.models.requests.DoctorResponse;
 import com.core.covid19.models.responses.PersonResponse;
+import com.core.covid19.models.responses.PersonsResponse;
 import com.core.covid19.repos.*;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
@@ -29,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class AccountService {
+public class AccountService extends BaseService {
 
 	@Autowired
 	private RoleRepo roleRepo;
@@ -167,19 +169,35 @@ public class AccountService {
 		accountRepo.delete(accountRepo.findByEmail(email));
 	}
 
-	public List<PersonResponse> getDoctors() {
+	/**
+	 * Obtiene la lista de medicos de acuerdo al rol del usuario
+	 */
+	public List<PersonResponse> getDoctors(String email) {
 
-		Role role = roleRepo.findByName(Roles.PROFESIONAL_MEDICO.toString());
-		List<Account> accounts = personRepo.getAccounts();
+		// Obtener datos del usuario logueado
+		List<PersonResponse> list = new ArrayList<>();
 		List<Person> persons = new ArrayList<>();
-		for (Account a : accounts) {
-			for (Role r : a.getRoles()) {
-				if (r.getId() == role.getId())
-					persons.add(a.getPerson());
-			}
+		Account account = accountRepo.findByEmail(email);
+		if (account.getPerson() == null) return list;
+
+		if (isAdmin(account.getRoles())) {
+			// Si es admin, obtenemos todos los medicos
+			Role role = roleRepo.findByName(Roles.PROFESIONAL_MEDICO.toString());
+			List<Account> accounts = accountRepo.getAllByRole(role.getId());
+			persons = accounts.stream().map(Account::getPerson).collect(Collectors.toList());
+
+		} else if (isCoordinator(account.getRoles())) {
+			// Si es coordinador, obtenemos los medicos de su Region
+			Person person = account.getPerson();
+			if (person.getProvince() == null) return list;
+			Role role = roleRepo.findByName(Roles.PROFESIONAL_MEDICO.toString());
+			List<Account> accounts = accountRepo.getAllByRoleAndProvince(role.getId(), person.getProvince().getId());
+			persons = accounts.stream().map(Account::getPerson).collect(Collectors.toList());
+
+		} else {
+			return list;
 		}
 
-		List<PersonResponse> list = new ArrayList<>();
 		for (Person p : persons) list.add(new PersonResponse(p));
 		return list;
 	}

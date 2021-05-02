@@ -79,9 +79,14 @@ public class AccountController {
 		accountService.delete(id);
 	}
 
+	/**
+	 * Obtiene la lista de medicos de acuerdo al rol del usuario
+	 * 1 - admin puede ver todos los medicos
+	 * 2 - coordinadores solo pueden ver los medicos de su region
+	 */
 	@GetMapping("/doctors")
-	public List<PersonResponse> getDoctors() {
-		return accountService.getDoctors();
+	public List<PersonResponse> getDoctors(@RequestHeader("Authorization") String authorization) {
+		return accountService.getDoctors(jwtUtil.getEmailFromJwtToken(authorization));
 	}
 
 	@GetMapping("/doctors/{id}/hospitals")

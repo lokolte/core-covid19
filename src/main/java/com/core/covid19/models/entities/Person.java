@@ -25,11 +25,14 @@ import java.util.Set;
 @Entity
 @Table(name="person")
 @Data
-@NamedQuery(name="Person.findAll", query="SELECT p FROM Person p")
+@NamedQuery(name="Person.findAll",
+		query="SELECT p FROM Person p")
 @NamedQuery(name="Person.getPatients",
 		query="SELECT a FROM Person p, Account a WHERE a.person.id = p.id and p.province.id = :province")
 @NamedQuery(name="Person.getAccounts",
 		query="SELECT a FROM Person p, Account a WHERE a.person.id = p.id")
+@NamedQuery(name="Person.getPatientsByDoctor",
+		query="SELECT p FROM Person p, PatientDoctor pd WHERE pd.id.patient = p.id and pd.id.doctor = :doctor")
 public class Person implements Serializable {
 	private static final long serialVersionUID = 1L;
 

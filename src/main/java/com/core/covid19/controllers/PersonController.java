@@ -43,7 +43,13 @@ public class PersonController {
 	public List<Person> list(){
 		return personService.findAll();
 	}
-	
+
+	/**
+	 * Obtiene la lista de pacientes de acuerdo al rol del usuario
+	 * 1 - admin puede ver todos los pacientes
+	 * 2 - coordinadores solo pueden ver los pacientes de su region
+	 * 3 - medicos solo de los pacientes asignados a el
+	 */
 	@GetMapping(value="/patients")
 	public PersonsResponse getPatients(@RequestHeader("Authorization") String authorization) {
 		return personService.getPatients(jwtUtil.getEmailFromJwtToken(authorization));
