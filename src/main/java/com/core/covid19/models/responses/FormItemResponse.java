@@ -9,17 +9,20 @@ public class FormItemResponse implements Serializable, Comparable<FormItemRespon
 
 	private static final long serialVersionUID = 1L;
 	
-	private final Integer id;
+	private Integer id;
 
-	private final String title;
+	private String title;
 
-	private final String subtitle;
+	private String subtitle;
 
-	private final Integer orderLevel;
+	private Integer orderLevel;
 
-	private final List<Item> itemsForm;
+	private List<Item> itemsForm;
 
-    public FormItemResponse(Integer id, String title, String subtitle,
+	public FormItemResponse() {
+	}
+
+	public FormItemResponse(Integer id, String title, String subtitle,
 							Integer orderLevel, List<Item> itemsForm) {
     	this.id = id;
     	this.title = title;
@@ -55,5 +58,9 @@ public class FormItemResponse implements Serializable, Comparable<FormItemRespon
 
 	public List<Item> getItemsForm() {
 		return itemsForm;
+	}
+
+	public void setItemsForm(List<Item> itemsForm) {
+		this.itemsForm = itemsForm;
 	}
 }

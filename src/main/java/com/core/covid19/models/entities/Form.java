@@ -3,6 +3,7 @@ package com.core.covid19.models.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import com.core.covid19.models.responses.FormItemResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -59,6 +60,13 @@ public class Form implements Serializable {
 	private Set<Answer> answers;
 
 	public Form() {
+	}
+
+	public Form(FormItemResponse data) {
+		this.id = data.getId();
+		this.title = data.getTitle();
+		this.subtitle = data.getSubtitle();
+		this.orderLevel = data.getOrderLevel();
 	}
 
 	public Integer getId() {

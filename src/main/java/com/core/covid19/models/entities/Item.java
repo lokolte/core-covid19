@@ -3,6 +3,7 @@ package com.core.covid19.models.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import com.core.covid19.models.responses.QuestionResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -58,6 +59,22 @@ public class Item implements Serializable, Comparable<Item> {
 	private Set<ItemsAnswer> answers;
 
 	public Item() {
+	}
+
+	public Item(Integer id, String title, String subtitle, Integer orderLevel, String type) {
+		this.id = id;
+		this.title = title;
+		this.subtitle = subtitle;
+		this.orderLevel = orderLevel;
+		this.type = type;
+	}
+
+	public Item(QuestionResponse data) {
+		this.id = data.getId();
+		this.title = data.getTitle();
+		this.subtitle = data.getSubtitle();
+		this.orderLevel = data.getOrderLevel();
+		this.type = data.getType();
 	}
 	
 	@Override
