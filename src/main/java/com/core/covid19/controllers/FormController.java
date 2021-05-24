@@ -20,12 +20,19 @@ public class FormController {
 
 	/**
 	 * Obtiene la lista de formularios
+	 * @param idForm 	Para obtener los datos de un formulario
+	 * @param idPerson	Para obtener los formularios que no han sido asignados al usuario
 	 * @return
 	 */
 	@GetMapping
-	public PersonFormsResponse listAll(@RequestParam(value = "idForm", required = false) Integer idForm) {
+	public PersonFormsResponse listAll(
+			@RequestParam(value = "idForm", required = false) Integer idForm,
+			@RequestParam(value = "idPerson", required = false) Integer idPerson) {
 		if (idForm != null) {
 			return formService.get(idForm);
+		}
+		if (idPerson != null) {
+			return formService.getFormsAvailable(idPerson);
 		}
 		return formService.findAll();
 	}
@@ -108,13 +115,23 @@ public class FormController {
 	}
 
 	/**
-	 * Obtiene los formularios del usuario
+	 * Obtiene los formularios del paciente
 	 * @param id
 	 * @return
 	 */
 	@GetMapping(value = "/{id}")
 	public PersonFormsResponse listAllById(@PathVariable("id") Integer id) {
 		return formService.findAllById(id);
+	}
+
+	/**
+	 * Asigna los formularios al paciente
+	 * @param id
+	 * @return
+	 */
+	@PostMapping(value = "/{id}")
+	public void asignForms(@PathVariable("id") Integer id, @RequestBody List<FormItemResponse> forms) {
+		formService.asignForms(id, forms);
 	}
 
 	@PostMapping

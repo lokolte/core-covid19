@@ -56,7 +56,7 @@ public class PersonController {
 	}
 
 	@GetMapping(value="/patients/{id}")
-	public Person get(@PathVariable("id") Integer id) {
+	public PatientForm get(@PathVariable("id") Integer id) {
 		return personService.get(id);
 	}
 

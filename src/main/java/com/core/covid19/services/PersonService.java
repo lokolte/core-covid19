@@ -44,6 +44,9 @@ public class PersonService extends BaseService {
 	PatientDoctorRepo patientDoctorRepo;
 
 	@Autowired
+	private FormRepo formRepo;
+
+	@Autowired
 	private RoleAccountRepo roleAccountRepo;
 
 	public Person insert(PersonRequest personRequest, String email) {
@@ -79,8 +82,10 @@ public class PersonService extends BaseService {
 		return personRepo.findAll();
 	}
 
-	public Person get(int id) {
-		return personRepo.findById(id).get();
+	public PatientForm get(int id) {
+		Person p = personRepo.findById(id).get();
+		Set<Form> forms = p.getPersonForms();
+		return new PatientForm(p, forms);
 	}
 
 	public PersonsResponse getPatientsDoctor(int id) {

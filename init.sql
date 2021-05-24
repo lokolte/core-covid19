@@ -142,8 +142,8 @@ INSERT INTO public.item(
 	VALUES (17, '¿Hace cuanto tiempo?', '¿Tuvo COVID-19?', 'INPUT_TEXT', 17);
 
 INSERT INTO public.form(
-	id, subtitle, title, order_level)
-	VALUES (1, 'Debe ingresar los síntomas de las últimas 24hs.', 'Formulario de síntomas', 1);
+	id, subtitle, title, order_level, is_default)
+	VALUES (1, 'Debe ingresar los síntomas de las últimas 24hs.', 'Formulario de síntomas', 1, true);
 	
 INSERT INTO public.form_items(
 	form_id, item_id)
@@ -275,8 +275,8 @@ INSERT INTO public.item(
 	
 
 INSERT INTO public.form(
-	id, subtitle, title, order_level)
-	VALUES (2, 'Debe ingresar las enfermedades base que posee.', 'Formulario de Enfermedades Base', 2);
+	id, subtitle, title, order_level, is_default)
+	VALUES (2, 'Debe ingresar las enfermedades base que posee.', 'Formulario de Enfermedades Base', 2, true);
 	
 INSERT INTO public.form_items(
 	form_id, item_id)
@@ -351,8 +351,8 @@ INSERT INTO public.item(
 	VALUES (33, 'Especifique.', '¿Cómo se llama el Hospital público, Centro de Salud o Atención Primaria de Salud que le queda más cerca de su casa?', 'INPUT_TEXT', 3);
 
 INSERT INTO public.form(
-	id, subtitle, title, order_level)
-	VALUES (3, 'Debe ingresar los datos hospitalarios.', 'Formulario Logístico', 3);
+	id, subtitle, title, order_level, is_default)
+	VALUES (3, 'Debe ingresar los datos hospitalarios.', 'Formulario Logístico', 3, true);
 
 INSERT INTO public.form_items(
 	form_id, item_id)

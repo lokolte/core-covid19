@@ -41,7 +41,7 @@ public class FormService {
 			for(Item i : f.getItemsForm())
 				itemList.add(i);
 			FormItemResponse formItemResponse = new FormItemResponse(f.getId(), f.getTitle(), f.getSubtitle(),
-					f.getOrderLevel(), itemList.stream().sorted().collect(Collectors.toList()));
+					f.getOrderLevel(), itemList.stream().sorted().collect(Collectors.toList()), f.getDefault());
 			formList.add(formItemResponse);
 		}
 		formList = formList.stream().sorted().collect(Collectors.toList());
@@ -57,11 +57,25 @@ public class FormService {
 		return new PersonFormsResponse(orderedForms(forms));
 	}
 
-	public PersonFormsResponse get(int id) {
-		Form form = formRepo.getOne(id);
+	public PersonFormsResponse get(int idForm) {
+		Form form = formRepo.getOne(idForm);
 		List<Form> list = new ArrayList<>();
 		list.add(form);
 		return new PersonFormsResponse(orderedForms(list));
+	}
+
+	public PersonFormsResponse getFormsAvailable(int idPerson) {
+		List<Form> forms = formRepo.findAll();
+		Person p = personRepo.getOne(idPerson);
+		Set<Form> formsPatient = p.getPersonForms();
+		List<Integer> ids = formsPatient.stream().map(Form::getId).collect(Collectors.toList());
+		List<Form> res = new ArrayList<>();
+		for (Form f : forms) {
+			if (!ids.contains(f.getId())) {
+				res.add(f);
+			}
+		}
+		return new PersonFormsResponse(orderedForms(res));
 	}
 
 	/**
@@ -208,6 +222,23 @@ public class FormService {
 		return new PersonFormsResponse(orderedForms(new ArrayList<>(person.getPersonForms())));
 	}
 
+	/**
+	 * Asigna los formularios al paciente
+	 * @param id		Id del paciente
+	 * @param forms 	Lista de formularios a asignar
+	 */
+	public void asignForms(int id, List<FormItemResponse> forms) {
+
+		Person person = personRepo.getOne(id);
+		Set<Form> list = new HashSet<>();
+		for (FormItemResponse f : forms) {
+			Form form = formRepo.getOne(f.getId());
+			list.add(form);
+		}
+		person.setPersonForms(list);
+		personRepo.save(person);
+	}
+
 	public void addDefaultFormsToPerson(String email) {
 
 		Account account = accountRepo.findByEmail(email);
@@ -219,12 +250,7 @@ public class FormService {
 	}
 	
 	public Set<Form> getDefaultForms() {
-
-		Set<Form> forms = new HashSet<Form>();
-		forms.add(formRepo.findById(1).get()); // Formulario de enfermedades base y condiciones
-		forms.add(formRepo.findById(2).get()); // Formulario de Sintomas
-		forms.add(formRepo.findById(3).get()); // Formulario referente a COVID19
-		return forms;
+		return formRepo.getDefaultForms();
 	}
 	
 	public PersonAnswersResponse getAnswersForm(int idPerson, int idForm) {

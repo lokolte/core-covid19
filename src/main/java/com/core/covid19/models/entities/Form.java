@@ -21,6 +21,7 @@ import java.util.Set;
 @Table(name="form")
 @Data
 @NamedQuery(name="Form.findAll", query="SELECT f FROM Form f")
+@NamedQuery(name="Form.getDefaultForms", query="SELECT f FROM Form f WHERE f.isDefault = true")
 public class Form implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -37,6 +38,9 @@ public class Form implements Serializable {
 
 	@Column(name="order_level", nullable=false)
 	private Integer orderLevel;
+
+	@Column(name="is_default")
+	private Boolean isDefault;
 
 	@ManyToMany
 	@JoinTable(name = "form_items",
@@ -67,6 +71,7 @@ public class Form implements Serializable {
 		this.title = data.getTitle();
 		this.subtitle = data.getSubtitle();
 		this.orderLevel = data.getOrderLevel();
+		this.isDefault = data.getDefault();
 	}
 
 	public Integer getId() {
@@ -127,5 +132,13 @@ public class Form implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public Boolean getDefault() {
+		return isDefault;
+	}
+
+	public void setDefault(Boolean aDefault) {
+		isDefault = aDefault;
 	}
 }
