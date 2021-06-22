@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.core.covid19.models.entities.*;
+import com.core.covid19.models.entities.location.HospitalDistance;
 import com.core.covid19.models.enums.Roles;
 import com.core.covid19.models.responses.*;
 import com.core.covid19.repos.*;
@@ -49,7 +50,14 @@ public class PersonService extends BaseService {
 	@Autowired
 	private RoleAccountRepo roleAccountRepo;
 
+	@Autowired
+	private HospitalRepo hospitalRepo;
+
+	@Autowired
+	private HospitalDoctorRepo hospitalDoctorRepo;
+
 	public Person insert(PersonRequest personRequest, String email) {
+
 		Location location = new Location();
 		location.setLatitude(personRequest.getLocation().getLatitude());
 		location.setLongitude(personRequest.getLocation().getLongitude());
@@ -111,11 +119,9 @@ public class PersonService extends BaseService {
 			Integer idPatient = (Integer) d[0];
 			Person p = personRepo.getOne(idPatient);
 			Person doctor = patientDoctorRepo.getDoctorPatient(idPatient);
-
 			if(doctor != null) list.add(new PersonResponse(p, doctor.getId(), doctor.getName()));
 			else list.add(new PersonResponse(p));
 		}
-
 		return new PersonsResponse(list);
 	}
 
@@ -209,25 +215,29 @@ public class PersonService extends BaseService {
 		
 		Account account = accountRepo.findByEmail(email);
 		Person personRecovered = personRepo.findByDocument(person.getDocument());
+		Person doctor = null;
 
-		if(personRecovered == null) {
+		if (personRecovered == null) {
+
 			Location location = new Location();
 			location.setLatitude(person.getLocation().getLatitude());
 			location.setLongitude(person.getLocation().getLongitude());
 			Location locationStored = locationRepo.save(location);
 
 			Status status = statusRepo.findByName(person.getStatus().getName());
+			Hospital hospital = getHospitalCloser(location, person.getProvince());
+			doctor = getDoctorByLocation(hospital);
 
 			personRecovered = new Person();
 			personRecovered.setLocation(locationStored);
 			personRecovered.setStatus(status);
+			personRecovered.setHospital(hospital);
 
 		} else if(person.getLocation().getId() == null){
 			Location location = new Location();
 			location.setLatitude(person.getLocation().getLatitude());
 			location.setLongitude(person.getLocation().getLongitude());
 			Location locationStored = locationRepo.save(location);
-			
 			personRecovered.setLocation(locationStored);
 		}
 
@@ -243,7 +253,7 @@ public class PersonService extends BaseService {
 		if(personRecovered.getPersonForms() == null) {
 			Set<Form> forms = formService.getDefaultForms();
 			personRecovered.setPersonForms(forms);
-		}else if(personRecovered.getPersonForms().isEmpty()) {
+		} else if(personRecovered.getPersonForms().isEmpty()) {
 			Set<Form> forms = formService.getDefaultForms();
 			for(Form form : forms) personRecovered.addForm(form);
 		}
@@ -251,6 +261,13 @@ public class PersonService extends BaseService {
 		Person personResult = personRepo.save(personRecovered);
 		account.setPerson(personResult);
 		accountRepo.save(account);
+
+		// Asignar medico a paciente
+		if (doctor != null) {
+			PatientDoctorPk patientDoctorPk = new PatientDoctorPk(personResult.getId(), doctor.getId());
+			PatientDoctor patientDoctor = new PatientDoctor(patientDoctorPk);
+			patientDoctorRepo.save(patientDoctor);
+		}
 
 		if (roles != null) {
 			account.getRoles();
@@ -264,7 +281,6 @@ public class PersonService extends BaseService {
 				roleAccountRepo.save(roleAccount);
 			}
 		}
-
 		return personResult;
 	}
 
@@ -277,6 +293,56 @@ public class PersonService extends BaseService {
 		personToDelete.setAccounts(null);
 		personRepo.save(personToDelete);
 		personRepo.delete(personToDelete);
+	}
+
+	public Person getDoctorByLocation(Hospital hospital) {
+
+		List<Integer> doctors = hospitalDoctorRepo.getDoctorsByHospital(hospital.getId());
+		int id = doctors.get(0);
+		List<Object[]> data = patientDoctorRepo.getDoctorByCountPatients(doctors);
+		if (data != null && data.size() > 0) {
+			Object[] d = data.get(0);
+			id = (int) d[0];
+		}
+		return personRepo.findById(id).get();
+	}
+
+	public Hospital getHospitalCloser(Location location, Province province) {
+
+		List<Hospital> hospitals = hospitalRepo.findAll()
+				.stream()
+				.filter(hospital -> hospital.getLocation() != null)
+				.collect(Collectors.toList());
+
+		List<HospitalDistance> hospitalsDistance = new ArrayList<HospitalDistance>();
+
+		for (Hospital hospital : hospitals)
+			hospitalsDistance.add(new HospitalDistance(distanceOf(location, hospital.getLocation()), hospital));
+
+		hospitalsDistance = hospitalsDistance.stream().sorted().collect(Collectors.toList());
+		if (hospitalsDistance != null && hospitalsDistance.size() > 0) {
+			for (HospitalDistance hd : hospitalsDistance) {
+				Hospital h = hd.getHospital();
+				District district = h.getDistrict();
+				if (district != null) {
+					if (district.getProvince().getId().equals(province.getId())) {
+						return h;
+					}
+				}
+			}
+			return hospitalsDistance.get(0).getHospital();
+		}
+		return null;
+	}
+
+	private Double distanceOf(Location a, Location b) {
+		if (a == null || b == null)
+			return 0.0;
+		return Math.sqrt(square(a.getLatitude() - b.getLatitude()) + square(a.getLongitude() - b.getLongitude()));
+	}
+
+	private double square(double n) {
+		return n*n;
 	}
 
 }

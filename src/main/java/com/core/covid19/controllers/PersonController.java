@@ -55,6 +55,10 @@ public class PersonController {
 		return personService.getPatients(jwtUtil.getEmailFromJwtToken(authorization));
 	}
 
+	/**
+	 * Obtiene los datos de un paciente
+	 * @param id	Id persona
+	 */
 	@GetMapping(value="/patients/{id}")
 	public PatientForm get(@PathVariable("id") Integer id) {
 		return personService.get(id);

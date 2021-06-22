@@ -10,4 +10,5 @@ public interface HospitalDoctorRepo extends JpaRepository<HospitalDoctor, Intege
 
     List<Hospital> getHospitalsDoctor(int doctor);
     List<HospitalDoctor> getAsignados(int doctor);
+    List<Integer> getDoctorsByHospital(int hospital);
 }

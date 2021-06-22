@@ -100,6 +100,11 @@ public class Person implements Serializable {
 	@JsonIgnoreProperties("persons")
 	private Province province;
 
+	@ManyToOne
+	@JoinColumn(name="hospital", nullable=true)
+	@JsonIgnoreProperties("persons")
+	private Hospital hospital;
+
 	public Person() {
 	}
 
@@ -271,5 +276,13 @@ public class Person implements Serializable {
 
 	public void setProvince(Province province) {
 		this.province = province;
+	}
+
+	public Hospital getHospital() {
+		return hospital;
+	}
+
+	public void setHospital(Hospital hospital) {
+		this.hospital = hospital;
 	}
 }

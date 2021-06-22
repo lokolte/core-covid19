@@ -11,6 +11,8 @@ import javax.persistence.Table;
         query="SELECT h FROM HospitalDoctor hd, Hospital h WHERE hd.id.doctor = :doctor AND hd.id.hospital = h.id ")
 @NamedQuery(name="HospitalDoctor.getAsignados",
         query="SELECT hd FROM HospitalDoctor hd WHERE hd.id.doctor = :doctor ")
+@NamedQuery(name="HospitalDoctor.getDoctorsByHospital",
+        query="SELECT hd.id.doctor FROM HospitalDoctor hd WHERE hd.id.hospital = :hospital ")
 public class HospitalDoctor {
 
     @EmbeddedId

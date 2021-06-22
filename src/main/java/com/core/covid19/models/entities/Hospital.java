@@ -1,12 +1,15 @@
 package com.core.covid19.models.entities;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * The persistent class for the person database table.
@@ -60,6 +63,12 @@ public class Hospital implements Serializable {
 	@JoinColumn(name="district", nullable=true)
 	@JsonIgnoreProperties("hospitals")
 	private District district;
+
+	@OneToMany(mappedBy="hospital")
+	@JsonIgnoreProperties("hospital")
+	@EqualsAndHashCode.Exclude
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private List<Person> persons;
 
 	public Hospital() {
 	}
@@ -154,5 +163,13 @@ public class Hospital implements Serializable {
 
 	public void setDistrict(District district) {
 		this.district = district;
+	}
+
+	public List<Person> getPersons() {
+		return this.persons;
+	}
+
+	public void setPersons(List<Person> persons) {
+		this.persons = persons;
 	}
 }

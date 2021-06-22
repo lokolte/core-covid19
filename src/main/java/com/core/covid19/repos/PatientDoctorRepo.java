@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface PatientDoctorRepo extends JpaRepository<PatientDoctor, Integer> {
+
     PatientDoctor getDoctor(int patient);
     List<Account> getDoctors(int province);
     Person getDoctorPatient(int patient);
@@ -64,4 +65,19 @@ public interface PatientDoctorRepo extends JpaRepository<PatientDoctor, Integer>
             nativeQuery = true
     )
     List<Object[]> getAdminPatients();
+
+    @Query(
+            value = "select doctor, count(1) from patient_doctor where doctor in :doctors group by doctor order by 2",
+            nativeQuery = true
+    )
+    List<Object[]> getDoctorByCountPatients(List<Integer> doctors);
+
+    @Query(
+            value = "select pd.patient from patient_doctor pd " +
+                    "join person p on pd.patient = p.id " +
+                    "join hospital h on p.hospital = h.id " +
+                    "where pd.doctor = :doctor and h.id = :hospital;",
+            nativeQuery = true
+    )
+    List<Integer> getPatientsAsigns(int doctor, int hospital);
 }

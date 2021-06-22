@@ -58,6 +58,9 @@ public class AccountService extends BaseService {
 	HospitalDoctorRepo hospitalDoctorRepo;
 
 	@Autowired
+	PatientDoctorRepo patientDoctorRepo;
+
+	@Autowired
 	EmailSender emailSender;
 
 	@Autowired
@@ -234,18 +237,38 @@ public class AccountService extends BaseService {
 		return new ArrayList<>();
 	}
 
+	/**
+	 * Se guardan los hospitales asignados a un medico
+	 * @param id				Id del doctor
+	 * @param hospitalList		Lista de hospitales
+	 */
 	public void saveHospitalsDoctor(int id, List<Hospital> hospitalList) {
 
 		Optional<Person> person = personRepo.findById(id);
 		if (person != null && person.isPresent()) {
+			List<HospitalDoctor> hospitalesDesasignados = new ArrayList<>();
+			List<Integer> hospitalesAsginados = hospitalList.stream().map(Hospital::getId).collect(Collectors.toList());;
 			Person p = person.get();
 			List<HospitalDoctor> hospitals = hospitalDoctorRepo.getAsignados(p.getId());
 			for (HospitalDoctor h : hospitals) {
+				if (!hospitalesAsginados.contains(h.getId())) {
+					hospitalesDesasignados.add(h);
+				}
 				hospitalDoctorRepo.delete(h);
 			}
 			for (Hospital h : hospitalList) {
 				HospitalDoctor hd = new HospitalDoctor(new HospitalDoctorPk(id, h.getId()));
 				hospitalDoctorRepo.save(hd);
+			}
+			// Desasignar los pacientes de los hospitales desvinculados al medico
+			if (hospitalesDesasignados.size() > 0) {
+				for (HospitalDoctor hd : hospitalesDesasignados) {
+					List<Integer> patients = patientDoctorRepo.getPatientsAsigns(id, hd.getId().getHospital());
+					for (Integer patient : patients) {
+						PatientDoctor pd = patientDoctorRepo.getDoctor(patient);
+						patientDoctorRepo.delete(pd);
+					}
+				}
 			}
 		}
 	}
@@ -362,9 +385,6 @@ public class AccountService extends BaseService {
 				}
 
 				// Location
-				System.err.println("province : " + province);
-				System.err.println("latitude : " + latitude);
-				System.err.println("longitude : " + longitude);
 				Location l = new Location(latitude, longitude);
 				Location loc = null;
 				if (isNew) {

@@ -94,6 +94,11 @@ public class AccountController {
 		return accountService.getHospitalsDoctor(id);
 	}
 
+	/**
+	 * Se guardan los hospitales asignados a un medico
+	 * @param id			Id del doctor
+	 * @param hospitals		Lista de hospitales
+	 */
 	@PostMapping("/doctors/{id}/hospitals")
 	public void saveHospitalsDoctor(@PathVariable("id") Integer id, @RequestBody List<Hospital> hospitals) {
 		accountService.saveHospitalsDoctor(id, hospitals);
