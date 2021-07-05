@@ -101,6 +101,7 @@ public class AccountController {
 	 */
 	@PostMapping("/doctors/{id}/hospitals")
 	public void saveHospitalsDoctor(@PathVariable("id") Integer id, @RequestBody List<Hospital> hospitals) {
+		// TODO agregar aca, el tema de asignacion/designacion
 		accountService.saveHospitalsDoctor(id, hospitals);
 	}
 

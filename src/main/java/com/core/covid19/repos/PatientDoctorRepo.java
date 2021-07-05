@@ -76,7 +76,7 @@ public interface PatientDoctorRepo extends JpaRepository<PatientDoctor, Integer>
             value = "select pd.patient from patient_doctor pd " +
                     "join person p on pd.patient = p.id " +
                     "join hospital h on p.hospital = h.id " +
-                    "where pd.doctor = :doctor and h.id = :hospital;",
+                    "where pd.doctor = :doctor and h.id = :hospital",
             nativeQuery = true
     )
     List<Integer> getPatientsAsigns(int doctor, int hospital);

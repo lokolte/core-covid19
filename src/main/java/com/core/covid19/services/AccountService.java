@@ -267,10 +267,25 @@ public class AccountService extends BaseService {
 					for (Integer patient : patients) {
 						PatientDoctor pd = patientDoctorRepo.getDoctor(patient);
 						patientDoctorRepo.delete(pd);
+						reasignarDoctor(patient, hd.getId().getHospital());
 					}
 				}
 			}
 		}
+	}
+
+	private void reasignarDoctor(int patient, int hospital) {
+
+		List<Integer> doctors = hospitalDoctorRepo.getDoctorsByHospital(hospital);
+		int idDoctor = doctors.get(0);
+		List<Object[]> data = patientDoctorRepo.getDoctorByCountPatients(doctors);
+		if (data != null && data.size() > 0) {
+			Object[] d = data.get(0);
+			idDoctor = (int) d[0];
+		}
+		PatientDoctorPk patientDoctorPk = new PatientDoctorPk(patient, idDoctor);
+		PatientDoctor patientDoctor = new PatientDoctor(patientDoctorPk);
+		patientDoctorRepo.save(patientDoctor);
 	}
 
 	public void changePassword(ChangePasswordRequest data, String email) throws Exception {
