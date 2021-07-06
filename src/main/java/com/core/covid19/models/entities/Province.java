@@ -2,13 +2,9 @@ package com.core.covid19.models.entities;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -49,6 +45,12 @@ public class Province implements Serializable {
 	@EqualsAndHashCode.Exclude
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private List<District> districts;
+
+	@ManyToMany(mappedBy = "provincesDoctor")
+	@JsonIgnoreProperties("provincesDoctor")
+	@EqualsAndHashCode.Exclude
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private Set<Person> provincesDoctor;
 	
 	public Province() {
 	}
@@ -103,5 +105,13 @@ public class Province implements Serializable {
 
 	public void setDistricts(List<District> districts) {
 		this.districts = districts;
+	}
+
+	public Set<Person> getProvincesDoctor() {
+		return provincesDoctor;
+	}
+
+	public void setProvincesDoctor(Set<Person> provincesDoctor) {
+		this.provincesDoctor = provincesDoctor;
 	}
 }

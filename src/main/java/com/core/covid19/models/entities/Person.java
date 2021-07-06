@@ -105,6 +105,13 @@ public class Person implements Serializable {
 	@JsonIgnoreProperties("persons")
 	private Hospital hospital;
 
+	@ManyToMany
+	@JoinTable(name = "province_doctor",
+			joinColumns = @JoinColumn(name = "person_id"),
+			inverseJoinColumns = @JoinColumn(name = "province_id"))
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private Set<Province> provincesDoctor;
+
 	public Person() {
 	}
 
@@ -284,5 +291,13 @@ public class Person implements Serializable {
 
 	public void setHospital(Hospital hospital) {
 		this.hospital = hospital;
+	}
+
+	public Set<Province> getProvincesDoctor() {
+		return provincesDoctor;
+	}
+
+	public void setProvincesDoctor(Set<Province> provincesDoctor) {
+		this.provincesDoctor = provincesDoctor;
 	}
 }
