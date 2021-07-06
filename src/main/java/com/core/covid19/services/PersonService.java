@@ -298,13 +298,16 @@ public class PersonService extends BaseService {
 	public Person getDoctorByLocation(Hospital hospital) {
 
 		List<Integer> doctors = hospitalDoctorRepo.getDoctorsByHospital(hospital.getId());
-		int id = doctors.get(0);
-		List<Object[]> data = patientDoctorRepo.getDoctorByCountPatients(doctors);
-		if (data != null && data.size() > 0) {
-			Object[] d = data.get(0);
-			id = (int) d[0];
+		if (doctors != null && doctors.size() > 0) {
+			int id = doctors.get(0);
+			List<Object[]> data = patientDoctorRepo.getDoctorByCountPatients(doctors);
+			if (data != null && data.size() > 0) {
+				Object[] d = data.get(0);
+				id = (int) d[0];
+			}
+			return personRepo.findById(id).get();
 		}
-		return personRepo.findById(id).get();
+		return null;
 	}
 
 	public Hospital getHospitalCloser(Location location, Province province) {
