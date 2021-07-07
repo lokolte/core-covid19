@@ -24,6 +24,10 @@ import lombok.Data;
 @NamedQuery(name="Account.getAllByRoleAndProvince",
 		query="SELECT a FROM Account a, RoleAccount ra WHERE a.id = ra.id.account AND ra.id.role = :role "
 				+ "AND a.person.province.id = :province")
+@NamedQuery(name="Account.getDoctorsByProvince",
+		query="SELECT a FROM Account a, RoleAccount ra " +
+				"JOIN a.person.provincesDoctor provinces " +
+				"WHERE a.id = ra.id.account AND ra.id.role = :role AND provinces.id = :province")
 @NamedQuery(name="Account.getAccountByPersonId",
 		query="SELECT a FROM Person p, Account a WHERE a.person.id = p.id and p.id = :person")
 public class Account implements Serializable {

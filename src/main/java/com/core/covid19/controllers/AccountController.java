@@ -9,10 +9,14 @@ import java.util.Optional;
 import com.core.covid19.authentication.util.JwtUtil;
 import com.core.covid19.models.entities.Hospital;
 import com.core.covid19.models.entities.Person;
+import com.core.covid19.models.entities.Role;
+import com.core.covid19.models.enums.Roles;
 import com.core.covid19.models.requests.ChangePasswordRequest;
 import com.core.covid19.models.requests.DoctorRequest;
 import com.core.covid19.models.requests.DoctorResponse;
 import com.core.covid19.models.responses.PersonResponse;
+import com.core.covid19.repos.AccountRepo;
+import com.core.covid19.repos.RoleRepo;
 import com.core.covid19.services.PersonService;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,7 +146,7 @@ public class AccountController {
 	@PostMapping("/doctors")
 	public void update(@RequestBody DoctorRequest data) {
 		Person p = new Person(data);
-		personService.modify(data.getEmail(), p, data.getRoles());
+		personService.modify(data.getEmail(), p, data.getRoles(), data.getProvinces());
 	}
 
 	@PostMapping("/send-email")

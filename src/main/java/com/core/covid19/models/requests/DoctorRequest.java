@@ -22,6 +22,7 @@ public class DoctorRequest {
     private String password;
     private String password2;
     private List<RoleResponse> roles;
+    private List<Integer> provinces;
 
     public DoctorRequest() {
     }
@@ -152,5 +153,13 @@ public class DoctorRequest {
 
     public void setRoles(List<RoleResponse> roles) {
         this.roles = roles;
+    }
+
+    public List<Integer> getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(List<Integer> provinces) {
+        this.provinces = provinces;
     }
 }

@@ -12,7 +12,7 @@ import java.util.Set;
 public interface PatientDoctorRepo extends JpaRepository<PatientDoctor, Integer> {
 
     PatientDoctor getDoctor(int patient);
-    List<Account> getDoctors(int province);
+    //List<Account> getDoctors(int province);
     Person getDoctorPatient(int patient);
 
     @Query(

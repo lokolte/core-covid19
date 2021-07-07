@@ -2,7 +2,9 @@ package com.core.covid19.models.requests;
 
 import com.core.covid19.models.entities.Account;
 import com.core.covid19.models.entities.Person;
+import com.core.covid19.models.entities.Province;
 import com.core.covid19.models.entities.Role;
+import com.core.covid19.models.responses.ProvinceResponse;
 import com.core.covid19.models.responses.RoleResponse;
 
 import java.io.Serializable;
@@ -28,6 +30,7 @@ public class DoctorResponse implements Serializable {
     private double latitude;
     private double longitude;
     private List<RoleResponse> roles;
+    private List<ProvinceResponse> provinces;
 
     public DoctorResponse(Person p) {
 
@@ -53,9 +56,16 @@ public class DoctorResponse implements Serializable {
             accounts.addAll(p.getAccounts());
             this.email = accounts.get(0).getEmail();
         }
-        if (p.getProvince() != null) {
+        /*if (p.getProvince() != null) {
             this.provinceId = p.getProvince().getId();
             this.province = p.getProvince().getName();
+        }*/
+        this.provinces = new ArrayList<>();
+        if (p.getProvincesDoctor() != null) {
+            for (Province province : p.getProvincesDoctor()) {
+                ProvinceResponse pr = new ProvinceResponse(province.getId(), province.getName());
+                this.provinces.add(pr);
+            }
         }
         if (p.getStatus() != null) {
             this.status = p.getStatus().getName();
@@ -187,5 +197,13 @@ public class DoctorResponse implements Serializable {
 
     public void setRoles(List<RoleResponse> roles) {
         this.roles = roles;
+    }
+
+    public List<ProvinceResponse> getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(List<ProvinceResponse> provinces) {
+        this.provinces = provinces;
     }
 }

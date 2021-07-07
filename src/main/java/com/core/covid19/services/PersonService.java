@@ -28,6 +28,9 @@ public class PersonService extends BaseService {
 
 	@Autowired
 	private AccountRepo accountRepo;
+
+	@Autowired
+	ProvinceRepo provinceRepo;
 	
 	@Autowired
 	private FormService formService;
@@ -187,7 +190,7 @@ public class PersonService extends BaseService {
 
 		// Obtener los medicos de la provincia
 		Role role = roleRepo.findByName(Roles.PROFESIONAL_MEDICO.toString());
-		List<Account> accounts = accountRepo.getAllByRoleAndProvince(role.getId(), person.getProvince().getId());
+		List<Account> accounts = accountRepo.getDoctorsByProvince(role.getId(), person.getProvince().getId());
 		List<Person> doctors = accounts.stream().map(Account::getPerson).collect(Collectors.toList());
 
 		// Procesamos y retornamos la lista de medicos
@@ -212,6 +215,11 @@ public class PersonService extends BaseService {
 	}
 
 	public Person modify(String email, Person person, List<RoleResponse> roles) {
+
+		return modify(email, person, roles, null);
+	}
+
+	public Person modify(String email, Person person, List<RoleResponse> roles, List<Integer> provinces) {
 		
 		Account account = accountRepo.findByEmail(email);
 		Person personRecovered = personRepo.findByDocument(person.getDocument());
@@ -256,6 +264,16 @@ public class PersonService extends BaseService {
 		} else if(personRecovered.getPersonForms().isEmpty()) {
 			Set<Form> forms = formService.getDefaultForms();
 			for(Form form : forms) personRecovered.addForm(form);
+		}
+
+		if (provinces != null) {
+			personRecovered.getProvincesDoctor().clear();
+			Set<Province> provincesList = new HashSet<>();
+			for (Integer p : provinces) {
+				Province province = provinceRepo.getOne(p);
+				provincesList.add(province);
+			}
+			personRecovered.setProvincesDoctor(provincesList);
 		}
 
 		Person personResult = personRepo.save(personRecovered);

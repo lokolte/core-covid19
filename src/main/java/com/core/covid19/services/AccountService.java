@@ -15,6 +15,7 @@ import com.core.covid19.models.requests.DoctorRequest;
 import com.core.covid19.models.requests.DoctorResponse;
 import com.core.covid19.models.responses.PersonResponse;
 import com.core.covid19.models.responses.PersonsResponse;
+import com.core.covid19.models.responses.RoleResponse;
 import com.core.covid19.repos.*;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
@@ -115,7 +116,19 @@ public class AccountService extends BaseService {
 		Status status = statusRepo.findByName("HEALTHY");
 		Location location = new Location(data.getLatitude(), data.getLongitude());
 		locationRepo.save(location);
+
 		Person person = new Person(data, location, status);
+		if (rol.equals(Roles.PROFESIONAL_MEDICO.toString())) {
+			List<Integer> provinces = data.getProvinces();
+			if (provinces != null) {
+				Set<Province> provincesList = new HashSet<>();
+				for (Integer p : provinces) {
+					Province province = provinceRepo.getOne(p);
+					provincesList.add(province);
+				}
+				person.setProvincesDoctor(provincesList);
+			}
+		}
 		personRepo.save(person);
 
 		Account account = new Account();
@@ -194,7 +207,7 @@ public class AccountService extends BaseService {
 			Person person = account.getPerson();
 			if (person.getProvince() == null) return list;
 			Role role = roleRepo.findByName(Roles.PROFESIONAL_MEDICO.toString());
-			List<Account> accounts = accountRepo.getAllByRoleAndProvince(role.getId(), person.getProvince().getId());
+			List<Account> accounts = accountRepo.getDoctorsByProvince(role.getId(), person.getProvince().getId());
 			persons = accounts.stream().map(Account::getPerson).collect(Collectors.toList());
 
 		} else {
