@@ -11,6 +11,6 @@ public interface AccountRepo extends JpaRepository<Account, Integer>{
 	Account findByEmail(String email);
 	Account getAccountByPersonId(int person);
 	List<Account> getAllByRole(int role);
-	List<Account> getAllByRoleAndProvince(int role, int province);
+	List<Account> getAllByRoleAndProvinces(int role, List<Integer> provinces);
 	List<Account> getDoctorsByProvince(int role, int province);
 }

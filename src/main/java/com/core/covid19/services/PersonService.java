@@ -157,7 +157,10 @@ public class PersonService extends BaseService {
 			Person person = account.getPerson();
 			if (person.getProvince() == null) return new PersonsResponse();
 			Role role = roleRepo.findByName(Roles.CIVIL.toString());
-			List<Account> accounts = accountRepo.getAllByRoleAndProvince(role.getId(), person.getProvince().getId());
+			//List<Account> accounts = accountRepo.getAllByRoleAndProvince(role.getId(), person.getProvince().getId());
+			List<Integer> provinces = person.getProvincesDoctor().stream().map(province -> province.getId()).collect(Collectors.toList());
+			//List<Account> accounts = accountRepo.getAllByRoleAndProvince(role.getId(), person.getProvince().getId());
+			List<Account> accounts = accountRepo.getAllByRoleAndProvinces(role.getId(), provinces);
 			persons = accounts.stream().map(Account::getPerson).collect(Collectors.toList());
 
 		} else if (isDoctor(account.getRoles())) {
@@ -169,9 +172,11 @@ public class PersonService extends BaseService {
 		// Procesamos y retornamos la lista de pacientes
 		List<PersonResponse> list = new ArrayList<PersonResponse>();
 		for (Person p : persons) {
-			Person doctor = patientDoctorRepo.getDoctorPatient(p.getId());
-			String d = doctor == null ? "Sin asignar" : doctor.getName() + " " + doctor.getLastname();
-			list.add(new PersonResponse(p, d));
+			if (p != null) {
+				Person doctor = patientDoctorRepo.getDoctorPatient(p.getId());
+				String d = doctor == null ? "Sin asignar" : doctor.getName() + " " + doctor.getLastname();
+				list.add(new PersonResponse(p, d));
+			}
 		}
 		return new PersonsResponse(list);
 	}

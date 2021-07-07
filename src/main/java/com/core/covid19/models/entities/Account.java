@@ -21,15 +21,18 @@ import lombok.Data;
 		query="SELECT a FROM Account a")
 @NamedQuery(name="Account.getAllByRole",
 		query="SELECT a FROM Account a, RoleAccount ra WHERE a.id = ra.id.account AND ra.id.role = :role")
-@NamedQuery(name="Account.getAllByRoleAndProvince",
+/*@NamedQuery(name="Account.getAllByRoleAndProvince",
 		query="SELECT a FROM Account a, RoleAccount ra WHERE a.id = ra.id.account AND ra.id.role = :role "
-				+ "AND a.person.province.id = :province")
+				+ "AND a.person.province.id = :province")*/
 @NamedQuery(name="Account.getDoctorsByProvince",
 		query="SELECT a FROM Account a, RoleAccount ra " +
 				"JOIN a.person.provincesDoctor provinces " +
 				"WHERE a.id = ra.id.account AND ra.id.role = :role AND provinces.id = :province")
 @NamedQuery(name="Account.getAccountByPersonId",
 		query="SELECT a FROM Person p, Account a WHERE a.person.id = p.id and p.id = :person")
+@NamedQuery(name="Account.getAllByRoleAndProvinces",
+		query="SELECT a FROM Account a, RoleAccount ra WHERE a.id = ra.id.account AND ra.id.role = :role "
+				+ "AND a.person.province.id in :provinces")
 public class Account implements Serializable {
 	private static final long serialVersionUID = 1L;
 
